@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/nunezMyles/fitness_personal#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "express": "^4.18.2",
     "http": "^0.0.1-security",
     "mongoose": "^6.6.5"

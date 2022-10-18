@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_fitness/utilities/auth_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -10,6 +11,19 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   var rememberValue = false;
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final AuthService authService = AuthService();
+
+  void signUpUser() {
+    authService.signUpUser(
+        context: context,
+        name: _nameController.text,
+        email: _emailController.text,
+        password: _passwordController.text
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +51,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Column(
                 children: [
                   TextFormField(
+                    controller: _nameController,
                     /*validator: (value) => EmailValidator.validate(value!)
                               ? null
                               : "Please enter a valid email",*/
@@ -53,6 +68,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: 20,
                   ),
                   TextFormField(
+                    controller: _emailController,
                     /*validator: (value) => EmailValidator.validate(value!)
                         ? null
                         : "Please enter a valid email",*/
@@ -69,6 +85,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: 20,
                   ),
                   TextFormField(
+                    controller: _passwordController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
