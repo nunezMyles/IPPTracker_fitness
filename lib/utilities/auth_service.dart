@@ -6,7 +6,7 @@ import '../models/user.dart';
 import '../widgets/showSnackBar.dart';
 import 'package:http/http.dart' as http;
 
-String webServer_uri = 'http://localhost:3000';
+String webServerUri = 'https://helpful-seer-366001.as.r.appspot.com/'; // for local use http://localhost:3000
 
 void httpErrorHandle({
   required http.Response response,
@@ -46,7 +46,7 @@ class AuthService {
           token: ''
       );
       http.Response res = await http.post(
-          Uri.parse('$webServer_uri/api/signup'),
+          Uri.parse('$webServerUri/api/signup'),
           body: user.toJson(),
           headers: <String, String> {
             'Content-Type': 'application/json; charset=UTF-8'
