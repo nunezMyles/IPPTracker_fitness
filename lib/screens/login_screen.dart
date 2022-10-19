@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_fitness/utilities/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -10,7 +11,17 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   var rememberValue = false;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final AuthService authService = AuthService();
 
+  void signInUser() {
+    authService.signInUser(
+        context: context,
+        email: _emailController.text,
+        password: _passwordController.text
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +48,14 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 children: [
                   TextFormField(
+                    controller: _emailController,
                     /* validator: (value) => EmailValidator.validate(value!)
                         ? null
                         : "Please enter a valid email", */
                     maxLines: 1,
                     decoration: InputDecoration(
-                      hintText: 'Username',
-                      prefixIcon: const Icon(Icons.person),
+                      hintText: 'Email',
+                      prefixIcon: const Icon(Icons.email),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -53,6 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 20,
                   ),
                   TextFormField(
+                    controller: _passwordController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
@@ -86,7 +99,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {} // goes through 'validator' property of each textfield
+                      //if (_formKey.currentState!.validate()) {} // goes through 'validator' property of each textfield
+                      signInUser();
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(40, 15, 40, 15),

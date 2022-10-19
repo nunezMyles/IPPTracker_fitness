@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_fitness/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -11,6 +13,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).user;
     return Scaffold(
       appBar: AppBar(
         title: const Text('hello'),
@@ -18,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: [
           Center(
-            child: Text('Flutter Demo'),
+            child: Text(user.toJson()),
           ),
           ElevatedButton(
             onPressed: () {
