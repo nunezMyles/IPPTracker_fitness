@@ -10,8 +10,8 @@ class BottomNavBar extends StatefulWidget {
 int _selectedIndex = 0;
 
 class _BottomNavBarState extends State<BottomNavBar> {
-
   void _onItemTapped(int index) {
+
     setState(() {
       _selectedIndex = index;
     });
@@ -39,7 +39,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      backgroundColor: Colors.blue.shade600,
+      backgroundColor: Colors.blue.shade700,
       type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
