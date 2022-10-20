@@ -39,6 +39,8 @@ class AuthService {
     required String password
   }) async {
     try {
+
+      // create user object w/ inputs from sign up screen text controllers
       User user = User(
           id: '',
           name: name,
@@ -48,6 +50,9 @@ class AuthService {
           type: '',
           token: ''
       );
+
+      // send json converted user object to api uri along w/ headers
+      // after that obtain api response + store into variable res
       http.Response res = await http.post(
         Uri.parse('$webServerUri/api/signup'),
         body: user.toJson(),
@@ -55,6 +60,8 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8'
         },
       );
+
+      // handle successful/unsuccessful logins w/ SnackBar widget call
       httpErrorHandle(
         response: res,
         context: context,
@@ -62,6 +69,7 @@ class AuthService {
           showSnackbar(context, 'Account created! Please login again');
         },
       );
+
     } catch (e) {
       showSnackbar(context, e.toString());
     }
@@ -73,6 +81,8 @@ class AuthService {
     required String password
   }) async {
     try {
+      // send json converted email, password to api uri along w/ headers
+      // after that obtain api response + store into variable res
       http.Response res = await http.post(
         Uri.parse('$webServerUri/api/signin'),
         body: jsonEncode({
@@ -84,6 +94,7 @@ class AuthService {
         },
       );
 
+      // handle successful/unsuccessful logins w/ SnackBar widget call
       httpErrorHandle(
         response: res,
         context: context,
@@ -119,8 +130,18 @@ class AuthService {
       );
 
       var response = jsonDecode(tokenRes.body);
+
       if (response == true) {
-       //await
+        http.Response userRes = await http.get(
+          Uri.parse('$webServerUri/'),
+          headers: <String, String> {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': token  // token can never be null
+          },
+        );
+
+        var userProvider = Provider.of<UserProvider>(context, listen: false);
+        userProvider.setUser(userRes.body);
       }
       /*http.Response res = await http.post(
         Uri.parse('$webServerUri/api/signin'),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_fitness/screens/register_screen.dart';
+import 'package:my_fitness/utilities/auth_service.dart';
 import 'package:provider/provider.dart';
 import '../screens/login_screen.dart';
 import '../screens/home_screen.dart';
@@ -7,15 +8,33 @@ import '../screens/register_screen.dart';
 import '../providers/user_provider.dart';
 
 void main() {
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(
-        create: (context) => UserProvider(),
-    )
-  ], child: const MyApp()));
+  runApp(
+      MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (context) => UserProvider(),
+            )
+          ],
+          child: const MyApp(),
+      )
+  );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final AuthService authService = AuthService();
+
+  @override
+  void initState() {
+    super.initState();
+    authService.getUserData(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +52,15 @@ class MyApp extends StatelessWidget {
             )
           )
       ),
-      initialRoute: '/login',
+      //initialRoute: '/login',
       routes: {
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
         '/home': (context) => const HomeScreen(),
       },
+      home: Provider.of<UserProvider>(context).user.token.isNotEmpty
+          ? const HomeScreen()    // when app is closed then reopened immediately, restore user runtime data
+          : const LoginScreen(),  // else, dont restore and go back to login screen
     );
   }
 }
