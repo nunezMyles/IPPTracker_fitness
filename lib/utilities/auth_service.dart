@@ -136,7 +136,7 @@ class AuthService {
           Uri.parse('$webServerUri/'),
           headers: <String, String> {
             'Content-Type': 'application/json; charset=UTF-8',
-            'x-auth-token': token  // token can never be null
+            'x-auth-token': token
           },
         );
 
