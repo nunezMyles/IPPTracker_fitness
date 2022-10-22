@@ -1,7 +1,7 @@
-# IPPTracker (Fitness app)
+# IPPTracker (WIP)
 
-s
+Fitness app that records the timings and sets of User runs/situps/pushups.
 
 ## Features
 
-This project is a starting point for a Flutter application.
+* This project is a starting point for a Flutter application.
