@@ -1,6 +1,6 @@
 # my_fitness
 
-A new Flutter project.
+IPPTracker (Fitness app)
 
 ## Getting Started
 
