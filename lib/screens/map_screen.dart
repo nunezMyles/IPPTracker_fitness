@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import '../utilities/account_service.dart';
-import '../widgets/bottom_navBar.dart';
+import '../widgets/bottomNavBar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 import 'package:location/location.dart';
@@ -148,7 +148,6 @@ class _MapScreenState extends State<MapScreen> {
 
       setState(() {});
     });
-
   }
 
   @override
@@ -191,7 +190,9 @@ class _MapScreenState extends State<MapScreen> {
                   height: 140,
                   padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                   decoration: BoxDecoration(
-                      color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   child: Column(
                     children: [
                       Row(
@@ -282,7 +283,7 @@ class _MapScreenState extends State<MapScreen> {
                             _stopWatchTimer.onResetTimer();
 
                             Entry entry = Entry(
-                                id: 0,
+                                //id: 0,
                                 date: '22/10/2022',
                                 duration: _displayTime,
                                 speed: _speedCounter == 0

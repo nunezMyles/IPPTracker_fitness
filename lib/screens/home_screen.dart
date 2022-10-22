@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_fitness/models/run_exercise.dart';
 import 'package:my_fitness/utilities/account_service.dart';
 import 'package:my_fitness/utilities/run_service.dart';
-import 'package:my_fitness/widgets/bottom_navBar.dart';
+import 'package:my_fitness/widgets/bottomNavBar.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/user_provider.dart';

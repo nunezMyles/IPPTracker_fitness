@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../utilities/account_service.dart';
-import '../widgets/bottom_navBar.dart';
+import '../widgets/bottomNavBar.dart';
 
 class ProgressScreen extends StatefulWidget {
   const ProgressScreen({Key? key}) : super(key: key);

@@ -1,13 +1,13 @@
 class Entry {
   //static String table = "entries";
-  int id;
+  //int id;
   String date;
   String duration;
   double speed;
   double distance;
 
   Entry({
-    required this.id,
+    //required this.id,
     required this.date,
     required this.duration,
     required this.speed,
@@ -22,14 +22,14 @@ class Entry {
       'distance': distance
     };
 
-    map['id'] = id;
+    //map['id'] = id;
 
     return map;
   }
 
   static Entry fromMap(Map<String, dynamic> map) {
     return Entry(
-        id: map['id'],
+        //id: map['id'],
         date: map['date'],
         duration: map['duration'],
         speed: map['speed'],
