@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:my_fitness/screens/map_screen.dart';
+import 'package:my_fitness/screens/progress_screen.dart';
 import 'package:my_fitness/screens/register_screen.dart';
+import 'package:my_fitness/screens/settings_screen.dart';
 import 'package:my_fitness/utilities/auth_service.dart';
 import 'package:provider/provider.dart';
 import '../screens/login_screen.dart';
@@ -57,6 +60,10 @@ class _MyAppState extends State<MyApp> {
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
         '/home': (context) => const HomeScreen(),
+        '/map': (context) => const MapScreen(),
+        '/progress': (context) => const ProgressScreen(),
+        '/settings': (context) => const SettingsScreen(),
+
       },
       home: Provider.of<UserProvider>(context).user.token.isNotEmpty
           ? const HomeScreen()    // when app is closed then reopened immediately, restore user runtime data

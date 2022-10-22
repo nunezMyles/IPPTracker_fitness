@@ -7,13 +7,13 @@ class BottomNavBar extends StatefulWidget {
   State<BottomNavBar> createState() => _BottomNavBarState();
 }
 
-int _selectedIndex = 0;
+int navBarselectedIndex = 0;
 
 class _BottomNavBarState extends State<BottomNavBar> {
   void _onItemTapped(int index) {
 
     setState(() {
-      _selectedIndex = index;
+      navBarselectedIndex = index;
     });
 
     switch(index) {
@@ -21,19 +21,17 @@ class _BottomNavBarState extends State<BottomNavBar> {
         Navigator.pushReplacementNamed(context, '/home');
         break;
       case 1:
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/map');
         break;
       case 2:
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/progress');
         break;
       case 3:
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/settings');
         break;
       default:
         break;
     }
-
-
   }
 
   @override
@@ -43,23 +41,23 @@ class _BottomNavBarState extends State<BottomNavBar> {
       type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: Icon(Icons.directions_run),
+            label: 'Activities',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Business',
+            icon: Icon(Icons.map),
+            label: 'Map',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'School',
+            icon: Icon(Icons.insert_chart_outlined),
+            label: 'Progress',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'Settings',
           ),
         ],
-        currentIndex: _selectedIndex,
+        currentIndex: navBarselectedIndex,
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.lightBlueAccent,
         onTap: _onItemTapped,

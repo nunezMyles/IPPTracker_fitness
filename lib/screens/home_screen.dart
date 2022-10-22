@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       bottomNavigationBar: const BottomNavBar(),
       appBar: AppBar(
-        title: const Text('hello'),
+        title: const Text('Activities'),
         actions: <Widget>[
           IconButton(
             icon: const Icon(
@@ -43,7 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
         foregroundColor: Colors.white,
         child: const Icon(Icons.add),
         onPressed: () {
-
+          navBarselectedIndex = 1;
+          Navigator.pushReplacementNamed(context, '/map');
         },
       ),
       body: SafeArea(
@@ -58,17 +59,23 @@ class _HomeScreenState extends State<HomeScreen> {
                       return ListView.builder(
                           itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text(snapshot.data![index].name),
-                              subtitle: Text(snapshot.data![index].date),
-                              trailing: Text(snapshot.data![index].timing),
-                              onLongPress: () async {
-                                bool delConfirm = await ExerciseService().removeRun(context, snapshot.data![index].id);
-                                if (delConfirm) {
-                                 setState(() {});
-                                }
+                            return Padding(
+                              padding: const EdgeInsets.all(1.5),
+                              child: Card(
+                                elevation: 3,
+                                child: ListTile(
+                                  title: Text(snapshot.data![index].name),
+                                  subtitle: Text(snapshot.data![index].date),
+                                  trailing: Text(snapshot.data![index].timing),
 
-                              },
+                                  onLongPress: () async {
+                                    bool delConfirm = await ExerciseService().removeRun(context, snapshot.data![index].id);
+                                    if (delConfirm) {
+                                     setState(() {});
+                                    }
+                                  },
+                                ),
+                              ),
                             );
                           }
                       );

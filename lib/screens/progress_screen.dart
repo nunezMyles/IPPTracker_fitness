@@ -3,21 +3,20 @@ import 'package:flutter/material.dart';
 import '../utilities/account_service.dart';
 import '../widgets/bottom_navBar.dart';
 
-class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
+class ProgressScreen extends StatefulWidget {
+  const ProgressScreen({Key? key}) : super(key: key);
 
   @override
-  State<MapScreen> createState() => _MapScreenState();
+  State<ProgressScreen> createState() => _ProgressScreenState();
 }
 
-class _MapScreenState extends State<MapScreen> {
-
+class _ProgressScreenState extends State<ProgressScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: const BottomNavBar(),
       appBar: AppBar(
-        title: const Text('Map'),
+        title: const Text('Progress'),
         actions: <Widget>[
           IconButton(
             icon: const Icon(

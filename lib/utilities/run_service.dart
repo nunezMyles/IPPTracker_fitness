@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 
 import '../models/run_exercise.dart';
-import '../utilities/http_error_handle.dart';
 import '../widgets/showSnackBar.dart';
 import 'package:http/http.dart' as http;
 
