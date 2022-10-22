@@ -11,6 +11,25 @@ String webServerUri = 'https://helpful-seer-366001.as.r.appspot.com/'; // for lo
 
 class ExerciseService {
 
+  Future<bool> removeRun(BuildContext context, String runId) async {
+    final response = await http.post(
+      Uri.parse('$webServerUri/api/exercise/removeRun'),
+      body: jsonEncode({
+        'id': runId,
+      }),
+      headers: <String, String> {
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+    );
+    if (response.statusCode == 200) {
+      return true;
+    }
+    else {
+      showSnackbar(context, 'Fail to delete run.');
+      return false;
+    }
+  }
+
   Future<List<RunExercise>> fetchRuns(BuildContext context, String email) async {
     final response = await http.post(
       Uri.parse('$webServerUri/api/exercise/getRun'),
@@ -23,21 +42,13 @@ class ExerciseService {
     );
 
     if (response.statusCode == 200) {
-      httpErrorHandle(
-        response: response,
-        context: context,
-        onSuccess: () {
-          showSnackbar(context, 'Run exercise data retrieved!');
-        },
+
+      // convert 'response.body' into a known datatype for listviewbuilder by declaring
+      // contents of 'response.body' as list + map each content into a
+      // RunExercise object inside that list
+      List<RunExercise> runExerciseList(String str) => List<RunExercise>.from(
+              json.decode(str).map((x) => RunExercise.fromJson(x))
       );
-
-      print(response.body);
-
-      List<RunExercise> runExerciseList(String str) =>
-          List<RunExercise>.from(
-              json.decode(str).map((x) => RunExercise.fromJson(x)));
-
-      print(runExerciseList(response.body));
 
       return runExerciseList(response.body);
 

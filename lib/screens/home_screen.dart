@@ -57,9 +57,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     if (snapshot.hasData) {
                       return ListView.builder(
                           itemCount: snapshot.data!.length,
-                          itemBuilder: (context, int index) {
+                          itemBuilder: (context, index) {
                             return ListTile(
-                                title: Text(snapshot.data![0].email)
+                              title: Text(snapshot.data![index].name),
+                              subtitle: Text(snapshot.data![index].date),
+                              trailing: Text(snapshot.data![index].timing),
+                              onLongPress: () async {
+                                bool delConfirm = await ExerciseService().removeRun(context, snapshot.data![index].id);
+                                if (delConfirm) {
+                                 setState(() {});
+                                }
+
+                              },
                             );
                           }
                       );
