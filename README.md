@@ -1,7 +1,7 @@
-# my_fitness
+# IPPTracker (Fitness app)
 
-IPPTracker (Fitness app)
+s
 
-## Getting Started
+## Features
 
 This project is a starting point for a Flutter application.
