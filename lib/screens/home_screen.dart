@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:my_fitness/utilities/account_services.dart';
+import 'package:my_fitness/models/run_exercise.dart';
+import 'package:my_fitness/utilities/account_service.dart';
+import 'package:my_fitness/utilities/run_service.dart';
 import 'package:my_fitness/widgets/bottom_navBar.dart';
-import 'package:my_fitness/utilities/database_service.dart';
+import 'package:provider/provider.dart';
 
-import '../models/user.dart';
+import '../providers/user_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -14,11 +16,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-
   @override
   Widget build(BuildContext context) {
-    // final user = Provider.of<UserProvider>(context).user;
-    // print(user)
+    final user = Provider.of<UserProvider>(context).user;
 
     return Scaffold(
       bottomNavigationBar: const BottomNavBar(),
@@ -46,28 +46,33 @@ class _HomeScreenState extends State<HomeScreen> {
 
         },
       ),
-      /*body: SafeArea(
+      body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-                child: StreamBuilder<User>(
-                  stream: DBConnection().getCollection(),
-                  builder: (context, snapshot) {
+                child: FutureBuilder(
+                  future: ExerciseService().fetchRuns(context, user.email),
+                  builder: (context, AsyncSnapshot<List<RunExercise>> snapshot) {
                     if (snapshot.hasData) {
                       return ListView.builder(
-                          itemCount: snapshot.data!.,
-                          itemBuilder: itemBuilder
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, int index) {
+                            return ListTile(
+                                title: Text(snapshot.data![0].email)
+                            );
+                          }
                       );
-                    } else {
-                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Text('${snapshot.error}');
                     }
+                    return const Center(child: CircularProgressIndicator());
                   },
-                )
+                ),
             )
           ],
         ),
-      ),*/
+      ),
     );
   }
 }

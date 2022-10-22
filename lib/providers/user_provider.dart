@@ -11,7 +11,6 @@ class UserProvider extends ChangeNotifier {
       type: '',
       token: ''
   );
-
   User get user => _user;
 
   void setUser(String user) {

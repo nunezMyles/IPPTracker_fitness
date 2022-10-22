@@ -7,31 +7,13 @@ import 'package:provider/provider.dart';
 
 import '../models/user.dart';
 import '../widgets/showSnackBar.dart';
+import '../utilities/http_error_handle.dart';
 import 'package:http/http.dart' as http;
 
 String webServerUri = 'https://helpful-seer-366001.as.r.appspot.com/'; // for local use http://localhost:3000
 
-void httpErrorHandle({
-  required http.Response response,
-  required BuildContext context,
-  required VoidCallback onSuccess,
-}) {
-  switch(response.statusCode) {
-    case 200:
-      onSuccess();
-      break;
-    case 400:
-      showSnackbar(context, jsonDecode(response.body)['msg']);
-      break;
-    case 500:
-      showSnackbar(context, jsonDecode(response.body)['error']);
-      break;
-    default:
-      showSnackbar(context, response.body);
-  }
-}
-
 class AuthService {
+
   void signUpUser({
     required BuildContext context,
     required String name,
@@ -143,27 +125,7 @@ class AuthService {
         var userProvider = Provider.of<UserProvider>(context, listen: false);
         userProvider.setUser(userRes.body);
       }
-      /*http.Response res = await http.post(
-        Uri.parse('$webServerUri/api/signin'),
-        body: jsonEncode({
-          'email': email,
-          'password': password,
-        }),
-        headers: <String, String> {
-          'Content-Type': 'application/json; charset=UTF-8'
-        },
-      );*/
 
-      /*httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () async {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          Provider.of<UserProvider>(context, listen: false).setUser(res.body);
-          await prefs.setString('x-auth-token', jsonDecode(res.body)['token']);
-          Navigator.pushReplacementNamed(context, '/home');
-        },
-      );*/
     } catch (e) {
       showSnackbar(context, e.toString());
     }

@@ -19,6 +19,10 @@ class User {
     required this.token
   });
 
+  // (1) serialize to JSON format when sending to server
+  String toJson() => json.encode(toMap());
+
+  // (2)
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -31,6 +35,10 @@ class User {
     };
   }
 
+  // (1) deserialize to Dart object after receiving from server
+  factory User.fromJson(String source) => User.fromMap(json.decode(source));
+
+  // (2)
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
       id: map['_id'] ?? '',
@@ -42,9 +50,5 @@ class User {
       token: map['token'] ?? ''
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory User.fromJson(String source) => User.fromMap(json.decode(source));
 
 }
