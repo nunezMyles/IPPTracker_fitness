@@ -90,16 +90,40 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
 
                                   //subtitle: Text(snapshot.data![index].dateTime.toString()),
-                                  trailing: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(snapshot.data![index].distance + ' km'),
-                                      const SizedBox(height: 2),
-                                      Text(snapshot.data![index].timing),
-                                      const SizedBox(height: 2),
-                                      const Text('7:15 /km')
-                                    ],
+                                  trailing: Wrap(
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                const Icon(Icons.linear_scale, size: 18, color: Colors.brown,),
+                                                const SizedBox(width: 8),
+                                                Text(double.parse(snapshot.data![index].distance).toStringAsFixed(2) + ' km'), // 2 decimal points
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                const Icon(Icons.access_time_rounded, size: 18, color: Colors.blueGrey,),
+                                                const SizedBox(width: 8),
+                                                Text(snapshot.data![index].timing),
+                                              ],
+                                            ),
+                                            SizedBox(height: 2),
+                                            Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: const [
+                                                Icon(Icons.directions_run, size: 18, color: Colors.deepPurpleAccent,),
+                                                SizedBox(width: 8),
+                                                Text('7:15 /km'),
+                                              ],
+                                            )
+                                          ],
+                                        )
+                                      ]
                                   ),
 
                                   onLongPress: () async {
