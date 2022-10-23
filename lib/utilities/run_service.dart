@@ -42,15 +42,14 @@ class ExerciseService {
 
     if (response.statusCode == 200) {
 
-      // convert 'response.body' into a known datatype for listviewbuilder by declaring
-      // contents of 'response.body' as list + map each content into a
-      // RunExercise object inside that list
+      // convert 'response.body' into a known datatype for ListViewBuilder by declaring
+      // contents of 'response.body' as items of a list + map each content inside that list
+      // into a RunExercise object
       List<RunExercise> runExerciseList(String str) => List<RunExercise>.from(
               json.decode(str).map((x) => RunExercise.fromJson(x))
       );
 
       return runExerciseList(response.body);
-
     } else {
       throw Exception('Failed to load run data');
     }

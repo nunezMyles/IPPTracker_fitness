@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import '../utilities/account_service.dart';
 import '../widgets/bottomNavBar.dart';
@@ -16,28 +17,29 @@ class MapScreen extends StatefulWidget {
   State<MapScreen> createState() => _MapScreenState();
 }
 
-class _MapScreenState extends State<MapScreen> {
-  final LatLng _center = const LatLng(0, 0);
-  final Location _location = Location();
+// preserve values when user navigates to different page - to continuously track time, distance travelled
+bool recordStarted = false;
+List<LatLng> route = [];
+final Set<Polyline> polyline = {};
+LatLng _center = const LatLng(1.3521, 103.8198); // Map view starts w/ Singapore coords
+final Location _location = Location();
+
+double _dist = 0;
+String _displayTime = '';
+int _time = 0;
+int _lastTime = 0;
+double _speed = 0;
+double _avgSpeed = 0;
+int _speedCounter = 0;
+StopWatchTimer stopWatchTimer = StopWatchTimer();
+
+class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixin{
   late GoogleMapController _mapController;
 
-  List<LatLng> route = [];
-  final Set<Polyline> polyline = {};
-
-  bool recordStarted = false;
-
-  double _dist = 0;
-  late String _displayTime;
-  int _time = 0;
-  int _lastTime = 0;
-  double _speed = 0;
-  double _avgSpeed = 0;
-  int _speedCounter = 0;
 
   //final Completer<GoogleMapController> _controller = Completer();
-  final StopWatchTimer _stopWatchTimer = StopWatchTimer();
 
-  Future<geo.Position> _determinePosition(BuildContext context) async {
+  _locationInit(BuildContext context) async {
     bool serviceEnabled;
     geo.LocationPermission permission;
 
@@ -49,11 +51,10 @@ class _MapScreenState extends State<MapScreen> {
       // accessing the position and request users of the
       // App to enable the location services.
       showSnackbar(context, 'Location services are disabled.');
-      //await Geolocator.openLocationSettings();
-      return Future.error('Location services are disabled.');
     }
 
     permission = await geo.Geolocator.checkPermission();
+
     if (permission == geo.LocationPermission.denied) {
       permission = await geo.Geolocator.requestPermission();
       if (permission == geo.LocationPermission.denied) {
@@ -63,9 +64,8 @@ class _MapScreenState extends State<MapScreen> {
         // returned true. According to Android guidelines
         // your App should show an explanatory UI now.
         showSnackbar(context, 'Location permissions are denied');
-        return Future.error('Location permissions are denied');
       } else {
-        setState(() { // reload widget to show 'go to current location' button
+        setState(() { // reload widget to display 'go to current location' button
 
         });
       }
@@ -74,15 +74,14 @@ class _MapScreenState extends State<MapScreen> {
     if (permission == geo.LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
       showSnackbar(context, 'Location permissions are permanently denied, we cannot request permissions.');
-      return Future.error('Location permissions are permanently denied, we cannot request permissions.');
     }
 
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
-    return await geo.Geolocator.getCurrentPosition(
+    /*return await geo.Geolocator.getCurrentPosition(
       desiredAccuracy: geo.LocationAccuracy.bestForNavigation,
       forceAndroidLocationManager: true,
-    ).timeout(const Duration(seconds: 20));
+    ).timeout(const Duration(seconds: 20));*/
   }
 
   @override
@@ -92,18 +91,20 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   void dispose() async {
-    //_mapController.dispose();
     super.dispose();
-    await _stopWatchTimer.dispose();
+    //if (!recordStarted) await stopWatchTimer.dispose();
   }
+
+  @override
+  bool get wantKeepAlive => true; // preserve widget state when navigating to different page
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
     double appendDist;
 
-
     _location.onLocationChanged.listen((event) {
       LatLng loc = LatLng(event.latitude!, event.longitude!);
+      _center = loc;
 
       _mapController.animateCamera(
           CameraUpdate.newCameraPosition(
@@ -152,8 +153,9 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
 
-    _determinePosition(context);
+    _locationInit(context);
 
     return Scaffold(
       bottomNavigationBar: const BottomNavBar(),
@@ -180,7 +182,7 @@ class _MapScreenState extends State<MapScreen> {
               zoomControlsEnabled: false,
               onMapCreated: _onMapCreated,
               myLocationEnabled: true,
-              initialCameraPosition: CameraPosition(target: _center, zoom: 40),
+              initialCameraPosition: CameraPosition(target: _center, zoom: 22),
             ),
             Align(
                 alignment: Alignment.bottomCenter,
@@ -223,7 +225,7 @@ class _MapScreenState extends State<MapScreen> {
                                 ),
                               ),
                               StreamBuilder<int>(
-                                stream: _stopWatchTimer.rawTime,
+                                stream: stopWatchTimer.rawTime,
                                 initialData: 0,
                                 builder: (context, snapshot) {
                                   _time = snapshot.data!;
@@ -271,28 +273,32 @@ class _MapScreenState extends State<MapScreen> {
                           color: recordStarted ? Colors.red : Colors.lightBlueAccent,
                         ),
                         padding: const EdgeInsets.all(0),
-                        onPressed: () async {
+                        onPressed: () {
                           if (!recordStarted) {
-                            _stopWatchTimer.onStartTimer();
-
                             setState(() {
                               recordStarted = true;
+                              stopWatchTimer.onStartTimer();
                             });
-
                           } else {
-                            _stopWatchTimer.onResetTimer();
-
-                            Entry entry = Entry(
-                                //id: 0,
-                                date: '22/10/2022',
-                                duration: _displayTime,
-                                speed: _speedCounter == 0
-                                    ? 0
-                                    : _avgSpeed / _speedCounter,
-                                distance: _dist
-                            );
-
                             setState(() {
+                              recordStarted = false;
+                              stopWatchTimer.onResetTimer();
+
+                              // create new Run Entry object to send to DB
+                              Entry entry = Entry(
+                                //id: 0,
+                                  date: DateFormat('dd MMM').format(DateTime.now()),
+                                  duration: _displayTime,
+                                  speed: _speedCounter == 0
+                                      ? 0
+                                      : _avgSpeed / _speedCounter,
+                                  distance: _dist
+                              );
+
+                              // call createRun() API to send newly created object to DB
+
+
+                              // reset values
                               _dist = 0;
                               _displayTime = '00:00:00';
                               _time = 0;
@@ -300,14 +306,13 @@ class _MapScreenState extends State<MapScreen> {
                               _speed = 0;
                               _avgSpeed = 0;
                               _speedCounter = 0;
+                              _center = const LatLng(1.3521, 103.8198);
 
                               route = [];
                               polyline.clear();
 
-                              recordStarted = false;
                             });
                           }
-
                         },
                       )
                     ],
@@ -319,3 +324,4 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 }
+
