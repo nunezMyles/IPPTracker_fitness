@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 String webServerUri = 'https://helpful-seer-366001.as.r.appspot.com/'; // for local, use http://localhost:3000
 
-class ExerciseService {
+class RunService {
 
   Future<bool> removeRun(BuildContext context, String runId) async {
     final response = await http.post(
@@ -29,6 +29,22 @@ class ExerciseService {
     }
   }
 
+  Future<void> createRun(BuildContext context, RunExercise runExercise) async {
+    final response = await http.post(
+      Uri.parse('$webServerUri/api/exercise/createRun'),
+      body: runExercise.toJson(),
+      headers: <String, String> {
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+    );
+    if (response.statusCode == 200) {
+      showSnackbar(context, 'Run entry added.');
+    }
+    else {
+      showSnackbar(context, 'Failed to add run entry.');
+    }
+  }
+
   Future<List<RunExercise>> fetchRuns(BuildContext context, String email) async {
     final response = await http.post(
       Uri.parse('$webServerUri/api/exercise/getRun'),
@@ -41,15 +57,15 @@ class ExerciseService {
     );
 
     if (response.statusCode == 200) {
-
       // convert 'response.body' into a known datatype for ListViewBuilder by declaring
       // contents of 'response.body' as items of a list + map each content inside that list
       // into a RunExercise object
       List<RunExercise> runExerciseList(String str) => List<RunExercise>.from(
               json.decode(str).map((x) => RunExercise.fromJson(x))
       );
-
+      //print(response.body);
       return runExerciseList(response.body);
+
     } else {
       throw Exception('Failed to load run data');
     }

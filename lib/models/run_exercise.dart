@@ -5,7 +5,8 @@ class RunExercise {
   final String name;
   final String email;
   final String timing;
-  final String date;
+  final String distance;
+  final String dateTime;
   final String type;
 
   RunExercise({
@@ -13,7 +14,8 @@ class RunExercise {
     required this.name,
     required this.email,
     required this.timing,
-    required this.date,
+    required this.distance,
+    required this.dateTime,
     required this.type
   });
 
@@ -27,7 +29,8 @@ class RunExercise {
       'name': name,
       'email': email,
       'timing': timing,
-      'date': date,
+      'distance': distance,
+      'dateTime': dateTime,
       'type': type
     };
   }
@@ -39,7 +42,8 @@ class RunExercise {
         name: map['name'] ?? '',
         email: map['email'] ?? '',
         timing: map['timing'] ?? '',
-        date: map['date'] ?? '',
+        distance: map['distance'] ?? '',
+        dateTime: map['dateTime'] ?? '',
         type: map['type'] ?? ''
     );
   }

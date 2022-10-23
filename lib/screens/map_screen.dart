@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import '../utilities/account_service.dart';
 import '../widgets/bottomNavBar.dart';
@@ -8,7 +6,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 import 'package:location/location.dart';
 import '../widgets/showSnackBar.dart';
-import '../models/run_entry.dart';
+import '../models/run_exercise.dart';
+import '../utilities/run_service.dart';
+
+import '../screens/home_screen.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -19,25 +20,26 @@ class MapScreen extends StatefulWidget {
 
 // preserve values when user navigates to different page - to continuously track time, distance travelled
 bool recordStarted = false;
-List<LatLng> route = [];
-final Set<Polyline> polyline = {};
-LatLng _center = const LatLng(1.3521, 103.8198); // Map view starts w/ Singapore coords
-final Location _location = Location();
 
 double _dist = 0;
-String _displayTime = '';
+
 int _time = 0;
 int _lastTime = 0;
 double _speed = 0;
 double _avgSpeed = 0;
 int _speedCounter = 0;
+String _displayTime = '';
+
+List<LatLng> route = [];
+final Set<Polyline> polyline = {};
+
+final Location _location = Location();
 StopWatchTimer stopWatchTimer = StopWatchTimer();
+LatLng _center = const LatLng(1.3521, 103.8198); // Map view starts w/ Singapore coords
+
 
 class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixin{
   late GoogleMapController _mapController;
-
-
-  //final Completer<GoogleMapController> _controller = Completer();
 
   _locationInit(BuildContext context) async {
     bool serviceEnabled;
@@ -285,18 +287,19 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
                               stopWatchTimer.onResetTimer();
 
                               // create new Run Entry object to send to DB
-                              Entry entry = Entry(
-                                //id: 0,
-                                  date: DateFormat('dd MMM').format(DateTime.now()),
-                                  duration: _displayTime,
-                                  speed: _speedCounter == 0
-                                      ? 0
-                                      : _avgSpeed / _speedCounter,
-                                  distance: _dist
+                              RunExercise runEntry = RunExercise(
+                                  id: '',
+                                  name: 'wow',
+                                  email: user.email,
+                                  timing: _displayTime,
+                                  distance: _dist.toString(),
+                                  dateTime: '',
+                                  type: ''
+                                  // speed: speed: _speedCounter == 0 ? 0 : _avgSpeed / _speedCounter,
                               );
 
                               // call createRun() API to send newly created object to DB
-
+                              RunService().createRun(context, runEntry);
 
                               // reset values
                               _dist = 0;

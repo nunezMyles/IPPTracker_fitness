@@ -14,11 +14,13 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
+dynamic user;
+
 class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context).user;
+    user = Provider.of<UserProvider>(context).user;
 
     return Scaffold(
       bottomNavigationBar: const BottomNavBar(),
@@ -53,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Expanded(
                 child: FutureBuilder(
-                  future: ExerciseService().fetchRuns(context, user.email),
+                  future: RunService().fetchRuns(context, user.email),
                   builder: (context, AsyncSnapshot<List<RunExercise>> snapshot) {
                     if (snapshot.hasData) {
                       return ListView.builder(
@@ -64,12 +66,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Card(
                                 elevation: 3,
                                 child: ListTile(
-                                  title: Text(snapshot.data![index].name),
-                                  subtitle: Text(snapshot.data![index].date),
+                                  title: Text(snapshot.data![index].id),
+                                  subtitle: Text(snapshot.data![index].dateTime.toString()),
                                   trailing: Text(snapshot.data![index].timing),
 
                                   onLongPress: () async {
-                                    bool delConfirm = await ExerciseService().removeRun(context, snapshot.data![index].id);
+                                    //print(snapshot.data![index].id + '===========================================================================================================');
+                                    bool delConfirm = await RunService().removeRun(context, snapshot.data![index].id);
                                     if (delConfirm) {
                                      setState(() {});
                                     }
