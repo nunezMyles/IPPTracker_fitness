@@ -10,6 +10,7 @@ import '../models/run_exercise.dart';
 import '../utilities/run_service.dart';
 
 import '../screens/home_screen.dart';
+import 'add_run_screen.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -106,6 +107,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
 
     _location.onLocationChanged.listen((event) {
       LatLng loc = LatLng(event.latitude!, event.longitude!);
+      //print(event.latitude.toString() + ' , ' + event.longitude.toString());
       _center = loc;
 
       // continuously return to current location only after User has started running
@@ -124,7 +126,9 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
             loc.latitude,
             loc.longitude
         );
+        //print(appendDist.toString() + '========================================================');
         _dist = _dist + appendDist;
+        //print(_dist.toString() + '==================================================================');
         int timeDuration = (_time - _lastTime);
 
         if (timeDuration != 0) {
@@ -165,7 +169,11 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
     return Scaffold(
       bottomNavigationBar: const BottomNavBar(),
       appBar: AppBar(
-        title: const Text('Map'),
+        title: const Text(
+          'Map',
+          style: TextStyle(
+              color: Color.fromARGB(255, 179, 161, 79)
+          ),),
         actions: <Widget>[
           IconButton(
             icon: const Icon(
@@ -294,17 +302,37 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
                               stopWatchTimer.onStartTimer();
                             });
                           } else {
-                            setState(() {
+                            setState(() async {
                               recordStarted = false;
                               stopWatchTimer.onResetTimer();
+
+                              // display 'add run' screen using bottomSheet
+                              await showModalBottomSheet(
+                                isScrollControlled: true,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return SingleChildScrollView(
+                                    child: Container(
+                                      padding: EdgeInsets.only(
+                                          bottom: MediaQuery.of(context).viewInsets.bottom),
+                                      child: const AddRunScreen(),
+                                    ),
+                                  );
+                                },
+                              );
+
+                              // force a value into runNameController
+                              if (runNameController.text.isEmpty) {
+                                runNameController.text = 'Unnamed entry';
+                              }
 
                               // create new Run Entry object to send to DB
                               RunExercise runEntry = RunExercise(
                                   id: '',
-                                  name: 'wow',
+                                  name: runNameController.text.toString(),
                                   email: user.email,
                                   timing: _displayTime,
-                                  distance: _dist.toString(),
+                                  distance: (_dist / 1000).toStringAsFixed(2).toString(),
                                   dateTime: '',
                                   type: ''
                                   // speed: speed: _speedCounter == 0 ? 0 : _avgSpeed / _speedCounter,
@@ -326,7 +354,10 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
                               route = [];
                               polyline.clear();
 
+                              runNameController.text = '';
+
                             });
+
                           }
                         },
                       )

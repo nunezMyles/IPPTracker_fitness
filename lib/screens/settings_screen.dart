@@ -16,7 +16,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       bottomNavigationBar: const BottomNavBar(),
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: const Text(
+          'Settings',
+          style: TextStyle(
+              color: Color.fromARGB(255, 179, 161, 79)
+          ),),
         actions: <Widget>[
           IconButton(
             icon: const Icon(

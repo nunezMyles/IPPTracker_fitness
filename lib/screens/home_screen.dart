@@ -82,6 +82,9 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text(
           'Activities',
+          style: TextStyle(
+            color: Color.fromARGB(255, 179, 161, 79)
+          ),
         ),
         actions: <Widget>[
           IconButton(
@@ -230,7 +233,7 @@ class ExpandableFab extends StatefulWidget {
   State<ExpandableFab> createState() => _ExpandableFabState();
 }
 
-// for initial FAB + cancel button after initial FAB is expanded
+// for initial FAB + cancel button
 class _ExpandableFabState extends State<ExpandableFab>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
@@ -414,7 +417,7 @@ class ActionButton extends StatelessWidget {
     return Material(
       shape: const CircleBorder(),
       clipBehavior: Clip.antiAlias,
-      color: Colors.black,
+      color: Colors.black.withOpacity(0.5),
       elevation: 4.0,
       child: IconButton(
         onPressed: onPressed,
