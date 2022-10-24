@@ -170,7 +170,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
           IconButton(
             icon: const Icon(
               Icons.exit_to_app,
-              color: Colors.white,
+              color: Colors.redAccent,
             ),
             onPressed: () {
               setState(() {
@@ -197,7 +197,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
                   height: 140,
                   padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.85),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Column(
@@ -210,13 +210,15 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
                               const Text(
                                 "Speed (km/h)",
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white
                                 ),
                               ),
                               Text(
                                 _speed.toStringAsFixed(2),
                                 style: const TextStyle(
-                                    fontSize: 20
+                                    fontSize: 20,
+                                    color: Colors.white
                                 ),
                               )
                             ],
@@ -226,7 +228,8 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
                               const Text(
                                 "Time",
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white
                                 ),
                               ),
                               StreamBuilder<int>(
@@ -242,7 +245,8 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
                                   return Text(
                                     _displayTime,
                                     style: const TextStyle(
-                                        fontSize: 20
+                                        fontSize: 20,
+                                        color: Colors.white
                                     ),
                                   );
                                 },
@@ -254,13 +258,15 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
                               const Text(
                                 "Distance (km)",
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white
                                 ),
                               ),
                               Text(
                                 (_dist / 1000).toStringAsFixed(2),
                                 style: const TextStyle(
-                                  fontSize: 20
+                                    fontSize: 20,
+                                    color: Colors.white
                                 ),
                               )
                             ],
@@ -268,14 +274,17 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
                         ],
                       ),
                       const Padding(
-                        padding: EdgeInsets.all(2.0),
-                        child: Divider(),
+                        padding: EdgeInsets.all(2.5),
+                        child: Divider(
+                          color: Color.fromARGB(255, 110, 110, 110),
+                          thickness: 2,
+                        ),
                       ),
                       IconButton(
                         icon: Icon(
                           recordStarted ? Icons.stop_circle_outlined : Icons.play_circle_outline,
                           size: 50,
-                          color: recordStarted ? Colors.red : Colors.lightBlueAccent,
+                          color: recordStarted ? Colors.redAccent : Colors.greenAccent,
                         ),
                         padding: const EdgeInsets.all(0),
                         onPressed: () {

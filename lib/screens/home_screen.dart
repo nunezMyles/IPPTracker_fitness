@@ -80,12 +80,14 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       bottomNavigationBar: const BottomNavBar(),
       appBar: AppBar(
-        title: const Text('Activities'),
+        title: const Text(
+          'Activities',
+        ),
         actions: <Widget>[
           IconButton(
             icon: const Icon(
               Icons.exit_to_app,
-              color: Colors.white,
+              color: Colors.redAccent,
             ),
             onPressed: () {
               setState(() {
@@ -129,28 +131,29 @@ class _HomeScreenState extends State<HomeScreen> {
                               padding: const EdgeInsets.all(1.5),
                               child: Card(
                                 elevation: 3,
+                                color: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.6),
                                 child: ListTile(
+                                  leading: const Icon(
+                                    Icons.directions_run,
+                                    size: 40,
+                                    color: Colors.orangeAccent
+                                  ),
+
                                   title: Text(
                                     snapshot.data![index].name,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold
-                                    ),
+                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                                   ),
-                                  leading: const Icon(
-                                    Icons.directions_run_rounded,
-                                    size: 40,
-                                    color: Colors.blue
-                                  ),
-                                  subtitle: Text(DateFormat('MMM dd')
+                                  subtitle: Text(
+                                    DateFormat('MMM dd')
                                       .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
                                       .parse(snapshot.data![index].dateTime.toString()))
                                       + ' at '
-                                      + DateFormat('HH:mm a')
+                                      + DateFormat('hh:mm a')
                                       .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
-                                      .parse(snapshot.data![index].dateTime.toString()))
+                                      .parse(snapshot.data![index].dateTime.toString())),
+                                    style: const TextStyle(color: Colors.white),
                                   ),
 
-                                  //subtitle: Text(snapshot.data![index].dateTime.toString()),
                                   trailing: Wrap(
                                       children: [
                                         Column(
@@ -160,28 +163,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                             Row(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
-                                                const Icon(Icons.linear_scale, size: 18, color: Colors.blueGrey,),
+                                                const Icon(Icons.linear_scale, size: 18, color: Color.fromARGB(255, 179, 161, 79),),
                                                 const SizedBox(width: 8),
-                                                Text(double.parse(snapshot.data![index].distance).toStringAsFixed(2) + ' km'), // 2 decimal points
+                                                Text(
+                                                  double.parse(snapshot.data![index].distance).toStringAsFixed(2) + ' km',
+                                                  style: const TextStyle(color: Colors.white),
+                                                ), // 2 decimal points
                                               ],
                                             ),
+                                            const SizedBox(height: 2,),
                                             Row(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
-                                                const Icon(Icons.access_time_rounded, size: 18, color: Colors.blueGrey,),
+                                                const Icon(Icons.access_time_rounded, size: 18, color: Color.fromARGB(255, 179, 161, 79),),
                                                 const SizedBox(width: 8),
-                                                Text(snapshot.data![index].timing),
+                                                Text(
+                                                  snapshot.data![index].timing,
+                                                  style: const TextStyle(color: Colors.white),
+                                                ),
                                               ],
                                             ),
-                                            const SizedBox(height: 1),
-                                            Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: const [
-                                                Icon(Icons.directions_run, size: 18, color: Colors.blueGrey,),
-                                                SizedBox(width: 8),
-                                                Text('7:15 /km'),
-                                              ],
-                                            )
                                           ],
                                         )
                                       ]
@@ -291,6 +292,7 @@ class _ExpandableFabState extends State<ExpandableFab>
       child: Center(
         child: Material(
           shape: const CircleBorder(),
+          color: Colors.white.withOpacity(0.9),
           clipBehavior: Clip.antiAlias,
           elevation: 4.0,
           child: InkWell(
@@ -299,7 +301,7 @@ class _ExpandableFabState extends State<ExpandableFab>
               padding: EdgeInsets.all(8.0),
               child: Icon(
                 Icons.close,
-                color: Colors.blue,
+                color: Colors.redAccent,
               ),
             ),
           ),
@@ -345,9 +347,9 @@ class _ExpandableFabState extends State<ExpandableFab>
           duration: const Duration(milliseconds: 250),
           child: FloatingActionButton(
             onPressed: _toggle,
-            child: const Icon(Icons.add),
-            backgroundColor: Colors.blueAccent,
-            foregroundColor: Colors.white,
+            child: const Icon(Icons.add, size: 30,),
+            backgroundColor: const Color.fromARGB(255, 23, 23, 23),
+            foregroundColor: Colors.greenAccent,
           ),
         ),
       ),
@@ -412,12 +414,12 @@ class ActionButton extends StatelessWidget {
     return Material(
       shape: const CircleBorder(),
       clipBehavior: Clip.antiAlias,
-      color: Colors.blueAccent,
+      color: Colors.black,
       elevation: 4.0,
       child: IconButton(
         onPressed: onPressed,
         icon: icon,
-        color: Colors.white,
+        color: Colors.greenAccent,
       ),
     );
   }

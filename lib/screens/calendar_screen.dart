@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 
 import '../utilities/account_service.dart';
@@ -28,7 +26,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   void initState() {
     super.initState();
-
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
   }
@@ -90,6 +87,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       bottomNavigationBar: const BottomNavBar(),
       appBar: AppBar(
         title: const Text('Workout Calendar'),
@@ -97,7 +95,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           IconButton(
             icon: const Icon(
               Icons.exit_to_app,
-              color: Colors.white,
+              color: Colors.redAccent,
             ),
             onPressed: () {
               setState(() {
@@ -155,7 +153,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         borderRadius: BorderRadius.circular(12.0),
                       ),
                       child: ListTile(
-                        onTap: () => print('${value[index]}'),
+                        onTap: () {
+                          //print('${value[index]}')
+
+                        },
                         title: Text('${value[index]}'),
                       ),
                     );

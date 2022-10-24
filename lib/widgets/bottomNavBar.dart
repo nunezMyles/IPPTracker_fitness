@@ -37,7 +37,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      backgroundColor: Colors.blue.shade700,
+      backgroundColor: const Color.fromARGB(255, 23, 23, 23),
       type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -58,8 +58,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
           ),
         ],
         currentIndex: navBarselectedIndex,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.lightBlueAccent,
+        selectedItemColor: const Color.fromARGB(255, 179, 161, 79),
+        unselectedItemColor: const Color.fromARGB(255, 120, 120, 120),
         onTap: _onItemTapped,
       );
   }

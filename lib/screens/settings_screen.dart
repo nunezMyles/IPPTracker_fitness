@@ -21,7 +21,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           IconButton(
             icon: const Icon(
               Icons.exit_to_app,
-              color: Colors.white,
+              color: Colors.redAccent,
             ),
             onPressed: () {
               setState(() {
