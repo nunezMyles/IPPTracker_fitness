@@ -108,11 +108,14 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
       LatLng loc = LatLng(event.latitude!, event.longitude!);
       _center = loc;
 
-      _mapController.animateCamera(
-          CameraUpdate.newCameraPosition(
-              CameraPosition(target: loc, zoom: 18)
-          )
-      );
+      // continuously return to current location only after User has started running
+      if (recordStarted) {
+        _mapController.animateCamera(
+            CameraUpdate.newCameraPosition(
+                CameraPosition(target: loc, zoom: 18)
+            )
+        );
+      }
 
       if (route.isNotEmpty) {
         appendDist = geo.Geolocator.distanceBetween(

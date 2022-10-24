@@ -57,12 +57,13 @@ class RunService {
     );
 
     if (response.statusCode == 200) {
-      // convert 'response.body' into a known datatype for ListViewBuilder by declaring
+      // (1) convert 'response.body' into a known datatype for ListViewBuilder by declaring
       // contents of 'response.body' as items of a list + map each content inside that list
       // into a RunExercise object
+      // (2) reverse the list to show newest entry at the top when building in futurebuilder
       List<RunExercise> runExerciseList(String str) => List<RunExercise>.from(
               json.decode(str).map((x) => RunExercise.fromJson(x))
-      );
+      ).reversed.toList();
       //print(response.body);
       return runExerciseList(response.body);
 
