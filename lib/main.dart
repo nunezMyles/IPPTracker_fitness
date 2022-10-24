@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:my_fitness/screens/map_screen.dart';
-import 'package:my_fitness/screens/progress_screen.dart';
+import 'package:my_fitness/screens/calendar_screen.dart';
 import 'package:my_fitness/screens/register_screen.dart';
 import 'package:my_fitness/screens/settings_screen.dart';
 import 'package:my_fitness/utilities/auth_service.dart';
 import 'package:provider/provider.dart';
 import '../screens/login_screen.dart';
 import '../screens/home_screen.dart';
-import '../screens/register_screen.dart';
 import '../providers/user_provider.dart';
 
 void main() {
@@ -61,7 +60,7 @@ class _MyAppState extends State<MyApp> {
         '/register': (context) => const RegisterScreen(),
         '/home': (context) => const HomeScreen(),
         '/map': (context) => const MapScreen(),
-        '/progress': (context) => const ProgressScreen(),
+        '/calendar': (context) => const CalendarScreen(),
         '/settings': (context) => const SettingsScreen(),
 
       },

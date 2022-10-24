@@ -24,7 +24,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         Navigator.pushReplacementNamed(context, '/map');
         break;
       case 2:
-        Navigator.pushReplacementNamed(context, '/progress');
+        Navigator.pushReplacementNamed(context, '/calendar');
         break;
       case 3:
         Navigator.pushReplacementNamed(context, '/settings');
@@ -49,8 +49,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
             label: 'Map',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.insert_chart_outlined),
-            label: 'Progress',
+            icon: Icon(Icons.calendar_month),
+            label: 'Calendar',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),

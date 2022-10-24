@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 import '../utilities/account_service.dart';
 import '../widgets/bottomNavBar.dart';
 
-class ProgressScreen extends StatefulWidget {
-  const ProgressScreen({Key? key}) : super(key: key);
+class CalendarScreen extends StatefulWidget {
+  const CalendarScreen({Key? key}) : super(key: key);
 
   @override
-  State<ProgressScreen> createState() => _ProgressScreenState();
+  State<CalendarScreen> createState() => _CalendarScreenState();
 }
 
-class _ProgressScreenState extends State<ProgressScreen> {
+class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: const BottomNavBar(),
       appBar: AppBar(
-        title: const Text('Progress'),
+        title: const Text('Workout Calendar'),
         actions: <Widget>[
           IconButton(
             icon: const Icon(
