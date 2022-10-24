@@ -87,7 +87,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 190, 190, 190),
+      backgroundColor: const Color.fromARGB(255, 210, 210, 210),
       bottomNavigationBar: const BottomNavBar(),
       appBar: AppBar(
         title: const Text(

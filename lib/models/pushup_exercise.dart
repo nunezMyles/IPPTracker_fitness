@@ -4,7 +4,7 @@ class PushUpExercise {
   final String id;
   final String name;
   final String email;
-  final String duration;
+  final String timing;
   final String reps;
   final String dateTime;
   final String type;
@@ -13,7 +13,7 @@ class PushUpExercise {
     required this.id,
     required this.name,
     required this.email,
-    required this.duration,
+    required this.timing,
     required this.reps,
     required this.dateTime,
     required this.type
@@ -28,7 +28,7 @@ class PushUpExercise {
       'id': id,
       'name': name,
       'email': email,
-      'duration': duration,
+      'timing': timing,
       'reps': reps,
       'dateTime': dateTime,
       'type': type
@@ -41,7 +41,7 @@ class PushUpExercise {
         id: map['_id'] ?? '',
         name: map['name'] ?? '',
         email: map['email'] ?? '',
-        duration: map['duration'] ?? '',
+        timing: map['timing'] ?? '',
         reps: map['reps'] ?? '',
         dateTime: map['dateTime'] ?? '',
         type: map['type'] ?? ''

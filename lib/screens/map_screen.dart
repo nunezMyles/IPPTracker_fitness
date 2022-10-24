@@ -356,8 +356,10 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
 
                               runNameController.text = '';
 
+                              // navigate to activity screen
+                              navBarselectedIndex = 0;
+                              Navigator.pushReplacementNamed(context, '/home');
                             });
-
                           }
                         },
                       )
