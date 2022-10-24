@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_fitness/models/run_exercise.dart';
+import 'package:my_fitness/my_flutter_app_icons.dart';
 import 'package:my_fitness/utilities/account_service.dart';
 import 'package:my_fitness/utilities/run_service.dart';
 import 'package:my_fitness/widgets/bottomNavBar.dart';
@@ -20,7 +21,7 @@ dynamic user;
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  static const _actionTitles = ['', 'Add Sit-ups', 'Add Push-ups'];
+  static const _actionTitles = ['', 'Add Push-ups', 'Add Sit-ups'];
 
   void _showAction(BuildContext context, int index) {
     switch(index) {
@@ -29,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.pushReplacementNamed(context, '/map');
         break;
 
-      case 1: // Sit ups
+      case 1: // Push ups
         showDialog<void>(
           context: context,
           builder: (context) {
@@ -48,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
         );
         break;
 
-      case 2: // Push ups
+      case 2: // Sit ups
         showDialog<void>(
           context: context,
           builder: (context) {
@@ -103,11 +104,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           ActionButton(
             onPressed: () => _showAction(context, 1),
-            icon: const Icon(Icons.fiber_dvr),
+            icon: const Icon(MyFlutterApp.push_ups1, size: 25),
           ),
           ActionButton(
             onPressed: () => _showAction(context, 2),
-            icon: const Icon(Icons.videocam),
+            icon: const Icon(MyFlutterApp.sit_ups, size: 23),
           ),
         ],
       ),
@@ -345,7 +346,7 @@ class _ExpandableFabState extends State<ExpandableFab>
           child: FloatingActionButton(
             onPressed: _toggle,
             child: const Icon(Icons.add),
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.blueAccent,
             foregroundColor: Colors.white,
           ),
         ),
