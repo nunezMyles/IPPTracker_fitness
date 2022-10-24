@@ -2,6 +2,7 @@
 
 Mobile app that records the timings and sets of User runs/situps/pushups. It also includes a IPPT score calculator, activity planner/calendar, location tracker to map routes & Spotify integration.
 
+
 ## Features
 
 ### Server
