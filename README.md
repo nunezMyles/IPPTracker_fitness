@@ -9,7 +9,6 @@ Fitness app that records the timings and sets of User runs/situps/pushups.
 ### Server
 - Web Server(Cloud) hosted w/ Google Cloud App Engine
 - Web Server development w/ Node.js + Express.js
-- Web Server middleware routing
 
 ### Database
 - MongoDB CRUD
@@ -22,7 +21,6 @@ Fitness app that records the timings and sets of User runs/situps/pushups.
 ### APIs
 - Built own RESTful APIs inside Web Server
 - Integrated online APIs, e.g. Google Maps
-- JSON-Dart object (de)serialization
 
 ### Others
 - Time tracker w/ stop_watch_timer package
