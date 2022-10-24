@@ -1,10 +1,9 @@
-# IPPTracker (WIP)
+# IPPTracker - Fitness Tracker (WIP)
 
-Fitness app that records the timings and sets of User runs/situps/pushups. 
-
-## Development & Features
+Mobile app that records the timings and sets of User runs/situps/pushups. It also includes a IPPT score calculator, activity planner/calendar, location tracker to map routes & Spotify integration.
 
 
+## Features
 
 ### Server
 - Web Server(Cloud) hosted w/ Google Cloud App Engine
