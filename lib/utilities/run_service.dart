@@ -34,10 +34,10 @@ class RunService {
       },
     );
     if (response.statusCode == 200) {
-      showSnackbar(context, 'Run entry added.');
+      showSnackbar(context, 'Run added.');
     }
     else {
-      showSnackbar(context, 'Failed to add run entry.');
+      showSnackbar(context, 'Failed to add run.');
     }
   }
 

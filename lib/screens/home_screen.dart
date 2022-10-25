@@ -222,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               Row(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
-                                                  const Icon(Icons.linear_scale, size: 18, color: Color.fromARGB(255, 179, 161, 79),),
+                                                  const Icon(Icons.linear_scale, size: 18, color: Color.fromARGB(255, 211, 186, 109),),
                                                   const SizedBox(width: 8),
                                                   Text(
                                                     double.parse(snapshot.data![index].distance).toStringAsFixed(2) + ' km',
@@ -234,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               Row(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
-                                                  const Icon(Icons.access_time_rounded, size: 18, color: Color.fromARGB(255, 179, 161, 79),),
+                                                  const Icon(Icons.access_time_rounded, size: 18, color: Color.fromARGB(255, 211, 186, 109),),
                                                   const SizedBox(width: 8),
                                                   Text(
                                                     snapshot.data![index].timing,

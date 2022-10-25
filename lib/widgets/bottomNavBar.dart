@@ -112,7 +112,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
           ),
         ],
         currentIndex: navBarselectedIndex,
-        selectedItemColor: const Color.fromARGB(255, 179, 161, 79),
+        selectedItemColor: const Color.fromARGB(255, 211, 186, 109),
         unselectedItemColor: const Color.fromARGB(255, 120, 120, 120),
         onTap: _onItemTapped,
       );
