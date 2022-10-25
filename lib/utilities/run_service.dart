@@ -10,7 +10,7 @@ String webServerUri = 'https://helpful-seer-366001.as.r.appspot.com/'; // for lo
 
 class RunService {
 
-  Future<bool> removeRun(BuildContext context, String runId) async {
+  Future<void> removeRun(BuildContext context, String runId) async {
     final response = await http.post(
       Uri.parse('$webServerUri/api/exercise/removeRun'),
       body: jsonEncode({
@@ -20,12 +20,8 @@ class RunService {
         'Content-Type': 'application/json; charset=UTF-8'
       },
     );
-    if (response.statusCode == 200) {
-      return true;
-    }
-    else {
+    if (response.statusCode != 200) {
       showSnackbar(context, 'Fail to delete run.');
-      return false;
     }
   }
 

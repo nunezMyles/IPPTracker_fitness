@@ -22,22 +22,22 @@ class MapScreen extends StatefulWidget {
 // preserve values when user navigates to different page - to continuously track time, distance travelled
 bool recordStarted = false;
 
-double _dist = 0;
+double dist = 0;
 
-int _time = 0;
-int _lastTime = 0;
-double _speed = 0;
-double _avgSpeed = 0;
-int _speedCounter = 0;
-String _displayTime = '';
+int time = 0;
+int lastTime = 0;
+String savedDisplayTime = '00:00:00';
+double speed = 0;
+double avgSpeed = 0;
+int speedCounter = 0;
+String displayTime = '';
 
 List<LatLng> route = [];
 final Set<Polyline> polyline = {};
+LatLng center = const LatLng(1.3521, 103.8198); // Map view starts w/ Singapore coords
 
-final Location _location = Location();
+final Location location = Location();
 StopWatchTimer stopWatchTimer = StopWatchTimer();
-LatLng _center = const LatLng(1.3521, 103.8198); // Map view starts w/ Singapore coords
-
 
 class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixin{
   late GoogleMapController _mapController;
@@ -105,10 +105,10 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
     _mapController = controller;
     double appendDist;
 
-    _location.onLocationChanged.listen((event) {
+    location.onLocationChanged.listen((event) {
       LatLng loc = LatLng(event.latitude!, event.longitude!);
       //print(event.latitude.toString() + ' , ' + event.longitude.toString());
-      _center = loc;
+      center = loc;
 
       // continuously return to current location only after User has started running
       if (recordStarted) {
@@ -127,20 +127,20 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
             loc.longitude
         );
         //print(appendDist.toString() + '========================================================');
-        _dist = _dist + appendDist;
+        dist = dist + appendDist;
         //print(_dist.toString() + '==================================================================');
-        int timeDuration = (_time - _lastTime);
+        int timeDuration = (time - lastTime);
 
         if (timeDuration != 0) {
-          _speed = (appendDist / (timeDuration / 100)) * 3.6;
-          if (_speed != 0) {
-            _avgSpeed = _avgSpeed + _speed;
-            _speedCounter++;
+          speed = (appendDist / (timeDuration / 100)) * 3.6;
+          if (speed != 0) {
+            avgSpeed = avgSpeed + speed;
+            speedCounter++;
           }
         }
       }
 
-      _lastTime = _time;
+      lastTime = time;
 
       if (recordStarted) {
         route.add(loc);
@@ -195,7 +195,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
               zoomControlsEnabled: false,
               onMapCreated: _onMapCreated,
               myLocationEnabled: true,
-              initialCameraPosition: CameraPosition(target: _center, zoom: 22),
+              initialCameraPosition: CameraPosition(target: center, zoom: 22),
             ),
             Align(
                 alignment: Alignment.bottomCenter,
@@ -223,7 +223,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
                                 ),
                               ),
                               Text(
-                                _speed.toStringAsFixed(2),
+                                speed.toStringAsFixed(2),
                                 style: const TextStyle(
                                     fontSize: 20,
                                     color: Colors.white
@@ -244,14 +244,14 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
                                 stream: stopWatchTimer.rawTime,
                                 initialData: 0,
                                 builder: (context, snapshot) {
-                                  _time = snapshot.data!;
-                                  _displayTime = StopWatchTimer.getDisplayTimeHours(_time)
+                                  time = snapshot.data!;
+                                  displayTime = StopWatchTimer.getDisplayTimeHours(time)
                                       + ":"
-                                      + StopWatchTimer.getDisplayTimeMinute(_time)
+                                      + StopWatchTimer.getDisplayTimeMinute(time)
                                       + ":"
-                                      + StopWatchTimer.getDisplayTimeSecond(_time);
+                                      + StopWatchTimer.getDisplayTimeSecond(time);
                                   return Text(
-                                    _displayTime,
+                                    displayTime,
                                     style: const TextStyle(
                                         fontSize: 20,
                                         color: Colors.white
@@ -271,7 +271,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
                                 ),
                               ),
                               Text(
-                                (_dist / 1000).toStringAsFixed(2),
+                                (dist / 1000).toStringAsFixed(2),
                                 style: const TextStyle(
                                     fontSize: 20,
                                     color: Colors.white
@@ -295,7 +295,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
                           color: recordStarted ? Colors.redAccent : Colors.greenAccent,
                         ),
                         padding: const EdgeInsets.all(0),
-                        onPressed: () {
+                        onPressed: () async {
                           if (!recordStarted) {
                             setState(() {
                               recordStarted = true;
@@ -304,6 +304,9 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
                           } else {
                             setState(() async {
                               recordStarted = false;
+
+                              // save display time before timer reset since above streambuilder will reset displayTime immediately
+                              savedDisplayTime = displayTime;
                               stopWatchTimer.onResetTimer();
 
                               // display 'add run' screen using bottomSheet
@@ -331,34 +334,35 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
                                   id: '',
                                   name: runNameController.text.toString(),
                                   email: user.email,
-                                  timing: _displayTime,
-                                  distance: (_dist / 1000).toStringAsFixed(2).toString(),
+                                  timing: savedDisplayTime,
+                                  distance: (dist / 1000).toStringAsFixed(2).toString(),
                                   dateTime: '',
                                   type: ''
                                   // speed: speed: _speedCounter == 0 ? 0 : _avgSpeed / _speedCounter,
                               );
 
                               // call createRun() API to send newly created object to DB
-                              RunService().createRun(context, runEntry);
+                              await RunService().createRun(context, runEntry);
 
                               // reset values
-                              _dist = 0;
-                              _displayTime = '00:00:00';
-                              _time = 0;
-                              _lastTime = 0;
-                              _speed = 0;
-                              _avgSpeed = 0;
-                              _speedCounter = 0;
-                              _center = const LatLng(1.3521, 103.8198);
+                              dist = 0;
+                              time = 0;
+                              speed = 0;
+                              avgSpeed = 0;
+                              lastTime = 0;
+                              speedCounter = 0;
+                              center = const LatLng(1.3521, 103.8198);
 
                               route = [];
                               polyline.clear();
 
                               runNameController.text = '';
+                              displayTime = '00:00:00';
 
                               // navigate to activity screen
                               navBarselectedIndex = 0;
-                              Navigator.pushReplacementNamed(context, '/home');
+                              await Navigator.pushReplacementNamed(context, '/home');
+
                             });
                           }
                         },

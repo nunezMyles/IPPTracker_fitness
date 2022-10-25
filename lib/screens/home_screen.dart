@@ -6,6 +6,7 @@ import 'package:my_fitness/utilities/run_service.dart';
 import 'package:my_fitness/widgets/bottomNavBar.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:auto_animated/auto_animated.dart';
 import 'dart:math' as math;
 
 import '../providers/user_provider.dart';
@@ -19,7 +20,29 @@ class HomeScreen extends StatefulWidget {
 
 dynamic user;
 
+
 class _HomeScreenState extends State<HomeScreen> {
+
+  final options = const LiveOptions(
+    // Start animation after (default zero)
+    delay: Duration(seconds: 0),
+
+    // Show each item through (default 250)
+    showItemInterval: Duration(milliseconds: 150),
+
+    // Animation duration (default 250)
+    showItemDuration: Duration(milliseconds: 300),
+
+
+    // Animations starts at 0.05 visible
+    // item fraction in sight (default 0.025)
+    visibleFraction: 0.025,
+
+    // Repeat the animation of the appearance
+    // when scrolling in the opposite direction (default false)
+    // To get the effect as in a showcase for ListView, set true
+    reAnimateOnVisibility: false,
+  );
 
   static const _actionTitles = ['', 'Add Push-ups', 'Add Sit-ups'];
 
@@ -127,80 +150,94 @@ class _HomeScreenState extends State<HomeScreen> {
                   future: RunService().fetchRuns(context, user.email),
                   builder: (context, AsyncSnapshot<List<RunExercise>> snapshot) {
                     if (snapshot.hasData) {
-                      return ListView.builder(
-                          itemCount: snapshot.data!.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(1.5),
-                              child: Card(
-                                elevation: 3,
-                                color: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.6),
-                                child: ListTile(
-                                  leading: const Icon(
-                                    Icons.directions_run,
-                                    size: 40,
-                                    color: Colors.orangeAccent
-                                  ),
+                      return LiveList.options(
+                        options: options,
+                        itemCount: snapshot.data!.length,
+                        itemBuilder:(BuildContext context, int index, Animation<double> animation,) =>
+                        // For example wrap with fade transition
+                        FadeTransition(
+                          opacity: Tween<double>(
+                            begin: 0,
+                            end: 1,
+                          ).animate(animation),
+                          // And slide transition
+                          child: SlideTransition(
+                            position: Tween<Offset>(
+                              begin: const Offset(0, -0.1),
+                              end: Offset.zero,
+                            ).animate(animation),
+                            // Paste you Widget
+                            child: Dismissible(
+                              key: UniqueKey(),
+                              onDismissed: (_) async {
+                                await RunService().removeRun(context, snapshot.data![index].id);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(1.5),
+                                child: Card(
+                                  elevation: 3,
+                                  color: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.6),
+                                  child: ListTile(
+                                    leading: const Icon(
+                                        Icons.directions_run,
+                                        size: 40,
+                                        color: Colors.orangeAccent
+                                    ),
 
-                                  title: Text(
-                                    snapshot.data![index].name,
-                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                  ),
-                                  subtitle: Text(
-                                    DateFormat('MMM dd')
-                                      .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
-                                      .parse(snapshot.data![index].dateTime.toString()))
-                                      + ' at '
-                                      + DateFormat('hh:mm a')
-                                      .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
-                                      .parse(snapshot.data![index].dateTime.toString())),
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
+                                    title: Text(
+                                      snapshot.data![index].name,
+                                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                    ),
+                                    subtitle: Text(
+                                      DateFormat('MMM dd')
+                                          .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
+                                          .parse(snapshot.data![index].dateTime.toString()))
+                                          + ' at '
+                                          + DateFormat('hh:mm a')
+                                          .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
+                                          .parse(snapshot.data![index].dateTime.toString())),
+                                      style: const TextStyle(color: Colors.white),
+                                    ),
 
-                                  trailing: Wrap(
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                const Icon(Icons.linear_scale, size: 18, color: Color.fromARGB(255, 179, 161, 79),),
-                                                const SizedBox(width: 8),
-                                                Text(
-                                                  double.parse(snapshot.data![index].distance).toStringAsFixed(2) + ' km',
-                                                  style: const TextStyle(color: Colors.white),
-                                                ), // 2 decimal points
-                                              ],
-                                            ),
-                                            const SizedBox(height: 2,),
-                                            Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                const Icon(Icons.access_time_rounded, size: 18, color: Color.fromARGB(255, 179, 161, 79),),
-                                                const SizedBox(width: 8),
-                                                Text(
-                                                  snapshot.data![index].timing,
-                                                  style: const TextStyle(color: Colors.white),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        )
-                                      ]
+                                    trailing: Wrap(
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  const Icon(Icons.linear_scale, size: 18, color: Color.fromARGB(255, 179, 161, 79),),
+                                                  const SizedBox(width: 8),
+                                                  Text(
+                                                    double.parse(snapshot.data![index].distance).toStringAsFixed(2) + ' km',
+                                                    style: const TextStyle(color: Colors.white),
+                                                  ), // 2 decimal points
+                                                ],
+                                              ),
+                                              const SizedBox(height: 2,),
+                                              Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  const Icon(Icons.access_time_rounded, size: 18, color: Color.fromARGB(255, 179, 161, 79),),
+                                                  const SizedBox(width: 8),
+                                                  Text(
+                                                    snapshot.data![index].timing,
+                                                    style: const TextStyle(color: Colors.white),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          )
+                                        ]
+                                    ),
                                   ),
-
-                                  onLongPress: () async {
-                                    bool delConfirm = await RunService().removeRun(context, snapshot.data![index].id);
-                                    if (delConfirm) {
-                                     setState(() {});
-                                    }
-                                  },
                                 ),
                               ),
-                            );
-                          }
+                            ),
+                          ),
+                        ),
                       );
                     } else if (snapshot.hasError) {
                       return Text('${snapshot.error}');

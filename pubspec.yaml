@@ -45,6 +45,7 @@ dependencies:
   location: ^4.4.0
   intl: ^0.17.0
   table_calendar: ^3.0.7
+  auto_animated: ^3.1.0
 
 flutter_icons:
   android: "launcher_icon"

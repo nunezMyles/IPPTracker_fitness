@@ -26,8 +26,8 @@ class _AddRunScreenState extends State<AddRunScreen> {
         ElevatedButton(
           child: const Text("ADD"),
           onPressed: () {
-              Navigator.pop(context);
-            }
+            Navigator.pop(context);
+          }
         ),
       ],
     );
