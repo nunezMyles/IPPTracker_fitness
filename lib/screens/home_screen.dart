@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:my_fitness/models/pushup_exercise.dart';
 import 'package:my_fitness/models/run_exercise.dart';
 import 'package:my_fitness/my_flutter_app_icons.dart';
 import 'package:my_fitness/screens/add_pushup_screen.dart';
 import 'package:my_fitness/utilities/account_service.dart';
+import 'package:my_fitness/utilities/pushup_service.dart';
 import 'package:my_fitness/utilities/run_service.dart';
 import 'package:my_fitness/widgets/bottomNavBar.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +26,8 @@ dynamic user;
 
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  List<dynamic> exercisesObjectsList = [];
 
   final options = const LiveOptions(
     // Start animation after (default zero)
@@ -159,12 +163,21 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Expanded(
                 child: FutureBuilder(
-                  future: RunService().fetchRuns(context, user.email),
-                  builder: (context, AsyncSnapshot<List<RunExercise>> snapshot) {
+                  future: Future.wait([RunService().fetchRuns(context, user.email), PushUpService().fetchPushUps(context, user.email)]),
+                  builder: (context, AsyncSnapshot<List<List<dynamic>>> snapshot) {
                     if (snapshot.hasData) {
+
+                      for (RunExercise runs in snapshot.data![0]) {
+                        exercisesObjectsList.add(runs);
+                      }
+
+                      for (PushUpExercise pushups in snapshot.data![1]) {
+                        exercisesObjectsList.add(pushups);
+                      }
+
                       return LiveList.options(
                         options: options,
-                        itemCount: snapshot.data!.length,
+                        itemCount: exercisesObjectsList.length,
                         itemBuilder:(BuildContext context, int index, Animation<double> animation,) =>
                         // For example wrap with fade transition
                         FadeTransition(
@@ -182,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Dismissible(
                               key: UniqueKey(),
                               onDismissed: (_) async {
-                                await RunService().removeRun(context, snapshot.data![index].id);
+                                await RunService().removeRun(context, snapshot.data![0][index].id);
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(1.5),
@@ -197,17 +210,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
 
                                     title: Text(
-                                      snapshot.data![index].name,
+                                      snapshot.data![0][index].name,
                                       style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                                     ),
                                     subtitle: Text(
                                       DateFormat('MMM dd')
                                           .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
-                                          .parse(snapshot.data![index].dateTime.toString()))
+                                          .parse(snapshot.data![0][index].dateTime.toString()))
                                           + ' at '
                                           + DateFormat('hh:mm a')
                                           .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
-                                          .parse(snapshot.data![index].dateTime.toString())),
+                                          .parse(snapshot.data![0][index].dateTime.toString())),
                                       style: const TextStyle(color: Colors.white),
                                     ),
 
@@ -223,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   const Icon(Icons.linear_scale, size: 18, color: Color.fromARGB(255, 211, 186, 109),),
                                                   const SizedBox(width: 8),
                                                   Text(
-                                                    double.parse(snapshot.data![index].distance).toStringAsFixed(2) + ' km',
+                                                    double.parse(snapshot.data![0][index].distance).toStringAsFixed(2) + ' km',
                                                     style: const TextStyle(color: Colors.white),
                                                   ), // 2 decimal points
                                                 ],
@@ -235,7 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   const Icon(Icons.access_time_rounded, size: 18, color: Color.fromARGB(255, 211, 186, 109),),
                                                   const SizedBox(width: 8),
                                                   Text(
-                                                    snapshot.data![index].timing,
+                                                    snapshot.data![0][index].timing,
                                                     style: const TextStyle(color: Colors.white),
                                                   ),
                                                 ],

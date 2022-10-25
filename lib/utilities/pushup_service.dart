@@ -26,4 +26,29 @@ class PushUpService {
     }
   }
 
+  Future<List<PushUpExercise>> fetchPushUps(BuildContext context, String email) async {
+    final response = await http.post(
+      Uri.parse('$webServerUri/api/exercise/getPushUp'),
+      body: jsonEncode({
+        'email': email,
+      }),
+      headers: <String, String> {
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      List<PushUpExercise> pushUpExerciseList(String str) => List<PushUpExercise>.from(
+          json.decode(str).map((x) => PushUpExercise.fromJson(x))
+      ).reversed.toList();
+      //print(response.body);
+      //print(pushUpExerciseList(response.body));
+      return pushUpExerciseList(response.body);
+
+    } else {
+      throw Exception('Failed to load push-up data');
+    }
+  }
+
+
 }
