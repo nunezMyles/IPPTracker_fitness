@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_fitness/models/run_exercise.dart';
 import 'package:my_fitness/my_flutter_app_icons.dart';
+import 'package:my_fitness/screens/add_pushup_screen.dart';
 import 'package:my_fitness/utilities/account_service.dart';
 import 'package:my_fitness/utilities/run_service.dart';
 import 'package:my_fitness/widgets/bottomNavBar.dart';
@@ -47,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   static const _actionTitles = ['', 'Add Push-ups', 'Add Sit-ups'];
 
-  void _showAction(BuildContext context, int index) {
+  void _showAction(BuildContext context, int index) async {
     switch(index) {
       case 0: // Runs
         navBarselectedIndex = 1;
@@ -67,22 +68,19 @@ class _HomeScreenState extends State<HomeScreen> {
         break;
 
       case 1: // Push ups
-        showDialog<void>(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: Text(_actionTitles[index]),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('CLOSE'),
-                ),
-              ],
-            );
-          },
-        );
+        await showModalBottomSheet(
+            isScrollControlled: true,
+            context: context,
+            builder: (BuildContext context) {
+          return SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: const AddPushUpScreen(),
+            ),
+          );
+        },
+    );
         break;
 
       case 2: // Sit ups

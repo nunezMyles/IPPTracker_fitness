@@ -19,7 +19,7 @@ class _AddRunScreenState extends State<AddRunScreen> {
         TextField(
           textAlign: TextAlign.center,
           decoration: const InputDecoration(
-            labelText: 'Add a name to your Run Entry'
+            labelText: 'Name of Run Entry'
           ),
           controller: runNameController,
         ),

@@ -19,7 +19,7 @@ class PushUpService {
       },
     );
     if (response.statusCode == 200) {
-      showSnackbar(context, 'Push-up entry added.');
+      showSnackbar(context, 'Push-up added.');
     }
     else {
       showSnackbar(context, 'Failed to add push-up entry.');
