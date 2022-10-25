@@ -16,17 +16,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       bottomNavigationBar: const BottomNavBar(),
       appBar: AppBar(
+        leadingWidth: 10,
         title: const Text(
           'Settings',
           style: TextStyle(
-              color: Color.fromARGB(255, 179, 161, 79)
-          ),),
+              color: Colors.white,
+          ),
+        ),
         actions: <Widget>[
           IconButton(
             icon: const Icon(
               Icons.exit_to_app,
               color: Colors.redAccent,
             ),
+
             onPressed: () {
               setState(() {
                 AccountService().logOut(context);

@@ -169,10 +169,11 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
     return Scaffold(
       bottomNavigationBar: const BottomNavBar(),
       appBar: AppBar(
+        leadingWidth: 10,
         title: const Text(
           'Map',
           style: TextStyle(
-              color: Color.fromARGB(255, 179, 161, 79)
+              color: Colors.white
           ),),
         actions: <Widget>[
           IconButton(
@@ -361,8 +362,19 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
 
                               // navigate to activity screen
                               navBarselectedIndex = 0;
-                              await Navigator.pushReplacementNamed(context, '/home');
-
+                              await Navigator.push(context, PageRouteBuilder(
+                                pageBuilder: (
+                                    BuildContext context,
+                                    Animation<double> animation,
+                                    Animation<double> secondaryAnimation
+                                    ) => const HomeScreen(),
+                                transitionDuration: const Duration(milliseconds: 250),
+                                transitionsBuilder: (
+                                    BuildContext context,
+                                    Animation<double> animation,
+                                    Animation<double> secondaryAnimation,
+                                    Widget child,) => FadeTransition(opacity: animation, child: child),
+                              ));
                             });
                           }
                         },

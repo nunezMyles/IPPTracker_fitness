@@ -10,6 +10,7 @@ import 'package:auto_animated/auto_animated.dart';
 import 'dart:math' as math;
 
 import '../providers/user_provider.dart';
+import 'map_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -50,7 +51,19 @@ class _HomeScreenState extends State<HomeScreen> {
     switch(index) {
       case 0: // Runs
         navBarselectedIndex = 1;
-        Navigator.pushReplacementNamed(context, '/map');
+        Navigator.push(context, PageRouteBuilder(
+          pageBuilder: (
+              BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation
+              ) => const MapScreen(),
+          transitionDuration: Duration(milliseconds: pageTransitionDuration),
+          transitionsBuilder: (
+              BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child,) => FadeTransition(opacity: animation, child: child),
+        ));
         break;
 
       case 1: // Push ups
@@ -103,10 +116,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       bottomNavigationBar: const BottomNavBar(),
       appBar: AppBar(
+        leadingWidth: 10,
         title: const Text(
           'Activities',
           style: TextStyle(
-            color: Color.fromARGB(255, 179, 161, 79)
+            color: Colors.white
           ),
         ),
         actions: <Widget>[

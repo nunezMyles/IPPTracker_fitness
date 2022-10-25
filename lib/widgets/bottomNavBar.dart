@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:my_fitness/screens/calendar_screen.dart';
+import 'package:my_fitness/screens/map_screen.dart';
+import 'package:my_fitness/screens/settings_screen.dart';
+
+import '../screens/home_screen.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({Key? key}) : super(key: key);
@@ -8,6 +13,7 @@ class BottomNavBar extends StatefulWidget {
 }
 
 int navBarselectedIndex = 0;
+int pageTransitionDuration = 50;
 
 class _BottomNavBarState extends State<BottomNavBar> {
   void _onItemTapped(int index) {
@@ -18,16 +24,64 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
     switch(index) {
       case 0:
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.push(context, PageRouteBuilder(
+          pageBuilder: (
+              BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation
+              ) => const HomeScreen(),
+          transitionDuration: Duration(milliseconds: pageTransitionDuration),
+          transitionsBuilder: (
+              BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child,) => FadeTransition(opacity: animation, child: child),
+        ));
         break;
       case 1:
-        Navigator.pushReplacementNamed(context, '/map');
+        Navigator.push(context, PageRouteBuilder(
+          pageBuilder: (
+              BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation
+              ) => const MapScreen(),
+          transitionDuration: Duration(milliseconds: pageTransitionDuration),
+          transitionsBuilder: (
+              BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child,) => FadeTransition(opacity: animation, child: child),
+        ));
         break;
       case 2:
-        Navigator.pushReplacementNamed(context, '/calendar');
+        Navigator.push(context, PageRouteBuilder(
+          pageBuilder: (
+              BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation
+              ) => const CalendarScreen(),
+          transitionDuration: Duration(milliseconds: pageTransitionDuration),
+          transitionsBuilder: (
+              BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child,) => FadeTransition(opacity: animation, child: child),
+        ));
         break;
       case 3:
-        Navigator.pushReplacementNamed(context, '/settings');
+        Navigator.push(context, PageRouteBuilder(
+          pageBuilder: (
+              BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation
+              ) => const SettingsScreen(),
+          transitionDuration: Duration(milliseconds: pageTransitionDuration),
+          transitionsBuilder: (
+              BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child,) => FadeTransition(opacity: animation, child: child),
+        ));
         break;
       default:
         break;
