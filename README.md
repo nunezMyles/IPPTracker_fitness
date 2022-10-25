@@ -25,6 +25,6 @@ Mobile app that records the timings and sets of User runs/situps/pushups. It als
 - User session restoration w/ JWT + SharedPreferences
 - Time tracker w/ stop_watch_timer package
 - User location retrieval w/ location package
-- Calender w/ table_calendar package
+- Calender display and interaction w/ table_calendar package
 
 
