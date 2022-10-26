@@ -29,6 +29,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<dynamic> exercisesObjectsList = [];
 
+  String _printDuration(String strDuration) {
+    Duration duration = Duration(seconds: int.parse(strDuration));
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  }
+
   final options = const LiveOptions(
     // Start animation after (default zero)
     delay: Duration(seconds: 0),
@@ -178,91 +186,181 @@ class _HomeScreenState extends State<HomeScreen> {
                       return LiveList.options(
                         options: options,
                         itemCount: exercisesObjectsList.length,
-                        itemBuilder:(BuildContext context, int index, Animation<double> animation,) =>
-                        // For example wrap with fade transition
-                        FadeTransition(
-                          opacity: Tween<double>(
-                            begin: 0,
-                            end: 1,
-                          ).animate(animation),
-                          // And slide transition
-                          child: SlideTransition(
-                            position: Tween<Offset>(
-                              begin: const Offset(0, -0.1),
-                              end: Offset.zero,
-                            ).animate(animation),
-                            // Paste you Widget
-                            child: Dismissible(
-                              key: UniqueKey(),
-                              onDismissed: (_) async {
-                                await RunService().removeRun(context, snapshot.data![0][index].id);
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(1.5),
-                                child: Card(
-                                  elevation: 3,
-                                  color: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.6),
-                                  child: ListTile(
-                                    leading: const Icon(
-                                        Icons.directions_run,
-                                        size: 40,
-                                        color: Colors.orangeAccent
-                                    ),
+                        itemBuilder: (BuildContext context, int index, Animation<double> animation) {
+                          switch(exercisesObjectsList[index].type) {
+                            case 'run':
+                              return FadeTransition(
+                                opacity: Tween<double>(
+                                  begin: 0,
+                                  end: 1,
+                                ).animate(animation),
+                                // And slide transition
+                                child: SlideTransition(
+                                  position: Tween<Offset>(
+                                    begin: const Offset(0, -0.1),
+                                    end: Offset.zero,
+                                  ).animate(animation),
+                                  // Paste you Widget
+                                  child: Dismissible(
+                                    key: UniqueKey(),
+                                    onDismissed: (_) async {
+                                      await RunService().removeRun(context, exercisesObjectsList[index].id);
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(1.5),
+                                      child: Card(
+                                        elevation: 3,
+                                        color: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.6),
+                                        child: ListTile(
+                                          leading: const Icon(
+                                              Icons.directions_run,
+                                              size: 40,
+                                              color: Colors.orangeAccent
+                                          ),
 
-                                    title: Text(
-                                      snapshot.data![0][index].name,
-                                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                    ),
-                                    subtitle: Text(
-                                      DateFormat('MMM dd')
-                                          .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
-                                          .parse(snapshot.data![0][index].dateTime.toString()))
-                                          + ' at '
-                                          + DateFormat('hh:mm a')
-                                          .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
-                                          .parse(snapshot.data![0][index].dateTime.toString())),
-                                      style: const TextStyle(color: Colors.white),
-                                    ),
+                                          title: Text(
+                                            exercisesObjectsList[index].name,
+                                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                          ),
+                                          subtitle: Text(
+                                            DateFormat('MMM dd')
+                                                .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
+                                                .parse(exercisesObjectsList[index].dateTime.toString()))
+                                                + ' at '
+                                                + DateFormat('hh:mm a')
+                                                .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
+                                                .parse(exercisesObjectsList[index].dateTime.toString())),
+                                            style: const TextStyle(color: Colors.white),
+                                          ),
 
-                                    trailing: Wrap(
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  const Icon(Icons.linear_scale, size: 18, color: Color.fromARGB(255, 211, 186, 109),),
-                                                  const SizedBox(width: 8),
-                                                  Text(
-                                                    double.parse(snapshot.data![0][index].distance).toStringAsFixed(2) + ' km',
-                                                    style: const TextStyle(color: Colors.white),
-                                                  ), // 2 decimal points
-                                                ],
-                                              ),
-                                              const SizedBox(height: 2,),
-                                              Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  const Icon(Icons.access_time_rounded, size: 18, color: Color.fromARGB(255, 211, 186, 109),),
-                                                  const SizedBox(width: 8),
-                                                  Text(
-                                                    snapshot.data![0][index].timing,
-                                                    style: const TextStyle(color: Colors.white),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          )
-                                        ]
+                                          trailing: Wrap(
+                                              children: [
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const Icon(Icons.linear_scale, size: 18, color: Color.fromARGB(255, 211, 186, 109),),
+                                                        const SizedBox(width: 8),
+                                                        Text(
+                                                          double.parse(exercisesObjectsList[index].distance).toStringAsFixed(2) + ' km',
+                                                          style: const TextStyle(color: Colors.white),
+                                                        ), // 2 decimal points
+                                                      ],
+                                                    ),
+                                                    const SizedBox(height: 2,),
+                                                    Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const Icon(Icons.access_time_rounded, size: 18, color: Color.fromARGB(255, 211, 186, 109),),
+                                                        const SizedBox(width: 8),
+                                                        Text(
+                                                          exercisesObjectsList[index].timing,
+                                                          style: const TextStyle(color: Colors.white),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                )
+                                              ]
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
-                        ),
+                              );
+                            case 'pushup':
+                              return FadeTransition(
+                                opacity: Tween<double>(
+                                  begin: 0,
+                                  end: 1,
+                                ).animate(animation),
+                                // And slide transition
+                                child: SlideTransition(
+                                  position: Tween<Offset>(
+                                    begin: const Offset(0, -0.1),
+                                    end: Offset.zero,
+                                  ).animate(animation),
+                                  // Paste you Widget
+                                  child: Dismissible(
+                                    key: UniqueKey(),
+                                    onDismissed: (_) async {
+                                      //await RunService().removeRun(context, exercisesObjectsList[index].id);
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(1.5),
+                                      child: Card(
+                                        elevation: 3,
+                                        color: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.6),
+                                        child: ListTile(
+                                          leading: const Icon(
+                                              Icons.directions_run,
+                                              size: 40,
+                                              color: Colors.orangeAccent
+                                          ),
+
+                                          title: Text(
+                                            exercisesObjectsList[index].name,
+                                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                          ),
+                                          subtitle: Text(
+                                            DateFormat('MMM dd')
+                                                .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
+                                                .parse(exercisesObjectsList[index].dateTime.toString()))
+                                                + ' at '
+                                                + DateFormat('hh:mm a')
+                                                .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
+                                                .parse(exercisesObjectsList[index].dateTime.toString())),
+                                            style: const TextStyle(color: Colors.white),
+                                          ),
+
+                                          trailing: Wrap(
+                                              children: [
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const Icon(Icons.linear_scale, size: 18, color: Color.fromARGB(255, 211, 186, 109),),
+                                                        const SizedBox(width: 8),
+                                                        Text(
+                                                          exercisesObjectsList[index].reps + ' reps',
+                                                          style: const TextStyle(color: Colors.white),
+                                                        ), // 2 decimal points
+                                                      ],
+                                                    ),
+                                                    const SizedBox(height: 2),
+                                                    Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const Icon(Icons.access_time_rounded, size: 18, color: Color.fromARGB(255, 211, 186, 109)),
+                                                        const SizedBox(width: 8),
+                                                        Text(
+                                                          _printDuration(exercisesObjectsList[index].timing),
+                                                          style: const TextStyle(color: Colors.white),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                )
+                                              ]
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            default:
+                              return const SizedBox(height: 1);
+                          }
+                          return const Center(child: CircularProgressIndicator());
+                        }
                       );
                     } else if (snapshot.hasError) {
                       return Text('${snapshot.error}');

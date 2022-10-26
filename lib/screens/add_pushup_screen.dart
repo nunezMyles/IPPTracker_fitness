@@ -24,7 +24,7 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
         TextField(
           textAlign: TextAlign.center,
           decoration: const InputDecoration(
-              labelText: 'Name of Push-up Entry'
+              labelText: 'Name of push-up Entry'
           ),
           controller: pushUpNameController,
         ),
@@ -32,7 +32,7 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
           textAlign: TextAlign.center,
           decoration: InputDecoration(
             labelText: 'Number of push-ups',
-            errorText: _validate ? 'Value Can\'t Be Empty' : null,
+            //errorText: _validate ? 'Value Can\'t Be Empty' : null,
           ),
 
           controller: pushUpRepsController,
@@ -40,8 +40,8 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
         TextField(
           textAlign: TextAlign.center,
           decoration: InputDecoration(
-            labelText: 'Time taken for all push-ups (s)',
-            errorText: _validate ? 'Value Can\'t Be Empty' : null,
+            labelText: 'Time taken (s)',
+            //errorText: _validate ? 'Value Can\'t Be Empty' : null,
           ),
           controller: pushUpDurationController,
         ),
@@ -53,8 +53,8 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
                 pushUpNameController.text = 'Unnamed entry';
               }
 
-              pushUpDurationController.text.isEmpty ? _validate = true : _validate = false;
-              pushUpRepsController.text.isEmpty ? _validate = true : _validate = false;
+              //pushUpDurationController.text.isEmpty ? _validate = true : _validate = false;
+              //pushUpRepsController.text.isEmpty ? _validate = true : _validate = false;
 
               PushUpExercise pushUpEntry = PushUpExercise(
                   id: '',
