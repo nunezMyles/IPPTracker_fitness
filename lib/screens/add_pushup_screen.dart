@@ -68,7 +68,19 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
 
               await PushUpService().createPushUp(context, pushUpEntry);
 
-              Navigator.pop(context);
+              Navigator.push(context, PageRouteBuilder(
+                pageBuilder: (
+                    BuildContext context,
+                    Animation<double> animation,
+                    Animation<double> secondaryAnimation
+                    ) => const HomeScreen(),
+                transitionDuration: const Duration(milliseconds: 50),
+                transitionsBuilder: (
+                    BuildContext context,
+                    Animation<double> animation,
+                    Animation<double> secondaryAnimation,
+                    Widget child,) => FadeTransition(opacity: animation, child: child),
+              ));
             }
         ),
       ],

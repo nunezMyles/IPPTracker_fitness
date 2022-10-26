@@ -60,8 +60,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   static const _actionTitles = ['', 'Add Push-ups', 'Add Sit-ups'];
 
+  TextEditingController pushUpNameController = TextEditingController();
+  TextEditingController pushUpDurationController = TextEditingController();
+  TextEditingController pushUpRepsController = TextEditingController();
+  bool _validate = false;
+
+
   void _showAction(BuildContext context, int index) async {
     switch(index) {
+
       case 0: // Runs
         navBarselectedIndex = 1;
         Navigator.push(context, PageRouteBuilder(
@@ -81,19 +88,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
       case 1: // Push ups
         await showModalBottomSheet(
-            isScrollControlled: true,
-            context: context,
-            builder: (BuildContext context) {
-          return SingleChildScrollView(
-            child: Container(
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: const AddPushUpScreen(),
-            ),
-          );
-        },
-    );
+          isScrollControlled: true,
+          context: context,
+          builder: (BuildContext context) {
+            return SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: const AddPushUpScreen(),
+              ),
+            );
+          },
+        );
         break;
+
 
       case 2: // Sit ups
         showDialog<void>(
@@ -175,12 +183,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (context, AsyncSnapshot<List<List<dynamic>>> snapshot) {
                     if (snapshot.hasData) {
 
-                      for (RunExercise runs in snapshot.data![0]) {
-                        exercisesObjectsList.add(runs);
-                      }
+                      // prevent continuous exercise add to list after hot reloading
+                      if (exercisesObjectsList.isEmpty) {
+                        for (RunExercise runs in snapshot.data![0]) {
+                          exercisesObjectsList.add(runs);
+                        }
 
-                      for (PushUpExercise pushups in snapshot.data![1]) {
-                        exercisesObjectsList.add(pushups);
+                        for (PushUpExercise pushups in snapshot.data![1]) {
+                          exercisesObjectsList.add(pushups);
+                        }
                       }
 
                       return LiveList.options(
@@ -288,7 +299,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Dismissible(
                                     key: UniqueKey(),
                                     onDismissed: (_) async {
-                                      //await RunService().removeRun(context, exercisesObjectsList[index].id);
+                                      await PushUpService().removePushUp(context, exercisesObjectsList[index].id);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(1.5),
@@ -296,10 +307,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                         elevation: 3,
                                         color: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.6),
                                         child: ListTile(
-                                          leading: const Icon(
-                                              Icons.directions_run,
-                                              size: 40,
-                                              color: Colors.orangeAccent
+                                          leading: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: const [
+                                              SizedBox(height: 5,),
+                                              Icon(
+                                                  MyFlutterApp.push_ups1,
+                                                  size: 32,
+                                                  color: Colors.lightBlueAccent
+                                              ),
+                                            ],
                                           ),
 
                                           title: Text(
@@ -326,12 +343,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     Row(
                                                       mainAxisSize: MainAxisSize.min,
                                                       children: [
-                                                        const Icon(Icons.linear_scale, size: 18, color: Color.fromARGB(255, 211, 186, 109),),
+                                                        const Icon(Icons.numbers, size: 18, color: Color.fromARGB(255, 211, 186, 109),),
                                                         const SizedBox(width: 8),
                                                         Text(
                                                           exercisesObjectsList[index].reps + ' reps',
                                                           style: const TextStyle(color: Colors.white),
-                                                        ), // 2 decimal points
+                                                        ),
                                                       ],
                                                     ),
                                                     const SizedBox(height: 2),

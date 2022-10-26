@@ -10,6 +10,21 @@ String webServerUri = 'https://helpful-seer-366001.as.r.appspot.com/'; // for lo
 
 class PushUpService {
 
+  Future<void> removePushUp(BuildContext context, String runId) async {
+    final response = await http.post(
+      Uri.parse('$webServerUri/api/exercise/removePushUp'),
+      body: jsonEncode({
+        'id': runId,
+      }),
+      headers: <String, String> {
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+    );
+    if (response.statusCode != 200) {
+      showSnackbar(context, 'Fail to delete push-up.');
+    }
+  }
+
   Future<void> createPushUp(BuildContext context, PushUpExercise pushUpExercise) async {
     final response = await http.post(
       Uri.parse('$webServerUri/api/exercise/createPushUp'),
