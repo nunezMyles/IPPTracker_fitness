@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_fitness/screens/register_screen.dart';
 import 'package:my_fitness/utilities/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -26,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: const Color.fromARGB(255, 23, 23, 23),
       body: Container(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -38,6 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 40,
+                color: Colors.white
               ),
             ),
             const SizedBox(
@@ -53,9 +55,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         ? null
                         : "Please enter a valid email", */
                     maxLines: 1,
+                    style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       hintText: 'Email',
-                      prefixIcon: const Icon(Icons.email),
+                      hintStyle: const TextStyle(color: Colors.white54),
+                      fillColor: const Color.fromARGB(255, 46, 46, 46),
+                      filled: true,
+                      prefixIcon: const Icon(Icons.email, color: Color.fromARGB(255, 211, 186, 109)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -74,9 +80,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     maxLines: 1,
                     obscureText: true,
+                    style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.lock),
+                      prefixIcon: const Icon(Icons.lock, color: Color.fromARGB(255, 211, 186, 109)),
                       hintText: 'Password',
+                      hintStyle: const TextStyle(color: Colors.white54),
+                      fillColor: const Color.fromARGB(255, 46, 46, 46),
+                      filled: true,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -103,11 +113,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       signInUser();
                     },
                     style: ElevatedButton.styleFrom(
+                      primary: Colors.white.withOpacity(0.9),
                       padding: const EdgeInsets.fromLTRB(40, 15, 40, 15),
                     ),
                     child: const Text(
                       'Sign in',
                       style: TextStyle(
+                        color: Color.fromARGB(255, 46, 46, 46),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -118,12 +130,30 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('Not registered yet?'),
+                      const Text('Not registered yet?', style: TextStyle(color: Colors.white)),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushReplacementNamed(context, '/register');
+                          Navigator.push(context, PageRouteBuilder(
+                            pageBuilder: (
+                                BuildContext context,
+                                Animation<double> animation,
+                                Animation<double> secondaryAnimation
+                                ) => const RegisterScreen(),
+                            transitionDuration: const Duration(milliseconds: 50),
+                            transitionsBuilder: (
+                                BuildContext context,
+                                Animation<double> animation,
+                                Animation<double> secondaryAnimation,
+                                Widget child,) => FadeTransition(opacity: animation, child: child),
+                          ));
                         },
-                        child: const Text('Create an account'),
+                        child: const Text(
+                            'Create an account',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 211, 186, 109),
+                                fontWeight: FontWeight.bold
+                            )
+                        ),
                       ),
                     ],
                   ),

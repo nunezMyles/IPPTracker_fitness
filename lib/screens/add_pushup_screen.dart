@@ -59,7 +59,7 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
       child: Column(
         children: [
-          const SizedBox(height: 5),
+          const SizedBox(height: 2),
           TextField(
             textAlign: TextAlign.center,
             decoration: const InputDecoration(
@@ -71,7 +71,7 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
             textAlign: TextAlign.center,
             decoration: InputDecoration(
               labelText: 'Number of push-ups',
-              errorText: _repsValidate ? 'Value Can\'t Be Empty' : null,
+              errorText: _repsValidate ? 'Value can\'t be empty.' : null,
             ),
             keyboardType: TextInputType.number,
             inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
@@ -81,12 +81,13 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
             textAlign: TextAlign.center,
             decoration: InputDecoration(
               labelText: 'Time taken (s)',
-              errorText: _durationValidate ? 'Value Can\'t Be Empty' : null,
+              errorText: _durationValidate ? 'Value can\'t be empty.' : null,
             ),
             keyboardType: TextInputType.number,
             inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
             controller: pushUpDurationController,
           ),
+          const SizedBox(height: 1),
           ElevatedButton(
               child: const Text("ADD"),
               onPressed: () async {
@@ -100,6 +101,7 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
                   pushUpNameController.text = 'Unnamed entry';
                 }
 
+                // create a pushup object
                 PushUpExercise pushUpEntry = PushUpExercise(
                     id: '',
                     name: pushUpNameController.text,
@@ -110,8 +112,10 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
                     type: ''
                 );
 
+                // send pushup object to DB through an api call
                 await PushUpService().createPushUp(context, pushUpEntry);
 
+                // navigate back to home screen
                 Navigator.push(context, PageRouteBuilder(
                   pageBuilder: (
                       BuildContext context,
@@ -127,7 +131,7 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
                 ));
               }
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 5),
         ],
       ),
     );

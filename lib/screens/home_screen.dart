@@ -63,8 +63,6 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController pushUpNameController = TextEditingController();
   TextEditingController pushUpDurationController = TextEditingController();
   TextEditingController pushUpRepsController = TextEditingController();
-  bool _validate = false;
-
 
   void _showAction(BuildContext context, int index) async {
     switch(index) {
