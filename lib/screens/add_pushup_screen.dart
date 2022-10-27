@@ -18,6 +18,34 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
   bool _validate = false;
 
   @override
+  void initState() {
+    super.initState();
+
+    // Start listening to changes.
+    pushUpDurationController.addListener(_printLatestValue);
+  }
+
+  void _printLatestValue() {
+    if (pushUpDurationController.text.isEmpty) {
+      _validate = true;
+    } else {
+      _validate = false;
+    }
+    // setstate to update error text display
+    setState(() {
+
+    });
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the widget tree.
+    // This also removes the _printLatestValue listener.
+    pushUpDurationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -41,7 +69,7 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
           textAlign: TextAlign.center,
           decoration: InputDecoration(
             labelText: 'Time taken (s)',
-            //errorText: _validate ? 'Value Can\'t Be Empty' : null,
+            errorText: _validate ? 'Value Can\'t Be Empty' : null,
           ),
           controller: pushUpDurationController,
         ),
@@ -52,9 +80,6 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
               if (pushUpNameController.text.isEmpty) {
                 pushUpNameController.text = 'Unnamed entry';
               }
-
-              //pushUpDurationController.text.isEmpty ? _validate = true : _validate = false;
-              //pushUpRepsController.text.isEmpty ? _validate = true : _validate = false;
 
               PushUpExercise pushUpEntry = PushUpExercise(
                   id: '',
