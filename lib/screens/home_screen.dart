@@ -90,6 +90,13 @@ class _HomeScreenState extends State<HomeScreen> {
         await showModalBottomSheet(
           isScrollControlled: true,
           context: context,
+          backgroundColor: Colors.white,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.0),
+                topRight: Radius.circular(20.0)
+            ),
+          ),
           builder: (BuildContext context) {
             return SingleChildScrollView(
               child: Container(

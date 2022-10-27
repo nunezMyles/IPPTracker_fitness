@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_fitness/models/pushup_exercise.dart';
 
 import '../utilities/pushup_service.dart';
+import 'package:flutter/services.dart';
 import 'home_screen.dart';
 
 class AddPushUpScreen extends StatefulWidget {
@@ -15,21 +16,28 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
   TextEditingController pushUpNameController = TextEditingController();
   TextEditingController pushUpDurationController = TextEditingController();
   TextEditingController pushUpRepsController = TextEditingController();
-  bool _validate = false;
+  bool _repsValidate = true;
+  bool _durationValidate = true;
 
   @override
   void initState() {
     super.initState();
 
     // Start listening to changes.
+    pushUpRepsController.addListener(_printLatestValue);
     pushUpDurationController.addListener(_printLatestValue);
   }
 
   void _printLatestValue() {
-    if (pushUpDurationController.text.isEmpty) {
-      _validate = true;
+    if (pushUpRepsController.text.isEmpty) {
+      _repsValidate = true;
     } else {
-      _validate = false;
+      _repsValidate = false;
+    }
+    if (pushUpDurationController.text.isEmpty) {
+      _durationValidate = true;
+    } else {
+      _durationValidate = false;
     }
     // setstate to update error text display
     setState(() {
@@ -47,68 +55,81 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextField(
-          textAlign: TextAlign.center,
-          decoration: const InputDecoration(
-              labelText: 'Name of push-up Entry'
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+      child: Column(
+        children: [
+          const SizedBox(height: 5),
+          TextField(
+            textAlign: TextAlign.center,
+            decoration: const InputDecoration(
+                labelText: 'Name of push-up Entry'
+            ),
+            controller: pushUpNameController,
           ),
-          controller: pushUpNameController,
-        ),
-        TextField(
-          textAlign: TextAlign.center,
-          decoration: InputDecoration(
-            labelText: 'Number of push-ups',
-            //errorText: _validate ? 'Value Can\'t Be Empty' : null,
+          TextField(
+            textAlign: TextAlign.center,
+            decoration: InputDecoration(
+              labelText: 'Number of push-ups',
+              errorText: _repsValidate ? 'Value Can\'t Be Empty' : null,
+            ),
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+            controller: pushUpRepsController,
           ),
+          TextField(
+            textAlign: TextAlign.center,
+            decoration: InputDecoration(
+              labelText: 'Time taken (s)',
+              errorText: _durationValidate ? 'Value Can\'t Be Empty' : null,
+            ),
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+            controller: pushUpDurationController,
+          ),
+          ElevatedButton(
+              child: const Text("ADD"),
+              onPressed: () async {
 
-          controller: pushUpRepsController,
-        ),
-        TextField(
-          textAlign: TextAlign.center,
-          decoration: InputDecoration(
-            labelText: 'Time taken (s)',
-            errorText: _validate ? 'Value Can\'t Be Empty' : null,
-          ),
-          controller: pushUpDurationController,
-        ),
-        ElevatedButton(
-            child: const Text("ADD"),
-            onPressed: () async {
+                // if no inputs for reps & duration, do nothing
+                if (_repsValidate || _durationValidate) {
+                  return;
+                }
 
-              if (pushUpNameController.text.isEmpty) {
-                pushUpNameController.text = 'Unnamed entry';
+                if (pushUpNameController.text.isEmpty) {
+                  pushUpNameController.text = 'Unnamed entry';
+                }
+
+                PushUpExercise pushUpEntry = PushUpExercise(
+                    id: '',
+                    name: pushUpNameController.text,
+                    email: user.email,
+                    timing: pushUpDurationController.text,
+                    reps: pushUpRepsController.text,
+                    dateTime: '',
+                    type: ''
+                );
+
+                await PushUpService().createPushUp(context, pushUpEntry);
+
+                Navigator.push(context, PageRouteBuilder(
+                  pageBuilder: (
+                      BuildContext context,
+                      Animation<double> animation,
+                      Animation<double> secondaryAnimation
+                      ) => const HomeScreen(),
+                  transitionDuration: const Duration(milliseconds: 50),
+                  transitionsBuilder: (
+                      BuildContext context,
+                      Animation<double> animation,
+                      Animation<double> secondaryAnimation,
+                      Widget child,) => FadeTransition(opacity: animation, child: child),
+                ));
               }
-
-              PushUpExercise pushUpEntry = PushUpExercise(
-                  id: '',
-                  name: pushUpNameController.text,
-                  email: user.email,
-                  timing: pushUpDurationController.text,
-                  reps: pushUpRepsController.text,
-                  dateTime: '',
-                  type: ''
-              );
-
-              await PushUpService().createPushUp(context, pushUpEntry);
-
-              Navigator.push(context, PageRouteBuilder(
-                pageBuilder: (
-                    BuildContext context,
-                    Animation<double> animation,
-                    Animation<double> secondaryAnimation
-                    ) => const HomeScreen(),
-                transitionDuration: const Duration(milliseconds: 50),
-                transitionsBuilder: (
-                    BuildContext context,
-                    Animation<double> animation,
-                    Animation<double> secondaryAnimation,
-                    Widget child,) => FadeTransition(opacity: animation, child: child),
-              ));
-            }
-        ),
-      ],
+          ),
+          const SizedBox(height: 10),
+        ],
+      ),
     );
   }
 }
