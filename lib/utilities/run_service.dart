@@ -21,7 +21,7 @@ class RunService {
       },
     );
     if (response.statusCode != 200) {
-      showSnackbar(context, 'Fail to delete run.');
+      showSnackBar(context, 'Fail to delete run.');
     }
   }
 
@@ -34,10 +34,10 @@ class RunService {
       },
     );
     if (response.statusCode == 200) {
-      showSnackbar(context, 'Run added.');
+      showSnackBar(context, 'Run added.');
     }
     else {
-      showSnackbar(context, 'Failed to add run.');
+      showSnackBar(context, 'Failed to add run.');
     }
   }
 

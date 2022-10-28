@@ -88,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
         await showModalBottomSheet(
           isScrollControlled: true,
           context: context,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.white54.withOpacity(0.9),
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20.0),
@@ -197,6 +197,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         for (PushUpExercise pushups in snapshot.data![1]) {
                           exercisesObjectsList.add(pushups);
                         }
+
+                        // sort exercises in listview by latest datetime
+                        exercisesObjectsList.sort((a,b) => a.dateTime.compareTo(b.dateTime));
+                        exercisesObjectsList = exercisesObjectsList.reversed.toList();
                       }
 
                       return LiveList.options(
@@ -252,30 +256,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                           trailing: Wrap(
                                               children: [
                                                 Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.end,
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
-                                                    Row(
-                                                      mainAxisSize: MainAxisSize.min,
-                                                      children: [
-                                                        const Icon(Icons.linear_scale, size: 18, color: Color.fromARGB(255, 211, 186, 109),),
-                                                        const SizedBox(width: 8),
-                                                        Text(
-                                                          double.parse(exercisesObjectsList[index].distance).toStringAsFixed(2) + ' km',
-                                                          style: const TextStyle(color: Colors.white),
-                                                        ), // 2 decimal points
-                                                      ],
+                                                    Text(
+                                                      double.parse(exercisesObjectsList[index].distance).toStringAsFixed(2) + ' km',
+                                                      style: const TextStyle(color: Color.fromARGB(255, 211, 186, 109), fontSize: 20),
                                                     ),
-                                                    const SizedBox(height: 2,),
+                                                    const SizedBox(height: 2),
                                                     Row(
                                                       mainAxisSize: MainAxisSize.min,
                                                       children: [
-                                                        const Icon(Icons.access_time_rounded, size: 18, color: Color.fromARGB(255, 211, 186, 109),),
-                                                        const SizedBox(width: 8),
+
                                                         Text(
                                                           exercisesObjectsList[index].timing,
-                                                          style: const TextStyle(color: Colors.white),
+                                                          style: const TextStyle(color: Color.fromARGB(255, 180, 180, 180), fontSize: 13.5),
                                                         ),
+                                                        //const SizedBox(width: 1),
+                                                        //const Icon(Icons.access_time_rounded, size: 16, color: Color.fromARGB(255, 211, 186, 109),),
+
                                                       ],
                                                     ),
                                                   ],
@@ -342,31 +341,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                           trailing: Wrap(
                                               children: [
                                                 Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.end,
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
-                                                    Row(
-                                                      mainAxisSize: MainAxisSize.min,
-                                                      children: [
-                                                        const Icon(Icons.numbers, size: 18, color: Color.fromARGB(255, 211, 186, 109),),
-                                                        const SizedBox(width: 8),
-                                                        Text(
-                                                          exercisesObjectsList[index].reps + ' reps',
-                                                          style: const TextStyle(color: Colors.white),
-                                                        ),
-                                                      ],
+                                                    Text(
+                                                      exercisesObjectsList[index].reps + ' reps',
+                                                      style: const TextStyle(color: Color.fromARGB(255, 211, 186, 109), fontSize: 20),
                                                     ),
                                                     const SizedBox(height: 2),
-                                                    Row(
-                                                      mainAxisSize: MainAxisSize.min,
-                                                      children: [
-                                                        const Icon(Icons.access_time_rounded, size: 18, color: Color.fromARGB(255, 211, 186, 109)),
-                                                        const SizedBox(width: 8),
-                                                        Text(
-                                                          _printDuration(exercisesObjectsList[index].timing),
-                                                          style: const TextStyle(color: Colors.white),
-                                                        ),
-                                                      ],
+                                                    Text(
+                                                      _printDuration(exercisesObjectsList[index].timing),
+                                                      style: const TextStyle(color: Color.fromARGB(255, 180, 180, 180), fontSize: 13.5),
                                                     ),
                                                   ],
                                                 )
@@ -381,7 +366,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             default:
                               return const SizedBox(height: 1);
                           }
-                          return const Center(child: CircularProgressIndicator());
                         }
                       );
                     } else if (snapshot.hasError) {

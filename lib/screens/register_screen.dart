@@ -58,6 +58,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ? null
                               : "Please enter a valid email",*/
                     maxLines: 1,
+                    cursorColor: Colors.white,
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       hintText: 'Username',
@@ -79,6 +80,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ? null
                         : "Please enter a valid email",*/
                     maxLines: 1,
+                    cursorColor: Colors.white,
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       hintText: 'Email',
@@ -103,6 +105,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       return null;
                     },
                     maxLines: 1,
+                    cursorColor: Colors.white,
                     obscureText: true,
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
@@ -125,7 +128,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       signUpUser();
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.white.withOpacity(0.9),
+                      backgroundColor: Colors.white54.withOpacity(0.9),
                       padding: const EdgeInsets.fromLTRB(40, 15, 40, 15),
                     ),
                     child: const Text(

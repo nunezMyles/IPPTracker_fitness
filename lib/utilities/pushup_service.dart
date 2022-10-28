@@ -21,7 +21,7 @@ class PushUpService {
       },
     );
     if (response.statusCode != 200) {
-      showSnackbar(context, 'Fail to delete push-up.');
+      showSnackBar(context, 'Fail to delete push-up.');
     }
   }
 
@@ -34,10 +34,10 @@ class PushUpService {
       },
     );
     if (response.statusCode == 200) {
-      showSnackbar(context, 'Push-up added.');
+      showSnackBar(context, 'Push-up added.');
     }
     else {
-      showSnackbar(context, 'Failed to add push-up entry.');
+      showSnackBar(context, 'Failed to add push-up entry.');
     }
   }
 

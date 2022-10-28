@@ -53,7 +53,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
       // Location services are not enabled don't continue
       // accessing the position and request users of the
       // App to enable the location services.
-      showSnackbar(context, 'Location services are disabled.');
+      showSnackBar(context, 'Location services are disabled.');
     }
 
     permission = await geo.Geolocator.checkPermission();
@@ -66,7 +66,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
         // Android's shouldShowRequestPermissionRationale
         // returned true. According to Android guidelines
         // your App should show an explanatory UI now.
-        showSnackbar(context, 'Location permissions are denied');
+        showSnackBar(context, 'Location permissions are denied');
       } else {
         setState(() { // reload widget to display 'go to current location' button
 
@@ -76,7 +76,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
 
     if (permission == geo.LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
-      showSnackbar(context, 'Location permissions are permanently denied, we cannot request permissions.');
+      showSnackBar(context, 'Location permissions are permanently denied, we cannot request permissions.');
     }
 
     // When we reach here, permissions are granted and we can
@@ -93,9 +93,9 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
   }
 
   @override
-  void dispose() async {
+  void dispose() {
+    stopWatchTimer.dispose(); // release memory
     super.dispose();
-    //if (!recordStarted) await stopWatchTimer.dispose();
   }
 
   @override
@@ -314,6 +314,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
                               await showModalBottomSheet(
                                 isScrollControlled: true,
                                 context: context,
+                                backgroundColor: Colors.white,
                                 builder: (BuildContext context) {
                                   return SingleChildScrollView(
                                     child: Container(

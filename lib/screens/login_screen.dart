@@ -55,6 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ? null
                         : "Please enter a valid email", */
                     maxLines: 1,
+                    cursorColor: Colors.white,
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       hintText: 'Email',
@@ -79,6 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       return null;
                     },
                     maxLines: 1,
+                    cursorColor: Colors.white,
                     obscureText: true,
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
@@ -113,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       signInUser();
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.white.withOpacity(0.9),
+                      backgroundColor: Colors.white54.withOpacity(0.9),
                       padding: const EdgeInsets.fromLTRB(40, 15, 40, 15),
                     ),
                     child: const Text(

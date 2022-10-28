@@ -47,8 +47,8 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is removed from the widget tree.
-    // This also removes the _printLatestValue listener.
+    // Clean up controllers
+    pushUpRepsController.dispose();
     pushUpDurationController.dispose();
     super.dispose();
   }
@@ -63,14 +63,14 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
           TextField(
             textAlign: TextAlign.center,
             decoration: const InputDecoration(
-                labelText: 'Name of push-up Entry'
+                labelText: 'Name of push-up entry'
             ),
             controller: pushUpNameController,
           ),
           TextField(
             textAlign: TextAlign.center,
             decoration: InputDecoration(
-              labelText: 'Number of push-ups',
+              labelText: 'Number of push-ups (reps)',
               errorText: _repsValidate ? 'Value can\'t be empty.' : null,
             ),
             keyboardType: TextInputType.number,

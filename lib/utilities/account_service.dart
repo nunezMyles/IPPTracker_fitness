@@ -10,7 +10,7 @@ class AccountService {
       await sharedPreferences.setString('x-auth-token', '');
       Navigator.pushReplacementNamed(context, '/login');
     } catch (e) {
-      showSnackbar(context, e.toString());
+      showSnackBar(context, e.toString());
     }
   }
 

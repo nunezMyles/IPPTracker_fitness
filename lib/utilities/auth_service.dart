@@ -48,12 +48,12 @@ class AuthService {
         response: res,
         context: context,
         onSuccess: () {
-          showSnackbar(context, 'Account created! Please login again');
+          showSnackBar(context, 'Account created! Please login again');
         },
       );
 
     } catch (e) {
-      showSnackbar(context, e.toString());
+      showSnackBar(context, e.toString());
     }
   }
 
@@ -88,7 +88,7 @@ class AuthService {
         },
       );
     } catch (e) {
-      showSnackbar(context, e.toString());
+      showSnackBar(context, e.toString());
     }
   }
 
@@ -127,7 +127,7 @@ class AuthService {
       }
 
     } catch (e) {
-      showSnackbar(context, e.toString());
+      showSnackBar(context, e.toString());
     }
   }
 
