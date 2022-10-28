@@ -80,7 +80,7 @@ class _AddIPPTScreenState extends State<AddIPPTScreen> {
             child: const Text("ADD"),
             onPressed: () async {
 
-              await IpptService().createIPPT(
+              await IpptService().createIpptTraining(
                   context,
                   ipptNameController.text,
                   ageController.text,

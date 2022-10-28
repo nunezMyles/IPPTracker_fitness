@@ -1,9 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:my_fitness/models/ippt_event.dart';
+import 'package:my_fitness/models/ippt_training.dart';
 
-import '../models/pushup_exercise.dart';
 import '../screens/home_screen.dart';
 import '../widgets/showSnackBar.dart';
 import 'package:http/http.dart' as http;
@@ -12,7 +11,7 @@ String webServerUri = 'https://helpful-seer-366001.as.r.appspot.com/'; // for lo
 
 class IpptService {
 
-  Future<void> createIPPT(BuildContext context, String name, String age, String runTiming, String pushupReps, String situpReps) async {
+  Future<void> createIpptTraining(BuildContext context, String name, String age, String runTiming, String pushupReps, String situpReps) async {
     String apiBaseURL = 'https://ippt.vercel.app/api?';
     String score;
 
@@ -30,7 +29,7 @@ class IpptService {
     }
     score = jsonDecode(response1.body)['total'].toString();
 
-    IpptEvent ipptEvent = IpptEvent(
+    IpptTraining ipptTraining = IpptTraining(
         id: '',
         name: name,
         email: user.email,
@@ -45,7 +44,7 @@ class IpptService {
 
     final response2 = await http.post(
       Uri.parse('$webServerUri/api/exercise/createIpptTraining'),
-      body: ipptEvent.toJson(),
+      body: ipptTraining.toJson(),
       headers: <String, String> {
         'Content-Type': 'application/json; charset=UTF-8'
       },
@@ -58,4 +57,26 @@ class IpptService {
     }
   }
 
+  Future<List<IpptTraining>> fetchIpptTraining(BuildContext context, String email) async {
+    final response = await http.post(
+      Uri.parse('$webServerUri/api/exercise/getIpptTraining'),
+      body: jsonEncode({
+        'email': email,
+      }),
+      headers: <String, String> {
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      List<IpptTraining> ipptTrainingList(String str) => List<IpptTraining>.from(
+          json.decode(str).map((x) => IpptTraining.fromJson(x))
+      );
+      print(response.body);
+      return ipptTrainingList(response.body);
+
+    } else {
+      throw Exception('Failed to load ippt data');
+    }
+  }
 }

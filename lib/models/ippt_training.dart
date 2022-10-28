@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class IpptEvent {
+class IpptTraining {
   final String id;
   final String name;
   final String email;
@@ -12,7 +12,7 @@ class IpptEvent {
   final String dateTime;
   final String type;
 
-  IpptEvent({
+  IpptTraining({
     required this.id,
     required this.name,
     required this.email,
@@ -45,8 +45,8 @@ class IpptEvent {
   }
 
   // json > dart object
-  factory IpptEvent.fromJson(Map<String, dynamic> map) {
-    return IpptEvent(
+  factory IpptTraining.fromJson(Map<String, dynamic> map) {
+    return IpptTraining(
         id: map['_id'] ?? '',
         name: map['name'] ?? '',
         email: map['email'] ?? '',

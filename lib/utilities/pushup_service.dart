@@ -56,7 +56,7 @@ class PushUpService {
       List<PushUpExercise> pushUpExerciseList(String str) => List<PushUpExercise>.from(
           json.decode(str).map((x) => PushUpExercise.fromJson(x))
       );
-      //print(response.body);
+      print(response.body);
       //print(pushUpExerciseList(response.body));
       return pushUpExerciseList(response.body);
 

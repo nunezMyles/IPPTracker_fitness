@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:my_fitness/models/ippt_training.dart';
 import 'package:my_fitness/models/pushup_exercise.dart';
 import 'package:my_fitness/models/run_exercise.dart';
 import 'package:my_fitness/my_flutter_app_icons.dart';
 import 'package:my_fitness/screens/add_ippt_activity_screen.dart';
 import 'package:my_fitness/screens/add_pushup_screen.dart';
 import 'package:my_fitness/utilities/account_service.dart';
+import 'package:my_fitness/utilities/ippt_service.dart';
 import 'package:my_fitness/utilities/pushup_service.dart';
 import 'package:my_fitness/utilities/run_service.dart';
 import 'package:my_fitness/widgets/bottomNavBar.dart';
@@ -212,7 +214,11 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Expanded(
                 child: FutureBuilder(
-                  future: Future.wait([RunService().fetchRuns(context, user.email), PushUpService().fetchPushUps(context, user.email)]),
+                  future: Future.wait([
+                    RunService().fetchRuns(context, user.email),
+                    PushUpService().fetchPushUps(context, user.email),
+                    IpptService().fetchIpptTraining(context, user.email),
+                  ]),
                   builder: (context, AsyncSnapshot<List<List<dynamic>>> snapshot) {
                     if (snapshot.hasData) {
 
@@ -224,6 +230,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         for (PushUpExercise pushups in snapshot.data![1]) {
                           exercisesObjectsList.add(pushups);
+                        }
+
+                        for (IpptTraining ippt in snapshot.data![2]) {
+                          exercisesObjectsList.add(ippt);
                         }
 
                         // sort exercises in listview by latest datetime
@@ -315,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                               );
-                            /*case 'pushup':
+                            case 'pushup':
                               return FadeTransition(
                                 opacity: Tween<double>(
                                   begin: 0,
@@ -391,7 +401,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                               );
-                            */case 'pushup':
+                            case 'ippt':
                               return FadeTransition(
                                 opacity: Tween<double>(
                                   begin: 0,
@@ -654,7 +664,7 @@ class _ExpandingActionButton extends StatelessWidget {
   }
 }
 
-// for each of the 3 action buttons
+// for each of the 4 action buttons
 @immutable
 class ActionButton extends StatelessWidget {
   const ActionButton({
@@ -671,7 +681,7 @@ class ActionButton extends StatelessWidget {
     return Material(
       shape: const CircleBorder(),
       clipBehavior: Clip.antiAlias,
-      color: Colors.black.withOpacity(0.5),
+      color: Colors.black.withOpacity(0.8),
       elevation: 4.0,
       child: IconButton(
         onPressed: onPressed,
