@@ -55,7 +55,7 @@ class PushUpService {
     if (response.statusCode == 200) {
       List<PushUpExercise> pushUpExerciseList(String str) => List<PushUpExercise>.from(
           json.decode(str).map((x) => PushUpExercise.fromJson(x))
-      ).reversed.toList();
+      );
       //print(response.body);
       //print(pushUpExerciseList(response.body));
       return pushUpExerciseList(response.body);

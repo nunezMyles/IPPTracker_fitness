@@ -59,7 +59,7 @@ class RunService {
       // (2) reverse the list to show newest entry at the top when building in futurebuilder
       List<RunExercise> runExerciseList(String str) => List<RunExercise>.from(
               json.decode(str).map((x) => RunExercise.fromJson(x))
-      ).reversed.toList();
+      );
       //print(response.body);
       return runExerciseList(response.body);
 

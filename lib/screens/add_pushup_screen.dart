@@ -70,7 +70,7 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
           TextField(
             textAlign: TextAlign.center,
             decoration: InputDecoration(
-              labelText: 'Number of push-ups (reps)',
+              labelText: 'No. of push-ups (reps)',
               errorText: _repsValidate ? 'Value can\'t be empty.' : null,
             ),
             keyboardType: TextInputType.number,

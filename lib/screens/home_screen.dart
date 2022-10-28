@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_fitness/models/pushup_exercise.dart';
 import 'package:my_fitness/models/run_exercise.dart';
 import 'package:my_fitness/my_flutter_app_icons.dart';
+import 'package:my_fitness/screens/add_ippt_activity_screen.dart';
 import 'package:my_fitness/screens/add_pushup_screen.dart';
 import 'package:my_fitness/utilities/account_service.dart';
 import 'package:my_fitness/utilities/pushup_service.dart';
@@ -127,6 +128,29 @@ class _HomeScreenState extends State<HomeScreen> {
         );
         break;
 
+      case 3: // ippt training
+        await showModalBottomSheet(
+          isScrollControlled: true,
+          context: context,
+          backgroundColor: Colors.white54.withOpacity(0.9),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.0),
+                topRight: Radius.circular(20.0)
+            ),
+          ),
+          builder: (BuildContext context) {
+            return SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: const AddIPPTScreen(),
+              ),
+            );
+          },
+        );
+        break;
+
       default:
         break;
     }
@@ -174,6 +198,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ActionButton(
             onPressed: () => _showAction(context, 2),
             icon: const Icon(MyFlutterApp.sit_ups, size: 23),
+          ),
+          ActionButton(
+            onPressed: () => _showAction(context, 3),
+            icon: const Icon(Icons.fact_check_outlined, size: 23),
           ),
         ],
       ),
@@ -392,11 +420,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                           leading: Column(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: const [
-                                              SizedBox(height: 5,),
+                                              SizedBox(height: 3),
                                               Icon(
                                                   Icons.fact_check_outlined,
                                                   size: 36,
-                                                  color: Colors.lightBlueAccent
+                                                  color: Colors.lightGreenAccent,
                                               ),
                                             ],
                                           ),
@@ -414,8 +442,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 .parse(exercisesObjectsList[index].dateTime.toString())),
                                             style: const TextStyle(color: Colors.white),
                                           ),
-                                          children: [
-                                            const Text('jinds'),
+                                          children: const [
+                                            Text('jinds'),
                                           ],
                                         ),
                                       ),
