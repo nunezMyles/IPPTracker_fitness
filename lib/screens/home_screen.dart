@@ -246,7 +246,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             DateFormat('MMM dd')
                                                 .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
                                                 .parse(exercisesObjectsList[index].dateTime.toString()))
-                                                + ' at '
+                                                + ', '
                                                 + DateFormat('hh:mm a')
                                                 .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
                                                 .parse(exercisesObjectsList[index].dateTime.toString())),
@@ -287,7 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                               );
-                            case 'pushup':
+                            /*case 'pushup':
                               return FadeTransition(
                                 opacity: Tween<double>(
                                   begin: 0,
@@ -331,7 +331,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             DateFormat('MMM dd')
                                                 .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
                                                 .parse(exercisesObjectsList[index].dateTime.toString()))
-                                                + ' at '
+                                                + ', '
                                                 + DateFormat('hh:mm a')
                                                 .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
                                                 .parse(exercisesObjectsList[index].dateTime.toString())),
@@ -357,6 +357,66 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 )
                                               ]
                                           ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            */case 'pushup':
+                              return FadeTransition(
+                                opacity: Tween<double>(
+                                  begin: 0,
+                                  end: 1,
+                                ).animate(animation),
+                                // And slide transition
+                                child: SlideTransition(
+                                  position: Tween<Offset>(
+                                    begin: const Offset(0, -0.1),
+                                    end: Offset.zero,
+                                  ).animate(animation),
+                                  // Paste you Widget
+                                  child: Dismissible(
+                                    key: UniqueKey(),
+                                    onDismissed: (_) async {
+                                      await PushUpService().removePushUp(context, exercisesObjectsList[index].id);
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(1.5),
+                                      child: Card(
+                                        elevation: 3,
+                                        color: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.6),
+                                        child: ExpansionTile(
+                                          iconColor: const Color.fromARGB(255, 211, 186, 109),
+                                          collapsedIconColor: const Color.fromARGB(255, 180, 180, 180),
+                                          leading: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: const [
+                                              SizedBox(height: 5,),
+                                              Icon(
+                                                  Icons.fact_check_outlined,
+                                                  size: 36,
+                                                  color: Colors.lightBlueAccent
+                                              ),
+                                            ],
+                                          ),
+                                          title: Text(
+                                            exercisesObjectsList[index].name,
+                                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                          ),
+                                          subtitle: Text(
+                                            DateFormat('MMM dd')
+                                                .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
+                                                .parse(exercisesObjectsList[index].dateTime.toString()))
+                                                + ', '
+                                                + DateFormat('hh:mm a')
+                                                .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
+                                                .parse(exercisesObjectsList[index].dateTime.toString())),
+                                            style: const TextStyle(color: Colors.white),
+                                          ),
+                                          children: [
+                                            const Text('jinds'),
+                                          ],
                                         ),
                                       ),
                                     ),
