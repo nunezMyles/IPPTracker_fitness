@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:my_fitness/screens/add_event_screen.dart';
 import '../widgets/bottomNavBar.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+import '../models/calendar_event.dart';
 
 
 class CalendarScreen extends StatefulWidget {
@@ -10,12 +12,12 @@ class CalendarScreen extends StatefulWidget {
   State<CalendarScreen> createState() => _CalendarScreenState();
 }
 
+var meetings = <Event>[];
 
 class _CalendarScreenState extends State<CalendarScreen> {
   final CalendarController _calendarController = CalendarController();
-  var meetings = <Meeting>[];
 
-  List<Meeting> _getDataSource() {
+  List<Event> _getDataSource() {
     return meetings;
   }
 
@@ -35,7 +37,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text(
-          'Workout Calendar',
+          'Activity Planner',
           style: TextStyle(
               color: Colors.white
           ),
@@ -44,19 +46,27 @@ class _CalendarScreenState extends State<CalendarScreen> {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add, color: Colors.greenAccent, size: 30),
         backgroundColor: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.9),
-        onPressed: () {
-          setState(() {
-            final DateTime startTime = _calendarController.selectedDate!;
-            final DateTime endTime = _calendarController.selectedDate!.add(const Duration(hours: 2));
-
-            meetings.add(Meeting(
-                'Conference',
-                startTime,
-                endTime,
-                const Color(0xFF0F8644),
-                false
-            ));
-          });
+        onPressed: () async {
+          await showModalBottomSheet(
+            isScrollControlled: true,
+            context: context,
+            backgroundColor: Colors.white54.withOpacity(0.9),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20.0),
+                  topRight: Radius.circular(20.0)
+              ),
+            ),
+            builder: (BuildContext context) {
+              return SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: const AddEventScreen(),
+                ),
+              );
+            },
+          );
         }
       ),
       body: Theme(
@@ -86,47 +96,4 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 }
 
-class MeetingDataSource extends CalendarDataSource {
-  MeetingDataSource(this.source);
-
-  List<Meeting> source;
-
-  @override
-  List<dynamic> get appointments => source;
-
-  @override
-  DateTime getStartTime(int index) {
-    return source[index].from;
-  }
-
-  @override
-  DateTime getEndTime(int index) {
-    return source[index].to;
-  }
-
-  @override
-  String getSubject(int index) {
-    return source[index].eventName;
-  }
-
-  @override
-  Color getColor(int index) {
-    return source[index].background;
-  }
-
-  @override
-  bool isAllDay(int index) {
-    return source[index].isAllDay;
-  }
-}
-
-class Meeting {
-  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
-
-  String eventName;
-  DateTime from;
-  DateTime to;
-  Color background;
-  bool isAllDay;
-}
 
