@@ -169,7 +169,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
     return Scaffold(
       bottomNavigationBar: const BottomNavBar(),
       appBar: AppBar(
-        leadingWidth: 10,
+        automaticallyImplyLeading: false,
         title: const Text(
           'Map',
           style: TextStyle(

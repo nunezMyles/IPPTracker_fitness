@@ -90,7 +90,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       backgroundColor: Colors.white,
       bottomNavigationBar: const BottomNavBar(),
       appBar: AppBar(
-        leadingWidth: 10,
+        automaticallyImplyLeading: false,
         title: const Text(
           'Workout Calendar',
           style: TextStyle(

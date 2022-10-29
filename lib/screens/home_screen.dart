@@ -165,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       bottomNavigationBar: const BottomNavBar(),
       appBar: AppBar(
-        leadingWidth: 10,
+        automaticallyImplyLeading: false,
         title: const Text(
           'Activities',
           style: TextStyle(
@@ -203,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           ActionButton(
             onPressed: () => _showAction(context, 3),
-            icon: const Icon(Icons.fact_check_outlined, size: 23),
+            icon: const Icon(Icons.fact_check_outlined, size: 26),
           ),
         ],
       ),
@@ -278,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                           title: Text(
                                             exercisesObjectsList[index].name,
-                                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                            style: const TextStyle(color: Colors.white, fontSize: 17),
                                           ),
                                           subtitle: Text(
                                             DateFormat('MMM dd')
@@ -352,10 +352,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           leading: Column(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: const [
-                                              SizedBox(height: 5,),
+                                              SizedBox(height: 5),
                                               Icon(
                                                   MyFlutterApp.push_ups1,
-                                                  size: 32,
+                                                  size: 35,
                                                   color: Colors.lightBlueAccent
                                               ),
                                             ],
@@ -363,7 +363,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                           title: Text(
                                             exercisesObjectsList[index].name,
-                                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                            style: const TextStyle(color: Colors.white, fontSize: 17),
                                           ),
                                           subtitle: Text(
                                             DateFormat('MMM dd')
@@ -426,21 +426,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                         color: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.6),
                                         child: ExpansionTile(
                                           iconColor: const Color.fromARGB(255, 211, 186, 109),
-                                          collapsedIconColor: const Color.fromARGB(255, 180, 180, 180),
+                                          collapsedIconColor: const Color.fromARGB(255, 200, 200, 200),
                                           leading: Column(
                                             mainAxisAlignment: MainAxisAlignment.center,
-                                            children: const [
-                                              SizedBox(height: 3),
+                                            children: [
+                                              const SizedBox(height: 2),
                                               Icon(
                                                   Icons.fact_check_outlined,
-                                                  size: 36,
-                                                  color: Colors.lightGreenAccent,
+                                                  size: 38,
+                                                  color: Colors.deepPurple.shade400,
                                               ),
                                             ],
                                           ),
                                           title: Text(
                                             exercisesObjectsList[index].name,
-                                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                            style: const TextStyle(color: Colors.white, fontSize: 17),
                                           ),
                                           subtitle: Text(
                                             DateFormat('MMM dd')
@@ -452,8 +452,103 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 .parse(exercisesObjectsList[index].dateTime.toString())),
                                             style: const TextStyle(color: Colors.white),
                                           ),
-                                          children: const [
-                                            Text('jinds'),
+                                          trailing: Wrap(
+                                              children: [
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      exercisesObjectsList[index].score + ' pts',
+                                                      style: const TextStyle(color: Color.fromARGB(255, 211, 186, 109), fontSize: 20),
+                                                    ),
+                                                    const SizedBox(height: 2),
+                                                    const Text(
+                                                      'Click to view details',
+                                                      style: TextStyle(color: Color.fromARGB(255, 180, 180, 180), fontSize: 13.5),
+                                                    ),
+                                                  ],
+                                                )
+                                              ]
+                                          ),
+                                          children: [
+                                            const Padding(
+                                              padding: EdgeInsets.fromLTRB(30, 0, 30, 7),
+                                              child: Divider(
+                                                color: Color.fromARGB(255, 80, 80, 80),
+                                                thickness: 1,
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Expanded(
+                                                  child: Column(
+                                                    children: [
+                                                      const Icon(
+                                                          MyFlutterApp.push_ups1,
+                                                          size: 35,
+                                                          color: Color.fromARGB(255, 180, 180, 180)
+                                                      ),
+                                                      const Text('1 min', style: TextStyle(color: Color.fromARGB(255, 180, 180, 180))),
+                                                      const SizedBox(height: 6),
+                                                      Text(
+                                                          exercisesObjectsList[index].pushupReps + ' reps',
+                                                          style: const TextStyle(
+                                                            color: Color.fromARGB(255, 211, 186, 109),
+                                                            fontSize: 18,
+                                                          )
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+
+                                                Expanded(
+                                                  child: Column(
+                                                    children: [
+                                                      const Icon(
+                                                        MyFlutterApp.sit_ups,
+                                                        size: 35,
+                                                        color: Color.fromARGB(255, 180, 180, 180)
+                                                      ),
+                                                      const Text('1 min', style: TextStyle(color: Color.fromARGB(255, 180, 180, 180))),
+                                                      const SizedBox(height: 6),
+                                                      Text(
+                                                          exercisesObjectsList[index].situpReps + ' reps',
+                                                          style: const TextStyle(
+                                                            color: Color.fromARGB(255, 211, 186, 109),
+                                                            fontSize: 18,
+                                                          )
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+
+                                                Expanded(
+                                                  child: Column(
+                                                    children: [
+                                                      const Icon(
+                                                          Icons.directions_run,
+                                                          size: 35,
+                                                          color: Color.fromARGB(255, 180, 180, 180)
+                                                      ),
+                                                      const Text('2.4 km', style: TextStyle(color: Color.fromARGB(255, 180, 180, 180))),
+                                                      const SizedBox(height: 6),
+                                                      Text(
+                                                          _printDuration(exercisesObjectsList[index].runTiming),
+                                                          style: const TextStyle(
+                                                            color: Color.fromARGB(255, 211, 186, 109),
+                                                            fontSize: 18,
+                                                          )
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+
+                                              ],
+                                            ),
+                                            const SizedBox(height: 15),
                                           ],
                                         ),
                                       ),

@@ -31,80 +31,85 @@ class _AddIPPTScreenState extends State<AddIPPTScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextField(
-          textAlign: TextAlign.center,
-          decoration: const InputDecoration(
-              labelText: 'Name of IPPT Entry'
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+      child: Column(
+        children: [
+          TextField(
+            textAlign: TextAlign.center,
+            decoration: const InputDecoration(
+                labelText: 'Name of IPPT Entry'
+            ),
+            controller: ipptNameController,
           ),
-          controller: ipptNameController,
-        ),
-        TextField(
-          textAlign: TextAlign.center,
-          decoration: const InputDecoration(
-              labelText: 'Age'
+          TextField(
+            textAlign: TextAlign.center,
+            decoration: const InputDecoration(
+                labelText: 'Age'
+            ),
+            controller: ageController,
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
           ),
-          controller: ageController,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
-        ),
-        TextField(
-          textAlign: TextAlign.center,
-          decoration: const InputDecoration(
-              labelText: 'Time taken for 2.4km (s)'
+          TextField(
+            textAlign: TextAlign.center,
+            decoration: const InputDecoration(
+                labelText: 'Time taken for 2.4km (s)'
+            ),
+            controller: runTimeController,
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
           ),
-          controller: runTimeController,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
-        ),
-        TextField(
-          textAlign: TextAlign.center,
-          decoration: const InputDecoration(
-              labelText: 'No. of push-ups (reps)'
+          TextField(
+            textAlign: TextAlign.center,
+            decoration: const InputDecoration(
+                labelText: 'No. of push-ups (reps)'
+            ),
+            controller: pushUpRepsController,
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
           ),
-          controller: pushUpRepsController,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
-        ),
-        TextField(
-          textAlign: TextAlign.center,
-          decoration: const InputDecoration(
-              labelText: 'No. of sit-ups (reps)'
+          TextField(
+            textAlign: TextAlign.center,
+            decoration: const InputDecoration(
+                labelText: 'No. of sit-ups (reps)'
+            ),
+            controller: sitUpRepsController,
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
           ),
-          controller: sitUpRepsController,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
-        ),
-        ElevatedButton(
-            child: const Text("ADD"),
-            onPressed: () async {
+          const SizedBox(height: 1),
+          ElevatedButton(
+              child: const Text("ADD"),
+              onPressed: () async {
 
-              await IpptService().createIpptTraining(
-                  context,
-                  ipptNameController.text,
-                  ageController.text,
-                  runTimeController.text,
-                  pushUpRepsController.text,
-                  sitUpRepsController.text
-              );
+                await IpptService().createIpptTraining(
+                    context,
+                    ipptNameController.text,
+                    ageController.text,
+                    runTimeController.text,
+                    pushUpRepsController.text,
+                    sitUpRepsController.text
+                );
 
-              Navigator.push(context, PageRouteBuilder(
-                pageBuilder: (
-                    BuildContext context,
-                    Animation<double> animation,
-                    Animation<double> secondaryAnimation
-                    ) => const HomeScreen(),
-                transitionDuration: const Duration(milliseconds: 50),
-                transitionsBuilder: (
-                    BuildContext context,
-                    Animation<double> animation,
-                    Animation<double> secondaryAnimation,
-                    Widget child,) => FadeTransition(opacity: animation, child: child),
-              ));
-            }
-        ),
-      ],
+                Navigator.push(context, PageRouteBuilder(
+                  pageBuilder: (
+                      BuildContext context,
+                      Animation<double> animation,
+                      Animation<double> secondaryAnimation
+                      ) => const HomeScreen(),
+                  transitionDuration: const Duration(milliseconds: 50),
+                  transitionsBuilder: (
+                      BuildContext context,
+                      Animation<double> animation,
+                      Animation<double> secondaryAnimation,
+                      Widget child,) => FadeTransition(opacity: animation, child: child),
+                ));
+              }
+          ),
+          const SizedBox(height: 5),
+        ],
+      ),
     );
   }
 }

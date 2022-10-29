@@ -72,7 +72,7 @@ class IpptService {
       List<IpptTraining> ipptTrainingList(String str) => List<IpptTraining>.from(
           json.decode(str).map((x) => IpptTraining.fromJson(x))
       );
-      print(response.body);
+      //print(response.body);
       return ipptTrainingList(response.body);
 
     } else {

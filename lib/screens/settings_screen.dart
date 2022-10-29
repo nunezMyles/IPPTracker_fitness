@@ -16,7 +16,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       bottomNavigationBar: const BottomNavBar(),
       appBar: AppBar(
-        leadingWidth: 10,
+        automaticallyImplyLeading: false,
         title: const Text(
           'Settings',
           style: TextStyle(
