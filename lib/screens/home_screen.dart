@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
     String twoDigits(int n) => n.toString().padLeft(2, "0");
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+    return "$twoDigitMinutes:$twoDigitSeconds";
   }
 
   final options = const LiveOptions(
@@ -319,7 +319,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       children: [
 
                                                         Text(
-                                                          exercisesObjectsList[index].timing,
+                                                          DateFormat('mm:ss')
+                                                              .format(DateFormat('HH:mm:ss')
+                                                              .parse(exercisesObjectsList[index].timing.toString())),
                                                           style: const TextStyle(color: Color.fromARGB(255, 180, 180, 180), fontSize: 13.5),
                                                         ),
                                                         //const SizedBox(width: 1),
@@ -645,7 +647,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               );
                             default:
-                              return const SizedBox(height: 1);
+                              return const SizedBox(height: 0);
                           }
                         }
                       );
