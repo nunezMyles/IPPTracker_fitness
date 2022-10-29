@@ -79,4 +79,19 @@ class IpptService {
       throw Exception('Failed to load ippt data');
     }
   }
+
+  Future<void> removeIpptTraining(BuildContext context, String ipptId) async {
+    final response = await http.post(
+      Uri.parse('$webServerUri/api/exercise/removeIpptTraining'),
+      body: jsonEncode({
+        'id': ipptId,
+      }),
+      headers: <String, String> {
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+    );
+    if (response.statusCode != 200) {
+      showSnackBar(context, 'Fail to delete IPPT training.');
+    }
+  }
 }

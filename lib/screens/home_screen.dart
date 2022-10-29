@@ -417,7 +417,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Dismissible(
                                     key: UniqueKey(),
                                     onDismissed: (_) async {
-                                      await PushUpService().removePushUp(context, exercisesObjectsList[index].id);
+                                      await IpptService().removeIpptTraining(context, exercisesObjectsList[index].id);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(1.5),
@@ -497,7 +497,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           exercisesObjectsList[index].pushupReps + ' reps',
                                                           style: const TextStyle(
                                                             color: Color.fromARGB(255, 211, 186, 109),
-                                                            fontSize: 18,
+                                                            fontSize: 16,
                                                           )
                                                       ),
                                                     ],
@@ -518,7 +518,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           exercisesObjectsList[index].situpReps + ' reps',
                                                           style: const TextStyle(
                                                             color: Color.fromARGB(255, 211, 186, 109),
-                                                            fontSize: 18,
+                                                            fontSize: 16,
                                                           )
                                                       ),
                                                     ],
@@ -539,7 +539,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           _printDuration(exercisesObjectsList[index].runTiming),
                                                           style: const TextStyle(
                                                             color: Color.fromARGB(255, 211, 186, 109),
-                                                            fontSize: 18,
+                                                            fontSize: 16,
                                                           )
                                                       ),
                                                     ],
