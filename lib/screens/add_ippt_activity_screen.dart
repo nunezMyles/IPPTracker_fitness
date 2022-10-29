@@ -17,6 +17,32 @@ class _AddIPPTScreenState extends State<AddIPPTScreen> {
   TextEditingController runTimeController = TextEditingController();
   TextEditingController pushUpRepsController = TextEditingController();
   TextEditingController sitUpRepsController = TextEditingController();
+  bool _ageValidate = true;
+  bool _runTimeValidate = true;
+  bool _pushUpRepsValidate = true;
+  bool _sitUpRepsValidate = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Start listening to changes.
+    ageController.addListener(_printLatestValue);
+    runTimeController.addListener(_printLatestValue);
+    pushUpRepsController.addListener(_printLatestValue);
+    sitUpRepsController.addListener(_printLatestValue);
+  }
+
+  void _printLatestValue() {
+    ageController.text.isEmpty ? _ageValidate = true : _ageValidate = false;
+    runTimeController.text.isEmpty ? _runTimeValidate = true : _runTimeValidate = false;
+    pushUpRepsController.text.isEmpty ? _pushUpRepsValidate = true : _pushUpRepsValidate = false;
+    sitUpRepsController.text.isEmpty ? _sitUpRepsValidate = true : _sitUpRepsValidate = false;
+
+    setState(() {
+
+    });
+  }
 
   @override
   void dispose() {
@@ -38,14 +64,15 @@ class _AddIPPTScreenState extends State<AddIPPTScreen> {
           TextField(
             textAlign: TextAlign.center,
             decoration: const InputDecoration(
-                labelText: 'Name of IPPT Entry'
+                labelText: 'Name of IPPT training'
             ),
             controller: ipptNameController,
           ),
           TextField(
             textAlign: TextAlign.center,
-            decoration: const InputDecoration(
-                labelText: 'Age'
+            decoration: InputDecoration(
+              labelText: 'Age',
+              errorText: _ageValidate ? 'Value can\'t be empty.' : null,
             ),
             controller: ageController,
             keyboardType: TextInputType.number,
@@ -53,8 +80,9 @@ class _AddIPPTScreenState extends State<AddIPPTScreen> {
           ),
           TextField(
             textAlign: TextAlign.center,
-            decoration: const InputDecoration(
-                labelText: 'Time taken for 2.4km (s)'
+            decoration: InputDecoration(
+                labelText: 'Time taken for 2.4km (s)',
+              errorText: _runTimeValidate ? 'Value can\'t be empty.' : null,
             ),
             controller: runTimeController,
             keyboardType: TextInputType.number,
@@ -62,8 +90,9 @@ class _AddIPPTScreenState extends State<AddIPPTScreen> {
           ),
           TextField(
             textAlign: TextAlign.center,
-            decoration: const InputDecoration(
-                labelText: 'No. of push-ups (reps)'
+            decoration: InputDecoration(
+                labelText: 'No. of push-ups (reps)',
+              errorText: _pushUpRepsValidate ? 'Value can\'t be empty.' : null,
             ),
             controller: pushUpRepsController,
             keyboardType: TextInputType.number,
@@ -71,8 +100,9 @@ class _AddIPPTScreenState extends State<AddIPPTScreen> {
           ),
           TextField(
             textAlign: TextAlign.center,
-            decoration: const InputDecoration(
-                labelText: 'No. of sit-ups (reps)'
+            decoration: InputDecoration(
+                labelText: 'No. of sit-ups (reps)',
+              errorText: _sitUpRepsValidate ? 'Value can\'t be empty.' : null,
             ),
             controller: sitUpRepsController,
             keyboardType: TextInputType.number,
@@ -82,6 +112,14 @@ class _AddIPPTScreenState extends State<AddIPPTScreen> {
           ElevatedButton(
               child: const Text("ADD"),
               onPressed: () async {
+
+                if (_ageValidate || _runTimeValidate || _pushUpRepsValidate || _sitUpRepsValidate) {
+                  return;
+                }
+
+                if (ipptNameController.text.isEmpty) {
+                  ipptNameController.text = 'Unnamed entry';
+                }
 
                 await IpptService().createIpptTraining(
                     context,
