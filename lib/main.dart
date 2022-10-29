@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:my_fitness/screens/account_screen.dart';
 import 'package:my_fitness/screens/map_screen.dart';
 import 'package:my_fitness/screens/calendar_screen.dart';
 import 'package:my_fitness/screens/register_screen.dart';
-import 'package:my_fitness/screens/settings_screen.dart';
+import 'package:my_fitness/screens/account_screen.dart';
 import 'package:my_fitness/utilities/auth_service.dart';
 import 'package:provider/provider.dart';
 import '../screens/login_screen.dart';
@@ -61,7 +62,7 @@ class _MyAppState extends State<MyApp> {
         '/home': (context) => const HomeScreen(),
         '/map': (context) => const MapScreen(),
         '/calendar': (context) => const CalendarScreen(),
-        '/settings': (context) => const SettingsScreen(),
+        '/account': (context) => const AccountScreen(),
 
       },
       home: Provider.of<UserProvider>(context).user.token.isNotEmpty

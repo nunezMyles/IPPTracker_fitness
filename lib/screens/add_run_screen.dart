@@ -13,13 +13,6 @@ TextEditingController runNameController = TextEditingController();
 class _AddRunScreenState extends State<AddRunScreen> {
 
   @override
-  void dispose() {
-    // Clean up controller
-    runNameController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Column(
       children: [

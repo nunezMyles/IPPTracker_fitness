@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../utilities/account_service.dart';
 import '../widgets/bottomNavBar.dart';
+import '../widgets/showFilterDialog.dart';
 
-class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+class AccountScreen extends StatefulWidget {
+  const AccountScreen({Key? key}) : super(key: key);
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  State<AccountScreen> createState() => _AccountScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,6 +33,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
             onPressed: () {
               setState(() {
+                filterValues = [true, true, true, true];
+                navBarselectedIndex = 0;
                 AccountService().logOut(context);
               });
             },

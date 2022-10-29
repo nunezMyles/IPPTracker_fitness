@@ -167,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  refresh() {
+  void refresh() {
     setState(() {});
   }
 
@@ -279,6 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Dismissible(
                                     key: UniqueKey(),
                                     onDismissed: (_) async {
+                                      exercisesObjectsList.removeAt(index);
                                       await RunService().removeRun(context, exercisesObjectsList[index].id);
                                     },
                                     child: Padding(
@@ -360,6 +361,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Dismissible(
                                     key: UniqueKey(),
                                     onDismissed: (_) async {
+                                      exercisesObjectsList.removeAt(index);
                                       await PushUpService().removePushUp(context, exercisesObjectsList[index].id);
                                     },
                                     child: Padding(
@@ -436,6 +438,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Dismissible(
                                     key: UniqueKey(),
                                     onDismissed: (_) async {
+                                      exercisesObjectsList.removeAt(index);
                                       await SitUpService().removeSitUp(context, exercisesObjectsList[index].id);
                                     },
                                     child: Padding(
@@ -512,6 +515,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Dismissible(
                                     key: UniqueKey(),
                                     onDismissed: (_) async {
+                                      exercisesObjectsList.removeAt(index);
                                       await IpptService().removeIpptTraining(context, exercisesObjectsList[index].id);
                                     },
                                     child: Padding(
@@ -559,7 +563,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     ),
                                                     const SizedBox(height: 2),
                                                     const Text(
-                                                      'Click to view details',
+                                                      'Tap to view details',
                                                       style: TextStyle(color: Color.fromARGB(255, 180, 180, 180), fontSize: 13.5),
                                                     ),
                                                   ],

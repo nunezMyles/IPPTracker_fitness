@@ -92,7 +92,7 @@ class _AddIPPTScreenState extends State<AddIPPTScreen> {
           TextField(
             textAlign: TextAlign.center,
             decoration: InputDecoration(
-                labelText: 'No. of push-ups (reps)',
+                labelText: 'No. of push-ups in 1 min (reps)',
               errorText: _pushUpRepsValidate ? 'Value can\'t be empty.' : null,
             ),
             controller: pushUpRepsController,
@@ -102,7 +102,7 @@ class _AddIPPTScreenState extends State<AddIPPTScreen> {
           TextField(
             textAlign: TextAlign.center,
             decoration: InputDecoration(
-                labelText: 'No. of sit-ups (reps)',
+                labelText: 'No. of sit-ups in 1 min (reps)',
               errorText: _sitUpRepsValidate ? 'Value can\'t be empty.' : null,
             ),
             controller: sitUpRepsController,

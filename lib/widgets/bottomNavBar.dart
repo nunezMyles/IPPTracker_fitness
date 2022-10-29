@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_fitness/screens/calendar_screen.dart';
 import 'package:my_fitness/screens/map_screen.dart';
-import 'package:my_fitness/screens/settings_screen.dart';
+import 'package:my_fitness/screens/account_screen.dart';
 
 import '../screens/home_screen.dart';
 
@@ -74,7 +74,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
               BuildContext context,
               Animation<double> animation,
               Animation<double> secondaryAnimation
-              ) => const SettingsScreen(),
+              ) => const AccountScreen(),
           transitionDuration: Duration(milliseconds: pageTransitionDuration),
           transitionsBuilder: (
               BuildContext context,
@@ -107,8 +107,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
             label: 'Calendar',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
+            icon: Icon(Icons.person),
+            label: 'Account',
           ),
         ],
         currentIndex: navBarselectedIndex,

@@ -8,9 +8,10 @@ void showAlertDialog(BuildContext context, Function() refresh) {
       return AlertDialog(
         title: const Text('Filter', style: TextStyle(color: Colors.white)),
         shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(23.0))),
+          borderRadius: BorderRadius.all(Radius.circular(27.0)),
+        ),
         insetPadding: const EdgeInsets.symmetric(horizontal: 100),
-        backgroundColor: const Color.fromARGB(255, 46, 46, 46),
+        backgroundColor: const Color.fromARGB(255, 46, 46, 46).withOpacity(0.9),
         content: AlertCheckbox(notifyParent: refresh),
       );
     },
