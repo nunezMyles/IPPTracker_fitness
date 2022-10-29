@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
-import '../utilities/account_service.dart';
 import '../widgets/bottomNavBar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart' as geo;
@@ -163,7 +162,6 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
   @override
   Widget build(BuildContext context) {
     super.build(context);
-
     _locationInit(context);
 
     return Scaffold(
@@ -176,7 +174,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
               color: Colors.white
           ),),
         actions: <Widget>[
-          IconButton(
+          /*IconButton(
             icon: const Icon(
               Icons.exit_to_app,
               color: Colors.redAccent,
@@ -186,7 +184,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
                 AccountService().logOut(context);
               });
             },
-          )
+          )*/
         ],
       ),
       body: Stack(

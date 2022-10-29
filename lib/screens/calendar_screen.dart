@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../utilities/account_service.dart';
 import '../widgets/bottomNavBar.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../models/calendar_event.dart';
@@ -97,7 +96,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               color: Colors.white
           ),),
         actions: <Widget>[
-          IconButton(
+          /*IconButton(
             icon: const Icon(
               Icons.exit_to_app,
               color: Colors.redAccent,
@@ -107,7 +106,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 AccountService().logOut(context);
               });
             },
-          )
+          )*/
         ],
       ),
       body: Column(
