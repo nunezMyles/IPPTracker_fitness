@@ -167,6 +167,10 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  refresh() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     user = Provider.of<UserProvider>(context).user;
@@ -188,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Color.fromARGB(255, 180, 180, 180),
             ),
             onPressed: () {
-              showAlertDialog(context);
+              showAlertDialog(context, refresh);
             },
           ),
           const SizedBox(width: 10),
@@ -260,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemBuilder: (BuildContext context, int index, Animation<double> animation) {
                           switch(exercisesObjectsList[index].type) {
                             case 'run':
-                              return FadeTransition(
+                              return filterValues[0] ? FadeTransition(
                                 opacity: Tween<double>(
                                   begin: 0,
                                   end: 1,
@@ -339,9 +343,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
-                              );
+                              ) : const SizedBox(height: 0);
                             case 'pushup':
-                              return FadeTransition(
+                              return filterValues[1] ? FadeTransition(
                                 opacity: Tween<double>(
                                   begin: 0,
                                   end: 1,
@@ -415,164 +419,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
-                              );
-                            case 'ippt':
-                              return FadeTransition(
-                                opacity: Tween<double>(
-                                  begin: 0,
-                                  end: 1,
-                                ).animate(animation),
-                                // And slide transition
-                                child: SlideTransition(
-                                  position: Tween<Offset>(
-                                    begin: const Offset(0, -0.1),
-                                    end: Offset.zero,
-                                  ).animate(animation),
-                                  // Paste you Widget
-                                  child: Dismissible(
-                                    key: UniqueKey(),
-                                    onDismissed: (_) async {
-                                      await IpptService().removeIpptTraining(context, exercisesObjectsList[index].id);
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(1.5),
-                                      child: Card(
-                                        elevation: 3,
-                                        color: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.6),
-                                        child: ExpansionTile(
-                                          iconColor: const Color.fromARGB(255, 211, 186, 109),
-                                          collapsedIconColor: const Color.fromARGB(255, 200, 200, 200),
-                                          leading: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              const SizedBox(height: 2),
-                                              Icon(
-                                                  Icons.fact_check_outlined,
-                                                  size: 38,
-                                                  color: Colors.lightGreenAccent.shade700,
-                                              ),
-                                            ],
-                                          ),
-                                          title: Text(
-                                            exercisesObjectsList[index].name,
-                                            style: const TextStyle(color: Colors.white, fontSize: 17),
-                                          ),
-                                          subtitle: Text(
-                                            DateFormat('MMM dd')
-                                                .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
-                                                .parse(exercisesObjectsList[index].dateTime.toString()))
-                                                + ', '
-                                                + DateFormat('hh:mm a')
-                                                .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
-                                                .parse(exercisesObjectsList[index].dateTime.toString())),
-                                            style: const TextStyle(color: Colors.white),
-                                          ),
-                                          trailing: Wrap(
-                                              children: [
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      exercisesObjectsList[index].score + ' pts',
-                                                      style: const TextStyle(color: Color.fromARGB(255, 211, 186, 109), fontSize: 20),
-                                                    ),
-                                                    const SizedBox(height: 2),
-                                                    const Text(
-                                                      'Click to view details',
-                                                      style: TextStyle(color: Color.fromARGB(255, 180, 180, 180), fontSize: 13.5),
-                                                    ),
-                                                  ],
-                                                )
-                                              ]
-                                          ),
-                                          children: [
-                                            const Padding(
-                                              padding: EdgeInsets.fromLTRB(30, 0, 30, 7),
-                                              child: Divider(
-                                                color: Color.fromARGB(255, 80, 80, 80),
-                                                thickness: 1,
-                                              ),
-                                            ),
-                                            Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                Expanded(
-                                                  child: Column(
-                                                    children: [
-                                                      const Icon(
-                                                          MyFlutterApp.push_ups1,
-                                                          size: 35,
-                                                          color: Color.fromARGB(255, 180, 180, 180)
-                                                      ),
-                                                      const Text('1 min', style: TextStyle(color: Color.fromARGB(255, 180, 180, 180))),
-                                                      const SizedBox(height: 6),
-                                                      Text(
-                                                          exercisesObjectsList[index].pushupReps + ' reps',
-                                                          style: const TextStyle(
-                                                            color: Color.fromARGB(255, 211, 186, 109),
-                                                            fontSize: 16,
-                                                          )
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-
-                                                Expanded(
-                                                  child: Column(
-                                                    children: [
-                                                      const Icon(
-                                                        MyFlutterApp.sit_ups,
-                                                        size: 35,
-                                                        color: Color.fromARGB(255, 180, 180, 180)
-                                                      ),
-                                                      const Text('1 min', style: TextStyle(color: Color.fromARGB(255, 180, 180, 180))),
-                                                      const SizedBox(height: 6),
-                                                      Text(
-                                                          exercisesObjectsList[index].situpReps + ' reps',
-                                                          style: const TextStyle(
-                                                            color: Color.fromARGB(255, 211, 186, 109),
-                                                            fontSize: 16,
-                                                          )
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-
-                                                Expanded(
-                                                  child: Column(
-                                                    children: [
-                                                      const Icon(
-                                                          Icons.directions_run,
-                                                          size: 35,
-                                                          color: Color.fromARGB(255, 180, 180, 180)
-                                                      ),
-                                                      const Text('2.4 km', style: TextStyle(color: Color.fromARGB(255, 180, 180, 180))),
-                                                      const SizedBox(height: 6),
-                                                      Text(
-                                                          _printDuration(exercisesObjectsList[index].runTiming),
-                                                          style: const TextStyle(
-                                                            color: Color.fromARGB(255, 211, 186, 109),
-                                                            fontSize: 16,
-                                                          )
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-
-                                              ],
-                                            ),
-                                            const SizedBox(height: 15),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              );
+                              ) : const SizedBox(height: 0);
                             case 'situp':
-                              return FadeTransition(
+                              return filterValues[2] ? FadeTransition(
                                 opacity: Tween<double>(
                                   begin: 0,
                                   end: 1,
@@ -646,7 +495,162 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
-                              );
+                              ) : const SizedBox(height: 0);
+                            case 'ippt':
+                              return filterValues[3] ? FadeTransition(
+                                opacity: Tween<double>(
+                                  begin: 0,
+                                  end: 1,
+                                ).animate(animation),
+                                // And slide transition
+                                child: SlideTransition(
+                                  position: Tween<Offset>(
+                                    begin: const Offset(0, -0.1),
+                                    end: Offset.zero,
+                                  ).animate(animation),
+                                  // Paste you Widget
+                                  child: Dismissible(
+                                    key: UniqueKey(),
+                                    onDismissed: (_) async {
+                                      await IpptService().removeIpptTraining(context, exercisesObjectsList[index].id);
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(1.5),
+                                      child: Card(
+                                        elevation: 3,
+                                        color: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.6),
+                                        child: ExpansionTile(
+                                          iconColor: const Color.fromARGB(255, 211, 186, 109),
+                                          collapsedIconColor: const Color.fromARGB(255, 200, 200, 200),
+                                          leading: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              const SizedBox(height: 2),
+                                              Icon(
+                                                Icons.fact_check_outlined,
+                                                size: 38,
+                                                color: Colors.lightGreenAccent.shade700,
+                                              ),
+                                            ],
+                                          ),
+                                          title: Text(
+                                            exercisesObjectsList[index].name,
+                                            style: const TextStyle(color: Colors.white, fontSize: 17),
+                                          ),
+                                          subtitle: Text(
+                                            DateFormat('MMM dd')
+                                                .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
+                                                .parse(exercisesObjectsList[index].dateTime.toString()))
+                                                + ', '
+                                                + DateFormat('hh:mm a')
+                                                .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
+                                                .parse(exercisesObjectsList[index].dateTime.toString())),
+                                            style: const TextStyle(color: Colors.white),
+                                          ),
+                                          trailing: Wrap(
+                                              children: [
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      exercisesObjectsList[index].score + ' pts',
+                                                      style: const TextStyle(color: Color.fromARGB(255, 211, 186, 109), fontSize: 20),
+                                                    ),
+                                                    const SizedBox(height: 2),
+                                                    const Text(
+                                                      'Click to view details',
+                                                      style: TextStyle(color: Color.fromARGB(255, 180, 180, 180), fontSize: 13.5),
+                                                    ),
+                                                  ],
+                                                )
+                                              ]
+                                          ),
+                                          children: [
+                                            const Padding(
+                                              padding: EdgeInsets.fromLTRB(30, 0, 30, 7),
+                                              child: Divider(
+                                                color: Color.fromARGB(255, 80, 80, 80),
+                                                thickness: 1,
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Expanded(
+                                                  child: Column(
+                                                    children: [
+                                                      const Icon(
+                                                          MyFlutterApp.push_ups1,
+                                                          size: 35,
+                                                          color: Color.fromARGB(255, 180, 180, 180)
+                                                      ),
+                                                      const Text('1 min', style: TextStyle(color: Color.fromARGB(255, 180, 180, 180))),
+                                                      const SizedBox(height: 6),
+                                                      Text(
+                                                          exercisesObjectsList[index].pushupReps + ' reps',
+                                                          style: const TextStyle(
+                                                            color: Color.fromARGB(255, 211, 186, 109),
+                                                            fontSize: 16,
+                                                          )
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+
+                                                Expanded(
+                                                  child: Column(
+                                                    children: [
+                                                      const Icon(
+                                                          MyFlutterApp.sit_ups,
+                                                          size: 35,
+                                                          color: Color.fromARGB(255, 180, 180, 180)
+                                                      ),
+                                                      const Text('1 min', style: TextStyle(color: Color.fromARGB(255, 180, 180, 180))),
+                                                      const SizedBox(height: 6),
+                                                      Text(
+                                                          exercisesObjectsList[index].situpReps + ' reps',
+                                                          style: const TextStyle(
+                                                            color: Color.fromARGB(255, 211, 186, 109),
+                                                            fontSize: 16,
+                                                          )
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+
+                                                Expanded(
+                                                  child: Column(
+                                                    children: [
+                                                      const Icon(
+                                                          Icons.directions_run,
+                                                          size: 35,
+                                                          color: Color.fromARGB(255, 180, 180, 180)
+                                                      ),
+                                                      const Text('2.4 km', style: TextStyle(color: Color.fromARGB(255, 180, 180, 180))),
+                                                      const SizedBox(height: 6),
+                                                      Text(
+                                                          _printDuration(exercisesObjectsList[index].runTiming),
+                                                          style: const TextStyle(
+                                                            color: Color.fromARGB(255, 211, 186, 109),
+                                                            fontSize: 16,
+                                                          )
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+
+                                              ],
+                                            ),
+                                            const SizedBox(height: 15),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ) : const SizedBox(height: 0);
                             default:
                               return const SizedBox(height: 0);
                           }

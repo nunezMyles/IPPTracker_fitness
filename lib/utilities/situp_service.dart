@@ -56,7 +56,7 @@ class SitUpService {
       List<SitUpExercise> sitUpExerciseList(String str) => List<SitUpExercise>.from(
           json.decode(str).map((x) => SitUpExercise.fromJson(x))
       );
-      print(response.body);
+      //print(response.body);
       //print(pushUpExerciseList(response.body));
       return sitUpExerciseList(response.body);
 

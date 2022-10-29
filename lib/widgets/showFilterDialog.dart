@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
-
 import '../my_flutter_app_icons.dart';
 
-showAlertDialog(BuildContext context) {
-  // show the dialog
+void showAlertDialog(BuildContext context, Function() refresh) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return const AlertDialog(
-        title: Text('Filter', style: TextStyle(color: Colors.white)),
-        shape: RoundedRectangleBorder(
+      return AlertDialog(
+        title: const Text('Filter', style: TextStyle(color: Colors.white)),
+        shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(23.0))),
-        insetPadding: EdgeInsets.symmetric(horizontal: 100),
-        backgroundColor: Color.fromARGB(255, 46, 46, 46),
-        content: AlertCheckbox(),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 100),
+        backgroundColor: const Color.fromARGB(255, 46, 46, 46),
+        content: AlertCheckbox(notifyParent: refresh),
       );
     },
   );
 }
 
 class AlertCheckbox extends StatefulWidget {
-  const AlertCheckbox({Key? key}) : super(key: key);
+  const AlertCheckbox({Key? key, required this.notifyParent}) : super(key: key);
+  final Function() notifyParent;
 
   @override
   State<AlertCheckbox> createState() => _AlertCheckboxState();
@@ -33,7 +32,7 @@ class _AlertCheckboxState extends State<AlertCheckbox> {
   List<Widget> iconWidgets = [
     const Icon(
         Icons.directions_run,
-        size: 40,
+        size: 36,
         color: Colors.orangeAccent
     ),
     const Icon(
@@ -43,48 +42,46 @@ class _AlertCheckboxState extends State<AlertCheckbox> {
     ),
     const Icon(
         MyFlutterApp.sit_ups,
-        size: 35,
+        size: 34,
         color: Colors.yellowAccent
     ),
     Icon(
       Icons.fact_check_outlined,
-      size: 38,
+      size: 34,
       color: Colors.lightGreenAccent.shade700,
     ),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 220.0,
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: 4,
-        itemBuilder: (BuildContext context, int index) {
-          return Theme(
-            data: ThemeData(unselectedWidgetColor: Colors.white),
-            child: CheckboxListTile(
-              activeColor: Colors.transparent,
-              checkboxShape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(5.0),
+    return SafeArea(
+      child: SizedBox(
+        height: 220.0,
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: 4,
+          itemBuilder: (BuildContext context, int index) {
+            return Theme(
+              data: ThemeData(unselectedWidgetColor: Colors.white),
+              child: CheckboxListTile(
+                activeColor: Colors.transparent,
+                checkboxShape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(5.0),
+                  ),
                 ),
+                title: iconWidgets[index],
+                value: filterValues[index],
+                onChanged: (bool? value) {
+                  setState(() {
+                    filterValues[index] = value!;
+                    widget.notifyParent();
+                  });
+                },
               ),
-              title: Row(
-                children: [
-                  Expanded(child: iconWidgets[index]),
-                  //SizedBox(width: 30,)
-                ],
-              ),
-              value: filterValues[index],
-              onChanged: (bool? value) {
-                setState(() {
-                  filterValues[index] = value!;
-                });
-              },
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
