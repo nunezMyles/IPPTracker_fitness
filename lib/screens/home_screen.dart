@@ -279,8 +279,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Dismissible(
                                     key: UniqueKey(),
                                     onDismissed: (_) async {
-                                      exercisesObjectsList.removeAt(index);
                                       await RunService().removeRun(context, exercisesObjectsList[index].id);
+                                      exercisesObjectsList.removeAt(index);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(1.5),
@@ -361,8 +361,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Dismissible(
                                     key: UniqueKey(),
                                     onDismissed: (_) async {
-                                      exercisesObjectsList.removeAt(index);
                                       await PushUpService().removePushUp(context, exercisesObjectsList[index].id);
+                                      exercisesObjectsList.removeAt(index);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(1.5),
@@ -438,8 +438,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Dismissible(
                                     key: UniqueKey(),
                                     onDismissed: (_) async {
-                                      exercisesObjectsList.removeAt(index);
                                       await SitUpService().removeSitUp(context, exercisesObjectsList[index].id);
+                                      exercisesObjectsList.removeAt(index);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(1.5),
@@ -515,8 +515,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Dismissible(
                                     key: UniqueKey(),
                                     onDismissed: (_) async {
-                                      exercisesObjectsList.removeAt(index);
                                       await IpptService().removeIpptTraining(context, exercisesObjectsList[index].id);
+                                      exercisesObjectsList.removeAt(index);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(1.5),

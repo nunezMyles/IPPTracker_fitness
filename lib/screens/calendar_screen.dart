@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
 import '../widgets/bottomNavBar.dart';
-import 'package:table_calendar/table_calendar.dart';
-import '../models/calendar_event.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
+
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({Key? key}) : super(key: key);
@@ -11,75 +10,20 @@ class CalendarScreen extends StatefulWidget {
   State<CalendarScreen> createState() => _CalendarScreenState();
 }
 
+
 class _CalendarScreenState extends State<CalendarScreen> {
+  final CalendarController _calendarController = CalendarController();
+  var meetings = <Meeting>[];
 
-  late final ValueNotifier<List<Event>> _selectedEvents;
-  CalendarFormat _calendarFormat = CalendarFormat.month;
-  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
-      .toggledOff; // Can be toggled on/off by longpressing a date
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
-  DateTime? _rangeStart;
-  DateTime? _rangeEnd;
+  List<Meeting> _getDataSource() {
+    return meetings;
+  }
 
   @override
-  void initState() {
+  initState(){
+    _calendarController.selectedDate = DateTime(2022, 10, 29);
+    _calendarController.displayDate = DateTime(2022, 10, 29);
     super.initState();
-    _selectedDay = _focusedDay;
-    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
-  }
-
-  @override
-  void dispose() {
-    _selectedEvents.dispose();
-    super.dispose();
-  }
-
-  List<Event> _getEventsForDay(DateTime day) {
-    // Implementation example
-    return kEvents[day] ?? [];
-  }
-
-  List<Event> _getEventsForRange(DateTime start, DateTime end) {
-    // Implementation example
-    final days = daysInRange(start, end);
-
-    return [
-      for (final d in days) ..._getEventsForDay(d),
-    ];
-  }
-
-  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-    if (!isSameDay(_selectedDay, selectedDay)) {
-      setState(() {
-        _selectedDay = selectedDay;
-        _focusedDay = focusedDay;
-        _rangeStart = null; // Important to clean those
-        _rangeEnd = null;
-        _rangeSelectionMode = RangeSelectionMode.toggledOff;
-      });
-
-      _selectedEvents.value = _getEventsForDay(selectedDay);
-    }
-  }
-
-  void _onRangeSelected(DateTime? start, DateTime? end, DateTime focusedDay) {
-    setState(() {
-      _selectedDay = null;
-      _focusedDay = focusedDay;
-      _rangeStart = start;
-      _rangeEnd = end;
-      _rangeSelectionMode = RangeSelectionMode.toggledOn;
-    });
-
-    // `start` or `end` could be null
-    if (start != null && end != null) {
-      _selectedEvents.value = _getEventsForRange(start, end);
-    } else if (start != null) {
-      _selectedEvents.value = _getEventsForDay(start);
-    } else if (end != null) {
-      _selectedEvents.value = _getEventsForDay(end);
-    }
   }
 
 
@@ -94,83 +38,95 @@ class _CalendarScreenState extends State<CalendarScreen> {
           'Workout Calendar',
           style: TextStyle(
               color: Colors.white
-          ),),
-        actions: <Widget>[
-          /*IconButton(
-            icon: const Icon(
-              Icons.exit_to_app,
-              color: Colors.redAccent,
-            ),
-            onPressed: () {
-              setState(() {
-                AccountService().logOut(context);
-              });
-            },
-          )*/
-        ],
+          ),
+        ),
       ),
-      body: Column(
-        children: [
-          TableCalendar<Event>(
-            firstDay: kFirstDay,
-            lastDay: kLastDay,
-            focusedDay: _focusedDay,
-            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            rangeStartDay: _rangeStart,
-            rangeEndDay: _rangeEnd,
-            calendarFormat: _calendarFormat,
-            rangeSelectionMode: _rangeSelectionMode,
-            eventLoader: _getEventsForDay,
-            startingDayOfWeek: StartingDayOfWeek.monday,
-            calendarStyle: const CalendarStyle(
-              // Use `CalendarStyle` to customize the UI
-              outsideDaysVisible: false,
-            ),
-            onDaySelected: _onDaySelected,
-            onRangeSelected: _onRangeSelected,
-            onFormatChanged: (format) {
-              if (_calendarFormat != format) {
-                setState(() {
-                  _calendarFormat = format;
-                });
-              }
-            },
-            onPageChanged: (focusedDay) {
-              _focusedDay = focusedDay;
-            },
-          ),
-          const SizedBox(height: 8.0),
-          Expanded(
-            child: ValueListenableBuilder<List<Event>>(
-              valueListenable: _selectedEvents,
-              builder: (context, value, _) {
-                return ListView.builder(
-                  itemCount: value.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 12.0,
-                        vertical: 4.0,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: ListTile(
-                        onTap: () {
-                          //print('${value[index]}')
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add, color: Colors.greenAccent, size: 30),
+        backgroundColor: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.9),
+        onPressed: () {
+          setState(() {
+            final DateTime startTime = _calendarController.selectedDate!;
+            final DateTime endTime = _calendarController.selectedDate!.add(const Duration(hours: 2));
 
-                        },
-                        title: Text('${value[index]}'),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
+            meetings.add(Meeting(
+                'Conference',
+                startTime,
+                endTime,
+                const Color(0xFF0F8644),
+                false
+            ));
+          });
+        }
+      ),
+      body: Theme(
+        data: ThemeData(colorScheme: const ColorScheme.dark()),
+        child: SfCalendar(
+          view: CalendarView.month,
+          firstDayOfWeek: 1,
+          controller: _calendarController,
+          dataSource: MeetingDataSource(_getDataSource()),
+          //allowDragAndDrop: true,
+          showDatePickerButton: true,
+          backgroundColor: const Color.fromARGB(255, 46, 46, 46),
+          todayHighlightColor: const Color.fromARGB(255, 211, 186, 109),
+          selectionDecoration: BoxDecoration(
+            color: Colors.transparent,
+            border: Border.all(color: const Color.fromARGB(255, 211, 186, 109), width: 2),
+            borderRadius: const BorderRadius.all(Radius.circular(4)),
+            shape: BoxShape.rectangle,
           ),
-        ],
+          monthViewSettings: const MonthViewSettings(
+            showAgenda: true,
+            showTrailingAndLeadingDates: false,
+          ),
+        ),
       ),
     );
   }
 }
+
+class MeetingDataSource extends CalendarDataSource {
+  MeetingDataSource(this.source);
+
+  List<Meeting> source;
+
+  @override
+  List<dynamic> get appointments => source;
+
+  @override
+  DateTime getStartTime(int index) {
+    return source[index].from;
+  }
+
+  @override
+  DateTime getEndTime(int index) {
+    return source[index].to;
+  }
+
+  @override
+  String getSubject(int index) {
+    return source[index].eventName;
+  }
+
+  @override
+  Color getColor(int index) {
+    return source[index].background;
+  }
+
+  @override
+  bool isAllDay(int index) {
+    return source[index].isAllDay;
+  }
+}
+
+class Meeting {
+  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
+
+  String eventName;
+  DateTime from;
+  DateTime to;
+  Color background;
+  bool isAllDay;
+}
+
