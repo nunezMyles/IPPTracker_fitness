@@ -1,41 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:my_fitness/models/pushup_exercise.dart';
+import 'package:my_fitness/models/situp_exercise.dart';
 
-import '../utilities/pushup_service.dart';
+import '../utilities/situp_service.dart';
 import 'package:flutter/services.dart';
 import 'home_screen.dart';
 
-class AddPushUpScreen extends StatefulWidget {
-  const AddPushUpScreen({Key? key}) : super(key: key);
+class AddSitUpScreen extends StatefulWidget {
+  const AddSitUpScreen({Key? key}) : super(key: key);
 
   @override
-  State<AddPushUpScreen> createState() => _AddPushUpScreenState();
+  State<AddSitUpScreen> createState() => _AddSitUpScreenState();
 }
 
-class _AddPushUpScreenState extends State<AddPushUpScreen> {
+class _AddSitUpScreenState extends State<AddSitUpScreen> {
   bool _repsValidate = true;
   bool _durationValidate = true;
 
-  TextEditingController pushUpNameController = TextEditingController();
-  TextEditingController pushUpDurationController = TextEditingController();
-  TextEditingController pushUpRepsController = TextEditingController();
+  TextEditingController sitUpNameController = TextEditingController();
+  TextEditingController sitUpDurationController = TextEditingController();
+  TextEditingController sitUpRepsController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
 
     // Start listening to changes.
-    pushUpRepsController.addListener(_printLatestValue);
-    pushUpDurationController.addListener(_printLatestValue);
+    sitUpRepsController.addListener(_printLatestValue);
+    sitUpDurationController.addListener(_printLatestValue);
   }
 
   void _printLatestValue() {
-    if (pushUpRepsController.text.isEmpty) {
+    if (sitUpRepsController.text.isEmpty) {
       _repsValidate = true;
     } else {
       _repsValidate = false;
     }
-    if (pushUpDurationController.text.isEmpty) {
+    if (sitUpDurationController.text.isEmpty) {
       _durationValidate = true;
     } else {
       _durationValidate = false;
@@ -49,8 +49,8 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
   @override
   void dispose() {
     // Clean up controllers
-    pushUpRepsController.dispose();
-    pushUpDurationController.dispose();
+    sitUpRepsController.dispose();
+    sitUpDurationController.dispose();
     super.dispose();
   }
 
@@ -64,19 +64,19 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
           TextField(
             textAlign: TextAlign.center,
             decoration: const InputDecoration(
-                labelText: 'Name of push-up entry'
+                labelText: 'Name of sit-up entry'
             ),
-            controller: pushUpNameController,
+            controller: sitUpNameController,
           ),
           TextField(
             textAlign: TextAlign.center,
             decoration: InputDecoration(
-              labelText: 'No. of push-ups (reps)',
+              labelText: 'No. of sit-ups (reps)',
               errorText: _repsValidate ? 'Value can\'t be empty.' : null,
             ),
             keyboardType: TextInputType.number,
             inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
-            controller: pushUpRepsController,
+            controller: sitUpRepsController,
           ),
           TextField(
             textAlign: TextAlign.center,
@@ -86,7 +86,7 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
             ),
             keyboardType: TextInputType.number,
             inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
-            controller: pushUpDurationController,
+            controller: sitUpDurationController,
           ),
           const SizedBox(height: 1),
           ElevatedButton(
@@ -98,23 +98,23 @@ class _AddPushUpScreenState extends State<AddPushUpScreen> {
                   return;
                 }
 
-                if (pushUpNameController.text.isEmpty) {
-                  pushUpNameController.text = 'Unnamed entry';
+                if (sitUpNameController.text.isEmpty) {
+                  sitUpNameController.text = 'Unnamed entry';
                 }
 
                 // create a pushup object
-                PushUpExercise pushUpEntry = PushUpExercise(
+                SitUpExercise sitUpEntry = SitUpExercise(
                     id: '',
-                    name: pushUpNameController.text,
+                    name: sitUpNameController.text,
                     email: user.email,
-                    timing: pushUpDurationController.text,
-                    reps: pushUpRepsController.text,
+                    timing: sitUpDurationController.text,
+                    reps: sitUpRepsController.text,
                     dateTime: '',
                     type: ''
                 );
 
                 // send pushup object to DB through an api call
-                await PushUpService().createPushUp(context, pushUpEntry);
+                await SitUpService().createSitUp(context, sitUpEntry);
 
                 // navigate back to home screen
                 Navigator.push(context, PageRouteBuilder(

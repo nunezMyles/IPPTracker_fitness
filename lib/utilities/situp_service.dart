@@ -2,48 +2,48 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 
-import '../models/pushup_exercise.dart';
+import '../models/situp_exercise.dart';
 import '../widgets/showSnackBar.dart';
 import 'package:http/http.dart' as http;
 
 String webServerUri = 'https://helpful-seer-366001.as.r.appspot.com/'; // for local, use http://localhost:3000
 
-class PushUpService {
+class SitUpService {
 
-  Future<void> removePushUp(BuildContext context, String pushUpId) async {
+  Future<void> removeSitUp(BuildContext context, String sitUpId) async {
     final response = await http.post(
-      Uri.parse('$webServerUri/api/exercise/removePushUp'),
+      Uri.parse('$webServerUri/api/exercise/removeSitUp'),
       body: jsonEncode({
-        'id': pushUpId,
+        'id': sitUpId,
       }),
       headers: <String, String> {
         'Content-Type': 'application/json; charset=UTF-8'
       },
     );
     if (response.statusCode != 200) {
-      showSnackBar(context, 'Fail to delete push-up.');
+      showSnackBar(context, 'Fail to delete sit-up.');
     }
   }
 
-  Future<void> createPushUp(BuildContext context, PushUpExercise pushUpExercise) async {
+  Future<void> createSitUp(BuildContext context, SitUpExercise pushUpExercise) async {
     final response = await http.post(
-      Uri.parse('$webServerUri/api/exercise/createPushUp'),
+      Uri.parse('$webServerUri/api/exercise/createSitUp'),
       body: pushUpExercise.toJson(),
       headers: <String, String> {
         'Content-Type': 'application/json; charset=UTF-8'
       },
     );
     if (response.statusCode == 200) {
-      showSnackBar(context, 'Push-up added.');
+      showSnackBar(context, 'Sit-up added.');
     }
     else {
-      showSnackBar(context, 'Failed to add push-up entry.');
+      showSnackBar(context, 'Failed to add sit-up entry.');
     }
   }
 
-  Future<List<PushUpExercise>> fetchPushUps(BuildContext context, String email) async {
+  Future<List<SitUpExercise>> fetchSitUps(BuildContext context, String email) async {
     final response = await http.post(
-      Uri.parse('$webServerUri/api/exercise/getPushUp'),
+      Uri.parse('$webServerUri/api/exercise/getSitUp'),
       body: jsonEncode({
         'email': email,
       }),
@@ -53,15 +53,15 @@ class PushUpService {
     );
 
     if (response.statusCode == 200) {
-      List<PushUpExercise> pushUpExerciseList(String str) => List<PushUpExercise>.from(
-          json.decode(str).map((x) => PushUpExercise.fromJson(x))
+      List<SitUpExercise> sitUpExerciseList(String str) => List<SitUpExercise>.from(
+          json.decode(str).map((x) => SitUpExercise.fromJson(x))
       );
-      //print(response.body);
+      print(response.body);
       //print(pushUpExerciseList(response.body));
-      return pushUpExerciseList(response.body);
+      return sitUpExerciseList(response.body);
 
     } else {
-      throw Exception('Failed to load push-up data');
+      throw Exception('Failed to load sit-up data');
     }
   }
 

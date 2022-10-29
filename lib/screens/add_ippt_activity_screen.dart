@@ -12,15 +12,16 @@ class AddIPPTScreen extends StatefulWidget {
 }
 
 class _AddIPPTScreenState extends State<AddIPPTScreen> {
+  bool _ageValidate = true;
+  bool _runTimeValidate = true;
+  bool _pushUpRepsValidate = true;
+  bool _sitUpRepsValidate = true;
+
   TextEditingController ipptNameController = TextEditingController();
   TextEditingController ageController = TextEditingController();
   TextEditingController runTimeController = TextEditingController();
   TextEditingController pushUpRepsController = TextEditingController();
   TextEditingController sitUpRepsController = TextEditingController();
-  bool _ageValidate = true;
-  bool _runTimeValidate = true;
-  bool _pushUpRepsValidate = true;
-  bool _sitUpRepsValidate = true;
 
   @override
   void initState() {

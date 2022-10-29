@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:my_fitness/models/ippt_training.dart';
 import 'package:my_fitness/models/pushup_exercise.dart';
 import 'package:my_fitness/models/run_exercise.dart';
+import 'package:my_fitness/models/situp_exercise.dart';
 import 'package:my_fitness/my_flutter_app_icons.dart';
 import 'package:my_fitness/screens/add_ippt_activity_screen.dart';
 import 'package:my_fitness/screens/add_pushup_screen.dart';
+import 'package:my_fitness/screens/add_situp_screen.dart';
 import 'package:my_fitness/utilities/account_service.dart';
 import 'package:my_fitness/utilities/ippt_service.dart';
 import 'package:my_fitness/utilities/pushup_service.dart';
 import 'package:my_fitness/utilities/run_service.dart';
+import 'package:my_fitness/utilities/situp_service.dart';
 import 'package:my_fitness/widgets/bottomNavBar.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -112,19 +115,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
       case 2: // Sit ups
-        showDialog<void>(
+        await showModalBottomSheet(
+          isScrollControlled: true,
           context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: Text(_actionTitles[index]),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('CLOSE'),
-                ),
-              ],
+          backgroundColor: Colors.white54.withOpacity(0.9),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.0),
+                topRight: Radius.circular(20.0)
+            ),
+          ),
+          builder: (BuildContext context) {
+            return SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: const AddSitUpScreen(),
+              ),
             );
           },
         );
@@ -218,11 +225,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     RunService().fetchRuns(context, user.email),
                     PushUpService().fetchPushUps(context, user.email),
                     IpptService().fetchIpptTraining(context, user.email),
+                    SitUpService().fetchSitUps(context, user.email),
                   ]),
                   builder: (context, AsyncSnapshot<List<List<dynamic>>> snapshot) {
                     if (snapshot.hasData) {
 
-                      // prevent continuous exercise add to list after hot reloading
+                      // prevent repetitive stacking of exercise listTile after hot reloading
                       if (exercisesObjectsList.isEmpty) {
                         for (RunExercise runs in snapshot.data![0]) {
                           exercisesObjectsList.add(runs);
@@ -234,6 +242,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         for (IpptTraining ippt in snapshot.data![2]) {
                           exercisesObjectsList.add(ippt);
+                        }
+
+                        for (SitUpExercise situps in snapshot.data![3]) {
+                          exercisesObjectsList.add(situps);
                         }
 
                         // sort exercises in listview by latest datetime
@@ -434,7 +446,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               Icon(
                                                   Icons.fact_check_outlined,
                                                   size: 38,
-                                                  color: Colors.deepPurple.shade400,
+                                                  color: Colors.lightGreenAccent.shade700,
                                               ),
                                             ],
                                           ),
@@ -550,6 +562,82 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                             const SizedBox(height: 15),
                                           ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            case 'situp':
+                              return FadeTransition(
+                                opacity: Tween<double>(
+                                  begin: 0,
+                                  end: 1,
+                                ).animate(animation),
+                                // And slide transition
+                                child: SlideTransition(
+                                  position: Tween<Offset>(
+                                    begin: const Offset(0, -0.1),
+                                    end: Offset.zero,
+                                  ).animate(animation),
+                                  // Paste you Widget
+                                  child: Dismissible(
+                                    key: UniqueKey(),
+                                    onDismissed: (_) async {
+                                      await SitUpService().removeSitUp(context, exercisesObjectsList[index].id);
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(1.5),
+                                      child: Card(
+                                        elevation: 3,
+                                        color: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.6),
+                                        child: ListTile(
+                                          leading: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: const [
+                                              SizedBox(height: 5),
+                                              Icon(
+                                                  MyFlutterApp.sit_ups,
+                                                  size: 35,
+                                                  color: Colors.yellowAccent
+                                              ),
+                                            ],
+                                          ),
+
+                                          title: Text(
+                                            exercisesObjectsList[index].name,
+                                            style: const TextStyle(color: Colors.white, fontSize: 17),
+                                          ),
+                                          subtitle: Text(
+                                            DateFormat('MMM dd')
+                                                .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
+                                                .parse(exercisesObjectsList[index].dateTime.toString()))
+                                                + ', '
+                                                + DateFormat('hh:mm a')
+                                                .format(DateFormat('y-MM-ddTHH:mm:ss.SSSZ')
+                                                .parse(exercisesObjectsList[index].dateTime.toString())),
+                                            style: const TextStyle(color: Colors.white),
+                                          ),
+
+                                          trailing: Wrap(
+                                              children: [
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      exercisesObjectsList[index].reps + ' reps',
+                                                      style: const TextStyle(color: Color.fromARGB(255, 211, 186, 109), fontSize: 20),
+                                                    ),
+                                                    const SizedBox(height: 2),
+                                                    Text(
+                                                      _printDuration(exercisesObjectsList[index].timing),
+                                                      style: const TextStyle(color: Color.fromARGB(255, 180, 180, 180), fontSize: 13.5),
+                                                    ),
+                                                  ],
+                                                )
+                                              ]
+                                          ),
                                         ),
                                       ),
                                     ),
