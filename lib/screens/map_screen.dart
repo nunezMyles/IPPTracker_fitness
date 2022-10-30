@@ -10,6 +10,7 @@ import '../utilities/run_service.dart';
 
 import '../screens/home_screen.dart';
 import 'add_run_screen.dart';
+import 'package:spotify_sdk/spotify_sdk.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -174,17 +175,19 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
               color: Colors.white
           ),),
         actions: <Widget>[
-          /*IconButton(
+          IconButton(
             icon: const Icon(
-              Icons.exit_to_app,
-              color: Colors.redAccent,
+              Icons.queue_music_outlined,
+              color: Colors.green,
             ),
-            onPressed: () {
-              setState(() {
-                AccountService().logOut(context);
-              });
+            onPressed: () async {
+              await SpotifySdk.connectToSpotifyRemote(
+                clientId: "d257f48e512e45e98096ea7b9f48abad",
+                redirectUrl: "https://helpful-seer-366001.as.r.appspot.com",
+              );
+              await SpotifySdk.play(spotifyUri: "https://open.spotify.com/artist/2ElMqlv5py0QFIVXUff627?uid=toptrack0PGAJ37n4O2AslZosr1YGx&uri=spotify%3Atrack%3A0PGAJ37n4O2AslZosr1YGx");
             },
-          )*/
+          )
         ],
       ),
       body: Stack(
