@@ -18,7 +18,7 @@ CalendarController calendarController = CalendarController();
 
 class _CalendarScreenState extends State<CalendarScreen> {
   var meetings = <Event>[];
-  var _selectedEvent;
+  dynamic _selectedEvent;
 
   List<Event> _getDataSource() {
     return meetings;

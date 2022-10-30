@@ -31,9 +31,16 @@ class MeetingDataSource extends CalendarDataSource {
     switch(source[index].background) {
       case 'blue':
         return Colors.blue;
-
+      case 'orange':
+        return Colors.deepOrangeAccent;
+      case 'red':
+        return Colors.blueGrey;
+      case 'green':
+        return Colors.green;
+      case 'purple':
+        return Colors.purple;
       default:
-        return Colors.white;
+        return Colors.black;
     }
   }
 

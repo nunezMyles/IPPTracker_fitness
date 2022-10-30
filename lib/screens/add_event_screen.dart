@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -22,6 +24,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
     "startTime": '',
     "endTime": '',
   };
+
+  final _random = Random();
+  List<String> colors = ['blue', 'orange', 'red', 'green', 'purple'];
+
+  String randomColor() {
+    int next(int min, int max) => min + _random.nextInt(max - min);
+    return colors[next(0, 5)];
+  }
 
   TextEditingController eventNameController = TextEditingController();
   TextEditingController startTimeController = TextEditingController();
@@ -49,7 +59,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
     type == 'start'
         ? timingMap.update('startTime', (value) => selectedDate.toString())
         : timingMap.update('endTime', (value) => selectedDate.toString());
-    return DateFormat('HH:mm a').format(selectedDate);
+    return DateFormat('hh:mm a').format(selectedDate);
   }
 
   @override
@@ -165,7 +175,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   email: user.email,
                   from: timingMap['startTime']!,
                   to: timingMap['endTime']!,
-                  background: 'blue',
+                  background: randomColor(),
                   isAllDay: false,
                   type: '',
                 );
@@ -175,6 +185,20 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
                 // reset map values
                 timingMap.clear();
+
+                Navigator.push(context, PageRouteBuilder(
+                  pageBuilder: (
+                      BuildContext context,
+                      Animation<double> animation,
+                      Animation<double> secondaryAnimation
+                      ) => const CalendarScreen(),
+                  transitionDuration: const Duration(milliseconds: 50),
+                  transitionsBuilder: (
+                      BuildContext context,
+                      Animation<double> animation,
+                      Animation<double> secondaryAnimation,
+                      Widget child,) => FadeTransition(opacity: animation, child: child),
+                ));
               }
           ),
           const SizedBox(height: 5),
