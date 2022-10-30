@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:my_fitness/models/global_variables.dart';
 import 'package:spotify_sdk/models/connection_status.dart';
 import 'package:spotify_sdk/models/crossfade_state.dart';
 import 'package:spotify_sdk/models/image_uri.dart';
@@ -46,6 +47,12 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    SpotifySdk.connectToSpotifyRemote(
+      clientId: spotifyClientID,
+      redirectUrl: spotifyRedirectUrl,
+    );
+
     return MaterialApp(
       home: StreamBuilder<ConnectionStatus>(
         stream: SpotifySdk.subscribeConnectionStatus(),
@@ -421,8 +428,8 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
         _loading = true;
       });
       var result = await SpotifySdk.connectToSpotifyRemote(
-          clientId: dotenv.env['d257f48e512e45e98096ea7b9f48abad'].toString(),
-          redirectUrl: dotenv.env['https://helpful-seer-366001.as.r.appspot.com'].toString());
+          clientId: dotenv.env[spotifyClientID].toString(),
+          redirectUrl: dotenv.env[spotifyRedirectUrl].toString());
       setStatus(result
           ? 'connect to spotify successful'
           : 'connect to spotify failed');
@@ -445,8 +452,8 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
   Future<String> getAccessToken() async {
     try {
       var authenticationToken = await SpotifySdk.getAccessToken(
-          clientId: dotenv.env['CLIENT_ID'].toString(),
-          redirectUrl: dotenv.env['REDIRECT_URL'].toString(),
+          clientId: dotenv.env[spotifyClientID].toString(),
+          redirectUrl: dotenv.env[spotifyRedirectUrl].toString(),
           scope: 'app-remote-control, '
               'user-modify-playback-state, '
               'playlist-read-private, '
@@ -542,7 +549,7 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
 
   Future<void> play() async {
     try {
-      await SpotifySdk.play(spotifyUri: 'spotify:track:58kNJana4w5BIjlZE2wq5m');
+      await SpotifySdk.play(spotifyUri: 'spotify:playlist:4saLGT2NDmRddyfcEPS4sn');
     } on PlatformException catch (e) {
       setStatus(e.code, message: e.message);
     } on MissingPluginException {

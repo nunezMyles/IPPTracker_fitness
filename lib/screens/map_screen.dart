@@ -180,14 +180,19 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
         actions: <Widget>[
           IconButton(
             icon: const Icon(
-              Icons.queue_music_outlined,
-              color: Colors.green,
+              Icons.music_off,
+              color: Colors.deepOrangeAccent,
             ),
             onPressed: () async {
-              await SpotifySdk.connectToSpotifyRemote(
-                clientId: spotifyClientID,
-                redirectUrl: spotifyRedirectUrl,
-              );
+              await SpotifySdk.disconnect();
+            },
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.queue_music,
+              color: Colors.green,
+            ),
+            onPressed: () {
               Navigator.push(context, PageRouteBuilder(
                 pageBuilder: (
                     BuildContext context,
