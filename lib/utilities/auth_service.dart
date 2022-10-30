@@ -5,12 +5,11 @@ import 'package:my_fitness/providers/user_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
+import '../models/global_variables.dart';
 import '../models/user.dart';
 import '../widgets/showSnackBar.dart';
 import '../utilities/http_error_handle.dart';
 import 'package:http/http.dart' as http;
-
-String webServerUri = 'https://helpful-seer-366001.as.r.appspot.com/'; // for local use http://localhost:3000
 
 class AuthService {
 

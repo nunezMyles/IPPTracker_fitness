@@ -4,8 +4,6 @@ import 'package:flutter/cupertino.dart';
 import '../widgets/showSnackBar.dart';
 import 'package:http/http.dart' as http;
 
-String webServerUri = 'https://helpful-seer-366001.as.r.appspot.com/'; // for local use http://localhost:3000
-
 void httpErrorHandle({
   required http.Response response,
   required BuildContext context,

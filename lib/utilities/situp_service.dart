@@ -1,12 +1,13 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';import '../models/global_variables.dart';
+
 
 import '../models/situp_exercise.dart';
 import '../widgets/showSnackBar.dart';
 import 'package:http/http.dart' as http;
 
-String webServerUri = 'https://helpful-seer-366001.as.r.appspot.com/'; // for local, use http://localhost:3000
+
 
 class SitUpService {
 

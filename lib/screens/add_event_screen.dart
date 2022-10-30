@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:my_fitness/screens/calendar_screen.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../models/calendar_event.dart';
 import '../utilities/calendar_event_service.dart';
 import 'home_screen.dart';

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_fitness/models/global_variables.dart';
+import 'package:my_fitness/screens/spotify_screen.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import '../widgets/bottomNavBar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -160,6 +162,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -182,10 +185,22 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
             ),
             onPressed: () async {
               await SpotifySdk.connectToSpotifyRemote(
-                clientId: "d257f48e512e45e98096ea7b9f48abad",
-                redirectUrl: "https://helpful-seer-366001.as.r.appspot.com",
+                clientId: spotifyClientID,
+                redirectUrl: spotifyRedirectUrl,
               );
-              await SpotifySdk.play(spotifyUri: "https://open.spotify.com/artist/2ElMqlv5py0QFIVXUff627?uid=toptrack0PGAJ37n4O2AslZosr1YGx&uri=spotify%3Atrack%3A0PGAJ37n4O2AslZosr1YGx");
+              Navigator.push(context, PageRouteBuilder(
+                pageBuilder: (
+                    BuildContext context,
+                    Animation<double> animation,
+                    Animation<double> secondaryAnimation
+                    ) => const SpotifyScreen(),
+                transitionDuration: Duration(milliseconds: pageTransitionDuration),
+                transitionsBuilder: (
+                    BuildContext context,
+                    Animation<double> animation,
+                    Animation<double> secondaryAnimation,
+                    Widget child,) => FadeTransition(opacity: animation, child: child),
+              ));
             },
           )
         ],
