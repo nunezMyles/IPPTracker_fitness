@@ -14,28 +14,57 @@ class CalendarScreen extends StatefulWidget {
   State<CalendarScreen> createState() => _CalendarScreenState();
 }
 
-
 CalendarController calendarController = CalendarController();
-var meetings = <Event>[];
 
 class _CalendarScreenState extends State<CalendarScreen> {
+  var meetings = <Event>[];
+  var _selectedEvent;
 
   List<Event> _getDataSource() {
     return meetings;
   }
 
   @override
-  initState(){
-    calendarController.selectedDate = DateTime(2022, 10, 29);
-    calendarController.displayDate = DateTime(2022, 10, 29);
-    EventService().fetchEvents(context, user.email).then((snapshot) {
-      setState(() {
-        for (Event event in snapshot) {
-          meetings.add(event);
+  initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      //calendarController.selectedDate = DateTime.now();
+      //calendarController.displayDate = DateTime.now();
+
+      await EventService().fetchEvents(context, user.email).then((snapshot) {
+        if (meetings.isEmpty) {
+          for (Event event in snapshot) {
+            meetings.add(event);
+          }
         }
+      });
+
+      setState(() {
+
       });
     });
     super.initState();
+  }
+
+  void calenderHold(CalendarLongPressDetails calendarLongPressDetails) async {
+    if (calendarLongPressDetails.targetElement==CalendarElement.agenda || calendarLongPressDetails.targetElement==CalendarElement.appointment) {
+      final Event event = calendarLongPressDetails.appointments![0];
+      _selectedEvent = event;
+      await EventService().removeEvent(context, _selectedEvent.id);
+      Navigator.push(context, PageRouteBuilder(
+        pageBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation
+            ) => const CalendarScreen(),
+        transitionDuration: Duration(milliseconds: pageTransitionDuration),
+        transitionsBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,) => FadeTransition(opacity: animation, child: child),
+      ));
+      //print(_selectedEvent.from.toString());
+    }
   }
 
   @override
@@ -57,6 +86,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         child: const Icon(Icons.add, color: Colors.greenAccent, size: 30),
         backgroundColor: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.9),
         onPressed: () async {
+
           await showModalBottomSheet(
             isScrollControlled: true,
             context: context,
@@ -77,12 +107,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
               );
             },
           );
+
         }
       ),
       body: Theme(
         data: ThemeData(colorScheme: const ColorScheme.dark()),
         child: SafeArea(
           child: SfCalendar(
+            onLongPress: calenderHold,
             view: CalendarView.month,
             firstDayOfWeek: 1,
             controller: calendarController,

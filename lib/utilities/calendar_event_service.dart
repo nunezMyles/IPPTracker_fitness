@@ -11,6 +11,21 @@ String webServerUri = 'https://helpful-seer-366001.as.r.appspot.com/'; // for lo
 
 class EventService {
 
+  Future<void> removeEvent(BuildContext context, String eventId) async {
+    final response = await http.post(
+      Uri.parse('$webServerUri/api/removeEvent'),
+      body: jsonEncode({
+        'id': eventId,
+      }),
+      headers: <String, String> {
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+    );
+    if (response.statusCode != 200) {
+      showSnackBar(context, 'Fail to delete event.');
+    }
+  }
+
   Future<void> createEvent(BuildContext context, Event event) async {
     final response = await http.post(
       Uri.parse('$webServerUri/api/createEvent'),
@@ -20,10 +35,10 @@ class EventService {
       },
     );
     if (response.statusCode == 200) {
-      showSnackBar(context, 'Event added.');
+      //showSnackBar(context, 'Event added.');
     }
     else {
-      showSnackBar(context, 'Failed to add event.');
+      //showSnackBar(context, 'Failed to add event.');
     }
   }
 

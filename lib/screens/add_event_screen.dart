@@ -31,11 +31,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
     var time = await showTimePicker(context: context, initialTime: TimeOfDay.now());
 
     if (time != null) {
-      setState(() {
-        type == 'start'
-            ? startTimeController.text = daytimeToDatetime(time, type)
-            : endTimeController.text = daytimeToDatetime(time, type);
-      });
+      type == 'start'
+          ? startTimeController.text = daytimeToDatetime(time, type)
+          : endTimeController.text = daytimeToDatetime(time, type);
     }
   }
 
@@ -150,13 +148,17 @@ class _AddEventScreenState extends State<AddEventScreen> {
           ElevatedButton(
               child: const Text("ADD"),
               onPressed: () async {
+
+                // if input empty, do nothing
                 if (_startTimeValidate || _endTimeValidate) {
                   return;
                 }
+
                 if (eventNameController.text.isEmpty) {
                   eventNameController.text = 'Unnamed event';
                 }
 
+                // Create Event object
                 Event event = Event(
                   id: '',
                   eventName: eventNameController.text,
@@ -168,11 +170,11 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   type: '',
                 );
 
+                // API call to DB
                 await EventService().createEvent(context, event);
 
+                // reset map values
                 timingMap.clear();
-
-                MeetingDataSource(meetings).notifyListeners(CalendarDataSourceAction.add, [event]);
               }
           ),
           const SizedBox(height: 5),

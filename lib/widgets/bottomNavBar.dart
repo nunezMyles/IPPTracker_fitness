@@ -60,12 +60,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
               Animation<double> animation,
               Animation<double> secondaryAnimation
               ) => const CalendarScreen(),
-          /*transitionDuration: Duration(milliseconds: pageTransitionDuration),
+          transitionDuration: Duration(milliseconds: pageTransitionDuration),
           transitionsBuilder: (
               BuildContext context,
               Animation<double> animation,
               Animation<double> secondaryAnimation,
-              Widget child,) => FadeTransition(opacity: animation, child: child),*/
+              Widget child,) => FadeTransition(opacity: animation, child: child),
         ));
         break;
       case 3:
