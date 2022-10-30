@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:my_fitness/screens/calendar_screen.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
+import '../models/calendar_event.dart';
+import '../utilities/calendar_event_service.dart';
+import 'home_screen.dart';
 
 class AddEventScreen extends StatefulWidget {
   const AddEventScreen({Key? key}) : super(key: key);
@@ -13,9 +18,41 @@ class _AddEventScreenState extends State<AddEventScreen> {
   bool _startTimeValidate = true;
   bool _endTimeValidate = true;
 
+  final Map<String, String> timingMap = {
+    "startTime": '',
+    "endTime": '',
+  };
+
   TextEditingController eventNameController = TextEditingController();
   TextEditingController startTimeController = TextEditingController();
   TextEditingController endTimeController = TextEditingController();
+
+  Future displayTimePicker(BuildContext context, String type) async {
+    var time = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+
+    if (time != null) {
+      setState(() {
+        type == 'start'
+            ? startTimeController.text = daytimeToDatetime(time, type)
+            : endTimeController.text = daytimeToDatetime(time, type);
+      });
+    }
+  }
+
+  daytimeToDatetime(TimeOfDay t, String type) {
+    //final now = DateTime.now();
+    DateTime selectedDate = DateTime(
+      calendarController.selectedDate!.year,
+      calendarController.selectedDate!.month,
+      calendarController.selectedDate!.day,
+      t.hour,
+      t.minute,
+    );
+    type == 'start'
+        ? timingMap.update('startTime', (value) => selectedDate.toString())
+        : timingMap.update('endTime', (value) => selectedDate.toString());
+    return DateFormat('HH:mm a').format(selectedDate);
+  }
 
   @override
   void initState() {
@@ -61,72 +98,81 @@ class _AddEventScreenState extends State<AddEventScreen> {
           TextField(
             textAlign: TextAlign.center,
             decoration: const InputDecoration(
-                labelText: 'Name of push-up entry'
+                labelText: 'Name of event'
             ),
             controller: eventNameController,
           ),
-          TextField(
-            textAlign: TextAlign.center,
-            decoration: InputDecoration(
-              labelText: 'No. of push-ups (reps)',
-              errorText: _startTimeValidate ? 'Value can\'t be empty.' : null,
-            ),
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
-            controller: startTimeController,
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                child: TextField(
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    labelText: 'From:',
+                    errorText: _startTimeValidate ? 'Value can\'t be empty.' : null,
+                  ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+                  controller: startTimeController,
+                ),
+              ),
+              const SizedBox(width: 20),
+              ElevatedButton(
+                child: const Icon(Icons.access_time_rounded),
+                onPressed: () => displayTimePicker(context, 'start'),
+              ),
+            ],
           ),
-          TextField(
-            textAlign: TextAlign.center,
-            decoration: InputDecoration(
-              labelText: 'Time taken (s)',
-              errorText: _endTimeValidate ? 'Value can\'t be empty.' : null,
-            ),
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
-            controller: endTimeController,
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                child: TextField(
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    labelText: 'To:',
+                    errorText: _endTimeValidate ? 'Value can\'t be empty.' : null,
+                  ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+                  controller: endTimeController,
+                ),
+              ),
+              const SizedBox(width: 20),
+              ElevatedButton(
+                child: const Icon(Icons.access_time_rounded),
+                onPressed: () => displayTimePicker(context, 'end'),
+              ),
+            ],
           ),
-          const SizedBox(height: 1),
+          const SizedBox(height: 3),
           ElevatedButton(
               child: const Text("ADD"),
               onPressed: () async {
-
-                // if no inputs for reps & duration, do nothing
                 if (_startTimeValidate || _endTimeValidate) {
                   return;
                 }
-
                 if (eventNameController.text.isEmpty) {
                   eventNameController.text = 'Unnamed event';
                 }
 
-                // create a pushup object
-                /*PushUpExercise pushUpEntry = PushUpExercise(
-                    id: '',
-                    name: eventNameController.text,
-                    email: user.email,
-                    timing: pushUpDurationController.text,
-                    reps: pushUpRepsController.text,
-                    dateTime: '',
-                    type: ''
+                Event event = Event(
+                  id: '',
+                  eventName: eventNameController.text,
+                  email: user.email,
+                  from: timingMap['startTime']!,
+                  to: timingMap['endTime']!,
+                  background: 'blue',
+                  isAllDay: false,
+                  type: '',
                 );
 
-                // send pushup object to DB through an api call
-                await PushUpService().createPushUp(context, pushUpEntry);
+                await EventService().createEvent(context, event);
 
-                // navigate back to home screen
-                Navigator.push(context, PageRouteBuilder(
-                  pageBuilder: (
-                      BuildContext context,
-                      Animation<double> animation,
-                      Animation<double> secondaryAnimation
-                      ) => const HomeScreen(),
-                  transitionDuration: const Duration(milliseconds: 50),
-                  transitionsBuilder: (
-                      BuildContext context,
-                      Animation<double> animation,
-                      Animation<double> secondaryAnimation,
-                      Widget child,) => FadeTransition(opacity: animation, child: child),
-                ));*/
+                timingMap.clear();
+
+                MeetingDataSource(meetings).notifyListeners(CalendarDataSourceAction.add, [event]);
               }
           ),
           const SizedBox(height: 5),
@@ -135,3 +181,5 @@ class _AddEventScreenState extends State<AddEventScreen> {
     );
   }
 }
+
+

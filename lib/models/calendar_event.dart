@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -11,12 +13,12 @@ class MeetingDataSource extends CalendarDataSource {
 
   @override
   DateTime getStartTime(int index) {
-    return source[index].from;
+    return DateTime.parse(source[index].from);
   }
 
   @override
   DateTime getEndTime(int index) {
-    return source[index].to;
+    return DateTime.parse(source[index].to);
   }
 
   @override
@@ -26,7 +28,13 @@ class MeetingDataSource extends CalendarDataSource {
 
   @override
   Color getColor(int index) {
-    return source[index].background;
+    switch(source[index].background) {
+      case 'blue':
+        return Colors.blue;
+
+      default:
+        return Colors.white;
+    }
   }
 
   @override
@@ -36,11 +44,53 @@ class MeetingDataSource extends CalendarDataSource {
 }
 
 class Event {
-  Event(this.eventName, this.from, this.to, this.background, this.isAllDay);
-
+  String id;
   String eventName;
-  DateTime from;
-  DateTime to;
-  Color background;
+  String email;
+  String from;
+  String to;
+  String background;
   bool isAllDay;
+  String type;
+
+  Event({
+    required this.id,
+    required this.eventName,
+    required this.email,
+    required this.from,
+    required this.to,
+    required this.background,
+    required this.isAllDay,
+    required this.type,
+  });
+
+  String toJson() => json.encode(toMap());
+
+  // (2)
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'eventName': eventName,
+      'email': email,
+      'from': from,
+      'to': to,
+      'background': background,
+      'isAllDay': isAllDay,
+      'type': type
+    };
+  }
+
+  // json > dart object
+  factory Event.fromJson(Map<String, dynamic> map) {
+    return Event(
+        id: map['_id'] ?? '',
+        eventName: map['eventName'] ?? '',
+        email: map['email'] ?? '',
+        from: map['from'] ?? '',
+        to: map['to'] ?? '',
+        background: map['background'] ?? '',
+        isAllDay: map['isAllDay'] ?? '',
+        type: map['type'] ?? ''
+    );
+  }
 }
