@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_fitness/models/global_variables.dart';
 import 'package:my_fitness/screens/spotify_screen.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
+import '../my_flutter_app_icons.dart';
 import '../widgets/bottomNavBar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart' as geo;
@@ -43,6 +44,7 @@ StopWatchTimer stopWatchTimer = StopWatchTimer();
 
 class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixin{
   late GoogleMapController _mapController;
+  bool isLocationOn = false;
 
   _locationInit(BuildContext context) async {
     bool serviceEnabled;
@@ -56,6 +58,10 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
       // accessing the position and request users of the
       // App to enable the location services.
       showSnackBar(context, 'Location services are disabled.');
+    } else {
+      setState(() { // reload widget to display 'go to current location' button
+        isLocationOn = true;
+      });
     }
 
     permission = await geo.Geolocator.checkPermission();
@@ -71,7 +77,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
         showSnackBar(context, 'Location permissions are denied');
       } else {
         setState(() { // reload widget to display 'go to current location' button
-
+          isLocationOn = true;
         });
       }
     }
@@ -173,41 +179,20 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text(
-          'Map',
+          'Record Trail Run',
           style: TextStyle(
               color: Colors.white
-          ),),
+          ),
+        ),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(
-              Icons.music_off,
-              color: Colors.deepOrangeAccent,
-            ),
+            icon: isLocationOn
+                ? const Icon(Icons.location_on, color: Colors.greenAccent, size: 30)
+                : const Icon(Icons.location_off, color: Colors.deepOrangeAccent, size: 30),
             onPressed: () async {
               await SpotifySdk.disconnect();
             },
           ),
-          IconButton(
-            icon: const Icon(
-              Icons.queue_music,
-              color: Colors.green,
-            ),
-            onPressed: () {
-              Navigator.push(context, PageRouteBuilder(
-                pageBuilder: (
-                    BuildContext context,
-                    Animation<double> animation,
-                    Animation<double> secondaryAnimation
-                    ) => const SpotifyScreen(),
-                transitionDuration: Duration(milliseconds: pageTransitionDuration),
-                transitionsBuilder: (
-                    BuildContext context,
-                    Animation<double> animation,
-                    Animation<double> secondaryAnimation,
-                    Widget child,) => FadeTransition(opacity: animation, child: child),
-              ));
-            },
-          )
         ],
       ),
       body: Stack(
@@ -215,6 +200,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
             GoogleMap(
               polylines: polyline,
               zoomControlsEnabled: false,
+              buildingsEnabled: false,
               onMapCreated: _onMapCreated,
               myLocationEnabled: true,
               initialCameraPosition: CameraPosition(target: center, zoom: 22),
@@ -310,97 +296,134 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
                           thickness: 2,
                         ),
                       ),
-                      IconButton(
-                        icon: Icon(
-                          recordStarted ? Icons.stop_circle_outlined : Icons.play_circle_outline,
-                          size: 50,
-                          color: recordStarted ? Colors.redAccent : Colors.greenAccent,
-                        ),
-                        padding: const EdgeInsets.all(0),
-                        onPressed: () async {
-                          if (!recordStarted) {
-                            setState(() {
-                              recordStarted = true;
-                              stopWatchTimer.onStartTimer();
-                            });
-                          } else {
-                            setState(() async {
-                              recordStarted = false;
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Expanded(child: SizedBox(width: 0)),
+                          Expanded(
+                            child: IconButton(
+                              icon: Icon(
+                                recordStarted ? Icons.stop_circle_outlined : Icons.play_circle_outline,
+                                size: 50,
+                                color: recordStarted ? Colors.redAccent : const Color.fromARGB(255, 211, 186, 109),
+                              ),
+                              padding: const EdgeInsets.all(0),
+                              onPressed: () async {
+                                if (!recordStarted) {
+                                  setState(() {
+                                    recordStarted = true;
+                                    stopWatchTimer.onStartTimer();
+                                  });
+                                } else {
+                                  setState(() async {
+                                    recordStarted = false;
 
-                              // save display time before timer reset since above streambuilder will reset displayTime immediately
-                              savedDisplayTime = displayTime;
-                              stopWatchTimer.onResetTimer();
+                                    // save display time before timer reset since above streambuilder will reset displayTime immediately
+                                    savedDisplayTime = displayTime;
+                                    stopWatchTimer.onResetTimer();
 
-                              // display 'add run' screen using bottomSheet
-                              await showModalBottomSheet(
-                                isScrollControlled: true,
-                                context: context,
-                                backgroundColor: Colors.white,
-                                builder: (BuildContext context) {
-                                  return SingleChildScrollView(
-                                    child: Container(
-                                      padding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context).viewInsets.bottom),
-                                      child: const AddRunScreen(),
-                                    ),
-                                  );
+                                    // display 'add run' screen using bottomSheet
+                                    await showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      context: context,
+                                      backgroundColor: Colors.white,
+                                      builder: (BuildContext context) {
+                                        return SingleChildScrollView(
+                                          child: Container(
+                                            padding: EdgeInsets.only(
+                                                bottom: MediaQuery.of(context).viewInsets.bottom),
+                                            child: const AddRunScreen(),
+                                          ),
+                                        );
+                                      },
+                                    );
+
+                                    // force a value into runNameController
+                                    if (runNameController.text.isEmpty) {
+                                      runNameController.text = 'Unnamed entry';
+                                    }
+
+                                    // create new Run Entry object to send to DB
+                                    RunExercise runEntry = RunExercise(
+                                        id: '',
+                                        name: runNameController.text.toString(),
+                                        email: user.email,
+                                        timing: savedDisplayTime,
+                                        distance: (dist / 1000).toStringAsFixed(2).toString(),
+                                        dateTime: '',
+                                        type: ''
+                                      // speed: speed: _speedCounter == 0 ? 0 : _avgSpeed / _speedCounter,
+                                    );
+
+                                    // call createRun() API to send newly created object to DB
+                                    await RunService().createRun(context, runEntry);
+
+                                    // reset values
+                                    dist = 0;
+                                    time = 0;
+                                    speed = 0;
+                                    avgSpeed = 0;
+                                    lastTime = 0;
+                                    speedCounter = 0;
+                                    center = const LatLng(1.3521, 103.8198);
+
+                                    route = [];
+                                    polyline.clear();
+
+                                    runNameController.text = '';
+                                    displayTime = '00:00:00';
+
+                                    // navigate to activity screen
+                                    navBarselectedIndex = 0;
+                                    await Navigator.push(context, PageRouteBuilder(
+                                      pageBuilder: (
+                                          BuildContext context,
+                                          Animation<double> animation,
+                                          Animation<double> secondaryAnimation
+                                          ) => const HomeScreen(),
+                                      transitionDuration: const Duration(milliseconds: 250),
+                                      transitionsBuilder: (
+                                          BuildContext context,
+                                          Animation<double> animation,
+                                          Animation<double> secondaryAnimation,
+                                          Widget child,) => FadeTransition(opacity: animation, child: child),
+                                    ));
+                                  });
+                                }
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: Material(
+                              color: Colors.transparent,
+                              child: IconButton(
+                                icon: const Icon(
+                                  MyFlutterApp.spotify,
+                                  color: Colors.green,
+                                  size: 35,
+                                ),
+                                splashRadius: 24,
+                                  splashColor: const Color.fromARGB(255, 80, 80, 80),
+                                onPressed: () {
+                                  Navigator.push(context, PageRouteBuilder(
+                                    pageBuilder: (
+                                        BuildContext context,
+                                        Animation<double> animation,
+                                        Animation<double> secondaryAnimation
+                                        ) => const SpotifyScreen(),
+                                    transitionDuration: Duration(milliseconds: pageTransitionDuration),
+                                    transitionsBuilder: (
+                                        BuildContext context,
+                                        Animation<double> animation,
+                                        Animation<double> secondaryAnimation,
+                                        Widget child,) => FadeTransition(opacity: animation, child: child),
+                                  ));
                                 },
-                              );
-
-                              // force a value into runNameController
-                              if (runNameController.text.isEmpty) {
-                                runNameController.text = 'Unnamed entry';
-                              }
-
-                              // create new Run Entry object to send to DB
-                              RunExercise runEntry = RunExercise(
-                                  id: '',
-                                  name: runNameController.text.toString(),
-                                  email: user.email,
-                                  timing: savedDisplayTime,
-                                  distance: (dist / 1000).toStringAsFixed(2).toString(),
-                                  dateTime: '',
-                                  type: ''
-                                  // speed: speed: _speedCounter == 0 ? 0 : _avgSpeed / _speedCounter,
-                              );
-
-                              // call createRun() API to send newly created object to DB
-                              await RunService().createRun(context, runEntry);
-
-                              // reset values
-                              dist = 0;
-                              time = 0;
-                              speed = 0;
-                              avgSpeed = 0;
-                              lastTime = 0;
-                              speedCounter = 0;
-                              center = const LatLng(1.3521, 103.8198);
-
-                              route = [];
-                              polyline.clear();
-
-                              runNameController.text = '';
-                              displayTime = '00:00:00';
-
-                              // navigate to activity screen
-                              navBarselectedIndex = 0;
-                              await Navigator.push(context, PageRouteBuilder(
-                                pageBuilder: (
-                                    BuildContext context,
-                                    Animation<double> animation,
-                                    Animation<double> secondaryAnimation
-                                    ) => const HomeScreen(),
-                                transitionDuration: const Duration(milliseconds: 250),
-                                transitionsBuilder: (
-                                    BuildContext context,
-                                    Animation<double> animation,
-                                    Animation<double> secondaryAnimation,
-                                    Widget child,) => FadeTransition(opacity: animation, child: child),
-                              ));
-                            });
-                          }
-                        },
-                      )
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 )
