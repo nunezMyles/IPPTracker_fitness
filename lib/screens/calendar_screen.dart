@@ -121,7 +121,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             dataSource: MeetingDataSource(_getDataSource()),
             //allowDragAndDrop: true,
             showDatePickerButton: true,
-            backgroundColor: const Color.fromARGB(255, 46, 46, 46),
+            backgroundColor: const Color.fromARGB(255, 55, 55, 55),
             todayHighlightColor: const Color.fromARGB(255, 211, 186, 109),
             selectionDecoration: BoxDecoration(
               color: Colors.transparent,

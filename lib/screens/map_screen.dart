@@ -351,96 +351,100 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Expanded(
-                            child: IconButton(
-                              icon: Icon(
-                                recordStarted ? Icons.stop_circle_outlined : Icons.play_circle_outline,
-                                size: 50,
-                                color: recordStarted ? Colors.redAccent : const Color.fromARGB(255, 211, 186, 109),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: IconButton(
+                                splashRadius: 27,
+                                icon: Icon(
+                                  recordStarted ? Icons.stop_circle_outlined : Icons.play_circle_outline,
+                                  size: 50,
+                                  color: recordStarted ? Colors.redAccent : const Color.fromARGB(255, 211, 186, 109),
+                                ),
+                                padding: const EdgeInsets.all(0),
+                                onPressed: () async {
+                                  if (!recordStarted) {
+                                    setState(() {
+                                      recordStarted = true;
+                                      stopWatchTimer.onStartTimer();
+                                    });
+                                  } else {
+                                    setState(() async {
+                                      recordStarted = false;
+
+                                      // save display time before timer reset since above streambuilder will reset displayTime immediately
+                                      savedDisplayTime = displayTime;
+                                      stopWatchTimer.onResetTimer();
+
+                                      // display 'add run' screen using bottomSheet
+                                      await showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        context: context,
+                                        backgroundColor: Colors.white,
+                                        builder: (BuildContext context) {
+                                          return SingleChildScrollView(
+                                            child: Container(
+                                              padding: EdgeInsets.only(
+                                                  bottom: MediaQuery.of(context).viewInsets.bottom),
+                                              child: const AddRunScreen(),
+                                            ),
+                                          );
+                                        },
+                                      );
+
+                                      // force a value into runNameController
+                                      if (runNameController.text.isEmpty) {
+                                        runNameController.text = 'Unnamed entry';
+                                      }
+
+                                      // create new Run Entry object to send to DB
+                                      RunExercise runEntry = RunExercise(
+                                          id: '',
+                                          name: runNameController.text.toString(),
+                                          email: user.email,
+                                          timing: savedDisplayTime,
+                                          distance: (dist / 1000).toStringAsFixed(2).toString(),
+                                          dateTime: '',
+                                          type: ''
+                                        // speed: speed: _speedCounter == 0 ? 0 : _avgSpeed / _speedCounter,
+                                      );
+
+                                      // call createRun() API to send newly created object to DB
+                                      await RunService().createRun(context, runEntry);
+
+                                      // reset values
+                                      dist = 0;
+                                      time = 0;
+                                      speed = 0;
+                                      avgSpeed = 0;
+                                      lastTime = 0;
+                                      speedCounter = 0;
+                                      center = const LatLng(1.3521, 103.8198);
+
+                                      route = [];
+                                      polyline.clear();
+
+                                      runNameController.text = '';
+                                      displayTime = '00:00:00';
+
+                                      // navigate to activity screen
+                                      navBarselectedIndex = 0;
+                                      await Navigator.push(context, PageRouteBuilder(
+                                        pageBuilder: (
+                                            BuildContext context,
+                                            Animation<double> animation,
+                                            Animation<double> secondaryAnimation
+                                            ) => const HomeScreen(),
+                                        transitionDuration: const Duration(milliseconds: 250),
+                                        transitionsBuilder: (
+                                            BuildContext context,
+                                            Animation<double> animation,
+                                            Animation<double> secondaryAnimation,
+                                            Widget child,) => FadeTransition(opacity: animation, child: child),
+                                      ));
+                                    });
+                                  }
+                                },
                               ),
-                              padding: const EdgeInsets.all(0),
-                              onPressed: () async {
-                                if (!recordStarted) {
-                                  setState(() {
-                                    recordStarted = true;
-                                    stopWatchTimer.onStartTimer();
-                                  });
-                                } else {
-                                  setState(() async {
-                                    recordStarted = false;
-
-                                    // save display time before timer reset since above streambuilder will reset displayTime immediately
-                                    savedDisplayTime = displayTime;
-                                    stopWatchTimer.onResetTimer();
-
-                                    // display 'add run' screen using bottomSheet
-                                    await showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      context: context,
-                                      backgroundColor: Colors.white,
-                                      builder: (BuildContext context) {
-                                        return SingleChildScrollView(
-                                          child: Container(
-                                            padding: EdgeInsets.only(
-                                                bottom: MediaQuery.of(context).viewInsets.bottom),
-                                            child: const AddRunScreen(),
-                                          ),
-                                        );
-                                      },
-                                    );
-
-                                    // force a value into runNameController
-                                    if (runNameController.text.isEmpty) {
-                                      runNameController.text = 'Unnamed entry';
-                                    }
-
-                                    // create new Run Entry object to send to DB
-                                    RunExercise runEntry = RunExercise(
-                                        id: '',
-                                        name: runNameController.text.toString(),
-                                        email: user.email,
-                                        timing: savedDisplayTime,
-                                        distance: (dist / 1000).toStringAsFixed(2).toString(),
-                                        dateTime: '',
-                                        type: ''
-                                      // speed: speed: _speedCounter == 0 ? 0 : _avgSpeed / _speedCounter,
-                                    );
-
-                                    // call createRun() API to send newly created object to DB
-                                    await RunService().createRun(context, runEntry);
-
-                                    // reset values
-                                    dist = 0;
-                                    time = 0;
-                                    speed = 0;
-                                    avgSpeed = 0;
-                                    lastTime = 0;
-                                    speedCounter = 0;
-                                    center = const LatLng(1.3521, 103.8198);
-
-                                    route = [];
-                                    polyline.clear();
-
-                                    runNameController.text = '';
-                                    displayTime = '00:00:00';
-
-                                    // navigate to activity screen
-                                    navBarselectedIndex = 0;
-                                    await Navigator.push(context, PageRouteBuilder(
-                                      pageBuilder: (
-                                          BuildContext context,
-                                          Animation<double> animation,
-                                          Animation<double> secondaryAnimation
-                                          ) => const HomeScreen(),
-                                      transitionDuration: const Duration(milliseconds: 250),
-                                      transitionsBuilder: (
-                                          BuildContext context,
-                                          Animation<double> animation,
-                                          Animation<double> secondaryAnimation,
-                                          Widget child,) => FadeTransition(opacity: animation, child: child),
-                                    ));
-                                  });
-                                }
-                              },
                             ),
                           ),
                         ],
