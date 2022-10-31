@@ -13,7 +13,6 @@ import 'package:spotify_sdk/models/player_context.dart';
 import 'package:spotify_sdk/models/player_state.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
 
-import '../widgets/sized_icon_button.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: '.env');
@@ -52,9 +51,8 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
       redirectUrl: spotifyRedirectUrl,
     );
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: StreamBuilder<ConnectionStatus>(
+    return SafeArea(
+      child: StreamBuilder<ConnectionStatus>(
         stream: SpotifySdk.subscribeConnectionStatus(),
         builder: (context, snapshot) {
           _connected = false;
@@ -62,74 +60,53 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
           if (data != null) {
             _connected = data.connected;
           }
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('SpotifySdk Example'),
-              actions: [
-                _connected
-                    ? IconButton(
-                  onPressed: disconnect,
-                  icon: const Icon(Icons.map),
-                )
-                    : Container()
-              ],
-            ),
-            body: _MainWidgetBuilder(context),
-            bottomNavigationBar: _connected ? _buildBottomBar(context) : null,
-          );
+          return _mainWidgetBuilder(context);
         },
       ),
     );
   }
 
+  Widget _mainWidgetBuilder(BuildContext context2) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          _connected
+              ? _buildPlayerContextWidget()
+              : const Center(
+            child: Text('Not connected'),
+          ),
+          const Divider(),
 
+          _connected
+              ? _buildPlayerStateWidget()
+              : const Center(
+            child: Text('Not connected'),
+          ),
 
-  Widget _MainWidgetBuilder(BuildContext context2) {
-    return Stack(
-      children: [
-        ListView(
-          padding: const EdgeInsets.all(8),
-          children: [
-
-            _connected
-                ? _buildPlayerContextWidget()
-                : const Center(
-              child: Text('Not connected'),
-            ),
-            const Divider(),
-
-            _connected
-                ? _buildPlayerStateWidget()
-                : const Center(
-              child: Text('Not connected'),
-            ),
-
-            const Divider(),
-
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: TextButton(
-                    onPressed: seekTo,
-                    child: const Text('seek to 20000ms'),
-                  ),
+          /*Row(
+            children: <Widget>[
+              Expanded(
+                child: TextButton(
+                  onPressed: seekTo,
+                  child: const Text('seek to 20000ms'),
                 ),
-                Expanded(
-                  child: TextButton(
-                    onPressed: seekToRelative,
-                    child: const Text('seek to relative 20000ms'),
-                  ),
+              ),
+              Expanded(
+                child: TextButton(
+                  onPressed: seekToRelative,
+                  child: const Text('seek to relative 20000ms'),
                 ),
-              ],
-            ),
-          ],
-        ),
-        _loading
-            ? Container(
-            color: Colors.black12,
-            child: const Center(child: CircularProgressIndicator()))
-            : const SizedBox(),
-      ],
+              ),
+            ],
+          ),*/
+          _loading
+              ? Container(
+              color: Colors.black12,
+              child: const Center(child: CircularProgressIndicator()))
+              : const SizedBox(),
+        ],
+      ),
     );
   }
 
@@ -148,56 +125,53 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
         }
 
         return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-
-            Text(
-                '${track.name} by ${track.artist.name} from the album ${track.album.name}'),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Progress: ${playerState.playbackPosition}ms/${track.duration}ms'),
-              ],
-            ),
-            
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                  child: _connected
-                      ? spotifyImageWidget(track.imageUri)
-                      : const Text('Connect to see an image...'),
-                ),
+                Text('Progress: ${playerState.playbackPosition}ms/${track.duration}ms', style: TextStyle(color: Colors.white),),
               ],
             ),
 
+            SizedBox(
+              height: 250,
+              child: _connected
+                  ? spotifyImageWidget(track.imageUri)
+                  : const Text('Connect to see an image...'),
+            ),
+            SizedBox(height:10),
+
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                SizedIconButton(
-                  width: 50,
-                  icon: Icons.skip_previous,
-                  onPressed: skipPrevious,
-                ),
-                playerState.isPaused
-                    ? SizedIconButton(
-                  width: 50,
-                  icon: Icons.play_arrow,
-                  onPressed: resume,
-                )
-                    : SizedIconButton(
-                  width: 50,
-                  icon: Icons.pause,
-                  onPressed: pause,
-                ),
-                SizedIconButton(
-                  width: 50,
-                  icon: Icons.skip_next,
-                  onPressed: skipNext,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(width: 20),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(track.name, style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+                    Text(track.artist.name!, style: TextStyle(color: Colors.white54, fontSize: 18))
+                  ],
                 ),
               ],
             ),
+            SizedBox(height: 15),
+
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Expanded(child: IconButton(icon: const Icon(Icons.skip_previous, size: 40), color: Colors.white, onPressed: skipPrevious)),
+                Expanded(
+                  child: playerState.isPaused
+                      ? IconButton(icon: const Icon(Icons.play_circle_fill), iconSize: 80.0, color: Colors.white, onPressed: resume)
+                      : IconButton(icon: const Icon(Icons.pause_circle_filled), iconSize: 80.0, color: Colors.white, onPressed: pause),
+                ),
+                Expanded(child: IconButton(icon: const Icon(Icons.skip_next, size: 40), color: Colors.white, onPressed: skipNext))
+              ],
+            ),
+            SizedBox(height: 20),
           ],
         );
       },
@@ -208,7 +182,7 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
     return FutureBuilder(
         future: SpotifySdk.getImage(
           imageUri: image,
-          dimension: ImageDimension.xSmall,
+          dimension: ImageDimension.large,
         ),
         builder: (BuildContext context, AsyncSnapshot<Uint8List?> snapshot) {
           if (snapshot.hasData) {
@@ -244,18 +218,19 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
 
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text('Title: ${playerContext.title}'),
-            Text('Subtitle: ${playerContext.subtitle}'),
-            Text('Type: ${playerContext.type}'),
-            Text('Uri: ${playerContext.uri}'),
+            Text(playerContext.subtitle, style: const TextStyle(color: Colors.white, fontSize: 17)),
+            Text(playerContext.title, style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold)),
+
+            //Text('Type: ${playerContext.type}'),
+            //Text('Uri: ${playerContext.uri}'),
           ],
         );
       },
     );
   }
-  
+  /*
   Widget _buildBottomBar(BuildContext context) {
     return BottomAppBar(
       child: Column(
@@ -267,21 +242,25 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
               SizedIconButton(
                 width: 50,
                 icon: Icons.queue_music,
+                color: Colors.white,
                 onPressed: () {},
               ),
               SizedIconButton(
                 width: 50,
                 icon: Icons.playlist_play,
+                color: Colors.white,
                 onPressed: play,
               ),
               SizedIconButton(
                 width: 50,
                 icon: Icons.repeat,
+                color: Colors.white,
                 onPressed: () {},
               ),
               SizedIconButton(
                 width: 50,
                 icon: Icons.shuffle,
+                color: Colors.white,
                 onPressed: () {},
               ),
             ],
@@ -291,11 +270,13 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
             children: [
               SizedIconButton(
                 width: 50,
+                color: Colors.white,
                 onPressed: () {},
                 icon: Icons.favorite,
               ),
               SizedIconButton(
                 width: 50,
+                color: Colors.white,
                 onPressed: () => checkIfAppIsActive(context),
                 icon: Icons.info,
               ),
@@ -305,7 +286,7 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
       ),
     );
   }
-
+*/
 
 
 
@@ -324,7 +305,7 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
               Animation<double> animation,
               Animation<double> secondaryAnimation
               ) => const MapScreen(),
-          transitionDuration: Duration(milliseconds: 50),
+          transitionDuration: const Duration(milliseconds: 50),
           transitionsBuilder: (
               BuildContext context,
               Animation<double> animation,

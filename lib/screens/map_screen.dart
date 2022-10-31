@@ -179,7 +179,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Container(
+          SizedBox(
             height: 45.0,
             width: 45.0,
             child: FittedBox(
@@ -199,27 +199,34 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
             ),
           ),
           const SizedBox(height: 10),
-          Container(
+          SizedBox(
             height: 45.0,
             width: 45.0,
             child: FittedBox(
               child: FloatingActionButton(
                 backgroundColor: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.8),
                 child: const Icon(MyFlutterApp.spotify, color: Colors.green, size: 37,),
-                onPressed: () {
-                  Navigator.push(context, PageRouteBuilder(
-                    pageBuilder: (
-                        BuildContext context,
-                        Animation<double> animation,
-                        Animation<double> secondaryAnimation
-                        ) => const SpotifyScreen(),
-                    transitionDuration: Duration(milliseconds: pageTransitionDuration),
-                    transitionsBuilder: (
-                        BuildContext context,
-                        Animation<double> animation,
-                        Animation<double> secondaryAnimation,
-                        Widget child,) => FadeTransition(opacity: animation, child: child),
-                  ));
+                onPressed: () async {
+                  await showModalBottomSheet(
+                    isScrollControlled: true,
+                    context: context,
+                    backgroundColor: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.9),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20.0),
+                          topRight: Radius.circular(20.0)
+                      ),
+                    ),
+                    builder: (BuildContext context) {
+                      return SingleChildScrollView(
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom),
+                          child: const SpotifyScreen(),
+                        ),
+                      );
+                    },
+                  );
                 },
               ),
             ),
