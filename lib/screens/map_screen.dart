@@ -244,7 +244,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
         actions: <Widget>[
           IconButton(
             icon: isLocationOn
-                ? const Icon(Icons.location_on, color: Colors.greenAccent, size: 30)
+                ? const Icon(Icons.location_on, color: Colors.green, size: 30)
                 : const Icon(Icons.location_off, color: Colors.deepOrangeAccent, size: 30),
             onPressed: () async {
               await SpotifySdk.disconnect();

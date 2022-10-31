@@ -13,6 +13,8 @@ import 'package:spotify_sdk/models/player_context.dart';
 import 'package:spotify_sdk/models/player_state.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
 
+import '../widgets/addPlaylistDialog.dart';
+
 
 Future<void> main() async {
   await dotenv.load(fileName: '.env');
@@ -26,22 +28,23 @@ class SpotifyScreen extends StatefulWidget {
   State<SpotifyScreen> createState() => _SpotifyScreenState();
 }
 
+final Logger _logger = Logger(
+  //filter: CustomLogFilter(), // custom logfilter can be used to have logs in release mode
+  printer: PrettyPrinter(
+    methodCount: 2, // number of method calls to be displayed
+    errorMethodCount: 8, // number of method calls if stacktrace is provided
+    lineLength: 120, // width of the output
+    colors: true, // Colorful log messages
+    printEmojis: true, // Print an emoji for each log message
+    printTime: true,
+  ),
+);
+
 class _SpotifyScreenState extends State<SpotifyScreen> {
   bool _loading = false;
   bool _connected = false;
-  final Logger _logger = Logger(
-    //filter: CustomLogFilter(), // custom logfilter can be used to have logs in release mode
-    printer: PrettyPrinter(
-      methodCount: 2, // number of method calls to be displayed
-      errorMethodCount: 8, // number of method calls if stacktrace is provided
-      lineLength: 120, // width of the output
-      colors: true, // Colorful log messages
-      printEmojis: true, // Print an emoji for each log message
-      printTime: true,
-    ),
-  );
-
   late ImageUri? currentTrackImageUri;
+
 
   @override
   Widget build(BuildContext context) {
@@ -73,38 +76,50 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
         children: [
           _connected
               ? _buildPlayerContextWidget()
-              : const Center(
-            child: Text('Not connected'),
-          ),
-          const Divider(),
+              : const Center(child: Text('Not connected')),
+
+          const SizedBox(height: 15),
 
           _connected
               ? _buildPlayerStateWidget()
-              : const Center(
-            child: Text('Not connected'),
-          ),
+              : const Center(child: Text('Not connected')),
 
-          /*Row(
-            children: <Widget>[
+          Row(
+            children: [
               Expanded(
-                child: TextButton(
-                  onPressed: seekTo,
-                  child: const Text('seek to 20000ms'),
+                child: IconButton(
+                  icon: const Icon(Icons.queue_music, size: 25),
+                  color: Colors.white,
+
+                  onPressed: () {},
                 ),
               ),
               Expanded(
-                child: TextButton(
-                  onPressed: seekToRelative,
-                  child: const Text('seek to relative 20000ms'),
+                child: IconButton(
+                  icon: const Icon(Icons.playlist_add, size: 25),
+                  tooltip: 'Add new playlist',
+                  color: Colors.white,
+                  onPressed: () {
+                    showAlertDialog(context);
+                  },
+                ),
+              ),
+              Expanded(
+                child: IconButton(
+                  icon: const Icon(Icons.repeat, size: 25),
+                  color: Colors.white,
+                  onPressed: () async => await SpotifySdk.toggleRepeat(),
+                ),
+              ),
+              Expanded(
+                child: IconButton(
+                  icon: const Icon(Icons.shuffle, size: 25),
+                  color: Colors.white,
+                  onPressed: () async => await SpotifySdk.toggleShuffle(),
                 ),
               ),
             ],
-          ),*/
-          _loading
-              ? Container(
-              color: Colors.black12,
-              child: const Center(child: CircularProgressIndicator()))
-              : const SizedBox(),
+          ),
         ],
       ),
     );
@@ -113,67 +128,67 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
   Widget _buildPlayerStateWidget() {
     return StreamBuilder<PlayerState>(
       stream: SpotifySdk.subscribePlayerState(),
-      builder: (BuildContext context, AsyncSnapshot<PlayerState> snapshot) {
-        var track = snapshot.data?.track;
-        currentTrackImageUri = track?.imageUri;
-        var playerState = snapshot.data;
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          var track = snapshot.data?.track;
+          currentTrackImageUri = track?.imageUri;
+          var playerState = snapshot.data;
 
-        if (playerState == null || track == null) {
-          return Center(
-            child: Container(),
+          if (playerState == null || track == null) {
+            return Center(
+              child: Container(),
+            );
+          }
+
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              //Text('Progress: ${snapshot.data!.playbackPosition}ms/${snapshot.data!.track?.duration}ms', style: const TextStyle(color: Colors.white),),
+
+              SizedBox(
+                height: 250,
+                child: _connected
+                    ? spotifyImageWidget(track.imageUri)
+                    : const Text('Connect to see an image...'),
+              ),
+              const SizedBox(height:10),
+
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(width: 20),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(track.name, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+                      Text(track.artist.name!, style: const TextStyle(color: Colors.white54, fontSize: 18))
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 15),
+
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(child: IconButton(icon: const Icon(Icons.skip_previous, size: 40), color: Colors.white, onPressed: skipPrevious)),
+                  Expanded(
+                    child: playerState.isPaused
+                        ? IconButton(icon: const Icon(Icons.play_circle_fill), iconSize: 80.0, color: Colors.white, onPressed: resume)
+                        : IconButton(icon: const Icon(Icons.pause_circle_filled), iconSize: 80.0, color: Colors.white, onPressed: pause),
+                  ),
+                  Expanded(child: IconButton(icon: const Icon(Icons.skip_next, size: 40), color: Colors.white, onPressed: skipNext))
+                ],
+              ),
+              const SizedBox(height: 20),
+            ],
           );
+        } else {
+          return const Center(child: CircularProgressIndicator());
         }
 
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Progress: ${playerState.playbackPosition}ms/${track.duration}ms', style: TextStyle(color: Colors.white),),
-              ],
-            ),
-
-            SizedBox(
-              height: 250,
-              child: _connected
-                  ? spotifyImageWidget(track.imageUri)
-                  : const Text('Connect to see an image...'),
-            ),
-            SizedBox(height:10),
-
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(width: 20),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(track.name, style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                    Text(track.artist.name!, style: TextStyle(color: Colors.white54, fontSize: 18))
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(height: 15),
-
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Expanded(child: IconButton(icon: const Icon(Icons.skip_previous, size: 40), color: Colors.white, onPressed: skipPrevious)),
-                Expanded(
-                  child: playerState.isPaused
-                      ? IconButton(icon: const Icon(Icons.play_circle_fill), iconSize: 80.0, color: Colors.white, onPressed: resume)
-                      : IconButton(icon: const Icon(Icons.pause_circle_filled), iconSize: 80.0, color: Colors.white, onPressed: pause),
-                ),
-                Expanded(child: IconButton(icon: const Icon(Icons.skip_next, size: 40), color: Colors.white, onPressed: skipNext))
-              ],
-            ),
-            SizedBox(height: 20),
-          ],
-        );
       },
     );
   }
@@ -220,7 +235,7 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text(playerContext.subtitle, style: const TextStyle(color: Colors.white, fontSize: 17)),
+            Text(playerContext.subtitle, style: const TextStyle(color: Colors.white70, fontSize: 17)),
             Text(playerContext.title, style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold)),
 
             //Text('Type: ${playerContext.type}'),
@@ -288,8 +303,6 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
   }
 */
 
-
-
   Future<void> disconnect() async {
     try {
       setState(() {
@@ -329,16 +342,6 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
   Future getPlayerState() async {
     try {
       return await SpotifySdk.getPlayerState();
-    } on PlatformException catch (e) {
-      setStatus(e.code, message: e.message);
-    } on MissingPluginException {
-      setStatus('not implemented');
-    }
-  }
-
-  Future<void> play() async {
-    try {
-      await SpotifySdk.play(spotifyUri: 'spotify:playlist:2ImkaBamzwgMRJHaHS84iX');
     } on PlatformException catch (e) {
       setStatus(e.code, message: e.message);
     } on MissingPluginException {
@@ -422,8 +425,22 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
     }
   }
 
-  void setStatus(String code, {String? message}) {
-    var text = message ?? '';
-    _logger.i('$code$text');
+
+}
+
+Future<void> play(String playlistUri) async {
+  try {
+    await SpotifySdk.play(spotifyUri: 'spotify:playlist:' + playlistUri);
+  } on PlatformException catch (e) {
+    setStatus(e.code, message: e.message);
+  } on MissingPluginException {
+    setStatus('not implemented');
   }
 }
+
+void setStatus(String code, {String? message}) {
+  var text = message ?? '';
+  _logger.i('$code$text');
+}
+
+
