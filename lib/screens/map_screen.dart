@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_fitness/models/global_variables.dart';
 import 'package:my_fitness/screens/spotify_screen.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import '../my_flutter_app_icons.dart';
@@ -176,6 +175,57 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
 
     return Scaffold(
       bottomNavigationBar: const BottomNavBar(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            height: 45.0,
+            width: 45.0,
+            child: FittedBox(
+              child: FloatingActionButton(
+                backgroundColor: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.8),
+                child: const Icon(Icons.my_location, color: Colors.white, size: 30,),
+                onPressed: () async {
+                  await geo.Geolocator.getCurrentPosition().then((value) {
+                    _mapController.animateCamera(
+                      CameraUpdate.newCameraPosition(
+                        CameraPosition(target: LatLng(value.latitude, value.longitude), zoom: 18),
+                      ),
+                    );
+                  });
+                },
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Container(
+            height: 45.0,
+            width: 45.0,
+            child: FittedBox(
+              child: FloatingActionButton(
+                backgroundColor: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.8),
+                child: const Icon(MyFlutterApp.spotify, color: Colors.green, size: 37,),
+                onPressed: () {
+                  Navigator.push(context, PageRouteBuilder(
+                    pageBuilder: (
+                        BuildContext context,
+                        Animation<double> animation,
+                        Animation<double> secondaryAnimation
+                        ) => const SpotifyScreen(),
+                    transitionDuration: Duration(milliseconds: pageTransitionDuration),
+                    transitionsBuilder: (
+                        BuildContext context,
+                        Animation<double> animation,
+                        Animation<double> secondaryAnimation,
+                        Widget child,) => FadeTransition(opacity: animation, child: child),
+                  ));
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text(
@@ -202,6 +252,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
               zoomControlsEnabled: false,
               buildingsEnabled: false,
               onMapCreated: _onMapCreated,
+              myLocationButtonEnabled: false,
               myLocationEnabled: true,
               initialCameraPosition: CameraPosition(target: center, zoom: 22),
             ),
@@ -299,7 +350,6 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Expanded(child: SizedBox(width: 0)),
                           Expanded(
                             child: IconButton(
                               icon: Icon(
@@ -391,35 +441,6 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
                                   });
                                 }
                               },
-                            ),
-                          ),
-                          Expanded(
-                            child: Material(
-                              color: Colors.transparent,
-                              child: IconButton(
-                                icon: const Icon(
-                                  MyFlutterApp.spotify,
-                                  color: Colors.green,
-                                  size: 35,
-                                ),
-                                splashRadius: 24,
-                                  splashColor: const Color.fromARGB(255, 80, 80, 80),
-                                onPressed: () {
-                                  Navigator.push(context, PageRouteBuilder(
-                                    pageBuilder: (
-                                        BuildContext context,
-                                        Animation<double> animation,
-                                        Animation<double> secondaryAnimation
-                                        ) => const SpotifyScreen(),
-                                    transitionDuration: Duration(milliseconds: pageTransitionDuration),
-                                    transitionsBuilder: (
-                                        BuildContext context,
-                                        Animation<double> animation,
-                                        Animation<double> secondaryAnimation,
-                                        Widget child,) => FadeTransition(opacity: animation, child: child),
-                                  ));
-                                },
-                              ),
                             ),
                           ),
                         ],
