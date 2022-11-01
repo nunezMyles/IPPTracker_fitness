@@ -16,15 +16,13 @@ class AddEventScreen extends StatefulWidget {
 }
 
 class _AddEventScreenState extends State<AddEventScreen> {
+  final _random = Random();
   bool _startTimeValidate = true;
   bool _endTimeValidate = true;
-
   final Map<String, String> timingMap = {
     "startTime": '',
     "endTime": '',
   };
-
-  final _random = Random();
   List<String> colors = ['blue', 'orange', 'red', 'green', 'purple'];
 
   String randomColor() {

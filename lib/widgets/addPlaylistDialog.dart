@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../screens/spotify_screen.dart';
+import '../utilities/spotify_service.dart';
 
 showAlertDialog(BuildContext context) {
   TextEditingController playlistUriController = TextEditingController();

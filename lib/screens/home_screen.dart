@@ -20,11 +20,11 @@ import 'package:my_fitness/utilities/run_service.dart';
 import 'package:my_fitness/utilities/situp_service.dart';
 
 import '../widgets/bottomNavBar.dart';
-import '../widgets/expandingActionBtn.dart';
+import '../widgets/expandableFAB.dart';
 
 import '../my_flutter_app_icons.dart';
 import '../providers/user_provider.dart';
-import '../widgets/showFilterDialog.dart';
+import '../widgets/activityFilterDialog.dart';
 
 
 class HomeScreen extends StatefulWidget {

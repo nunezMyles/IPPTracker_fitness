@@ -85,13 +85,6 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
       // Permissions are denied forever, handle appropriately.
       showSnackBar(context, 'Location permissions are permanently denied, we cannot request permissions.');
     }
-
-    // When we reach here, permissions are granted and we can
-    // continue accessing the position of the device.
-    /*return await geo.Geolocator.getCurrentPosition(
-      desiredAccuracy: geo.LocationAccuracy.bestForNavigation,
-      forceAndroidLocationManager: true,
-    ).timeout(const Duration(seconds: 20));*/
   }
 
   @override

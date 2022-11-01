@@ -124,7 +124,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      //if (_formKey.currentState!.validate()) {}
                       signUpUser();
                     },
                     style: ElevatedButton.styleFrom(
