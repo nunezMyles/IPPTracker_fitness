@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,6 +27,8 @@ class SpotifyScreen extends StatefulWidget {
   State<SpotifyScreen> createState() => _SpotifyScreenState();
 }
 
+bool isShuffling = false;
+int isRepeatingIndex = 0;
 final Logger _logger = Logger(
   //filter: CustomLogFilter(), // custom logfilter can be used to have logs in release mode
   printer: PrettyPrinter(
@@ -40,11 +41,23 @@ final Logger _logger = Logger(
   ),
 );
 
+Icon repeatIcon(int repeatingIndex) {
+  switch(repeatingIndex) {
+    case 0:
+      return const Icon(Icons.repeat, size: 27);
+    case 1:
+      return const Icon(Icons.repeat_one_on_outlined, size: 27, color: Color.fromARGB(255, 211, 186, 109));
+    case 2:
+      return const Icon(Icons.repeat_on_outlined, size: 27, color: Color.fromARGB(255, 211, 186, 109));
+    default:
+      return const Icon(Icons.repeat, size: 27);
+  }
+}
+
 class _SpotifyScreenState extends State<SpotifyScreen> {
-  bool _loading = false;
+  //bool _loading = false;
   bool _connected = false;
   late ImageUri? currentTrackImageUri;
-
 
   @override
   Widget build(BuildContext context) {
@@ -84,42 +97,7 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
               ? _buildPlayerStateWidget()
               : const Center(child: Text('Not connected')),
 
-          Row(
-            children: [
-              Expanded(
-                child: IconButton(
-                  icon: const Icon(Icons.queue_music, size: 25),
-                  color: Colors.white,
 
-                  onPressed: () {},
-                ),
-              ),
-              Expanded(
-                child: IconButton(
-                  icon: const Icon(Icons.playlist_add, size: 25),
-                  tooltip: 'Add new playlist',
-                  color: Colors.white,
-                  onPressed: () {
-                    showAlertDialog(context);
-                  },
-                ),
-              ),
-              Expanded(
-                child: IconButton(
-                  icon: const Icon(Icons.repeat, size: 25),
-                  color: Colors.white,
-                  onPressed: () async => await SpotifySdk.toggleRepeat(),
-                ),
-              ),
-              Expanded(
-                child: IconButton(
-                  icon: const Icon(Icons.shuffle, size: 25),
-                  color: Colors.white,
-                  onPressed: () async => await SpotifySdk.toggleShuffle(),
-                ),
-              ),
-            ],
-          ),
         ],
       ),
     );
@@ -183,6 +161,77 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
                 ],
               ),
               const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: IconButton(
+                      icon: const Icon(Icons.exit_to_app, size: 27),
+                      color: Colors.white,
+                      tooltip: 'Quit',
+                      onPressed: () async {
+                        await SpotifySdk.pause();
+                        await SpotifySdk.disconnect();
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: IconButton(
+                      icon: const Icon(Icons.playlist_add, size: 27),
+                      tooltip: 'Add new playlist',
+                      color: Colors.white,
+                      onPressed: () {
+                        showAlertDialog(context);
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: IconButton(
+                      icon: repeatIcon(isRepeatingIndex),
+                      color: Colors.white,
+                      tooltip: 'Repeat',
+                      onPressed: () async {
+                        switch (isRepeatingIndex) {
+                          case 0:
+                            isRepeatingIndex = 1;
+                            SpotifySdk.setRepeatMode(repeatMode: RepeatMode.track);
+                            break;
+
+                          case 1:
+                            isRepeatingIndex = 2;
+                            SpotifySdk.setRepeatMode(repeatMode: RepeatMode.context);
+                            break;
+
+                          case 2:
+                            isRepeatingIndex = 0;
+                            SpotifySdk.setRepeatMode(repeatMode: RepeatMode.off);
+                            break;
+
+                          default:
+                            break;
+                        }
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: IconButton(
+                      icon: isShuffling
+                          ? const Icon(Icons.shuffle_on_outlined, size: 27, color: Color.fromARGB(255, 211, 186, 109))
+                          : const Icon(Icons.shuffle, size: 27, color: Colors.white),
+                      tooltip: 'Shuffle',
+                      onPressed: () async {
+                        if (isShuffling) {
+                          isShuffling = false;
+                          await SpotifySdk.setShuffle(shuffle: isShuffling);
+                        } else {
+                          isShuffling = true;
+                          await SpotifySdk.setShuffle(shuffle: isShuffling);
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ],
           );
         } else {
@@ -224,94 +273,35 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
       stream: SpotifySdk.subscribePlayerContext(),
       initialData: PlayerContext('', '', '', ''),
       builder: (BuildContext context, AsyncSnapshot<PlayerContext> snapshot) {
-        var playerContext = snapshot.data;
-        if (playerContext == null) {
+        if (snapshot.hasData) {
+          var playerContext = snapshot.data!;
+          //print(playerContext.title + playerContext.type + playerContext.subtitle + playerContext.uri);
+          return Column(
+            children: <Widget>[
+              Text(playerContext.subtitle, style: const TextStyle(color: Colors.white70, fontSize: 16)),
+              Text(playerContext.title, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+              //Text('Type: ${playerContext.type}'),
+              //Text('Uri: ${playerContext.uri}'),
+            ],
+          );
+        } else {
           return const Center(
-            child: Text('Not connected'),
+            child: Text('Not connected', style: TextStyle(color: Colors.white)),
           );
         }
-
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(playerContext.subtitle, style: const TextStyle(color: Colors.white70, fontSize: 17)),
-            Text(playerContext.title, style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold)),
-
-            //Text('Type: ${playerContext.type}'),
-            //Text('Uri: ${playerContext.uri}'),
-          ],
-        );
       },
     );
   }
-  /*
-  Widget _buildBottomBar(BuildContext context) {
-    return BottomAppBar(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              SizedIconButton(
-                width: 50,
-                icon: Icons.queue_music,
-                color: Colors.white,
-                onPressed: () {},
-              ),
-              SizedIconButton(
-                width: 50,
-                icon: Icons.playlist_play,
-                color: Colors.white,
-                onPressed: play,
-              ),
-              SizedIconButton(
-                width: 50,
-                icon: Icons.repeat,
-                color: Colors.white,
-                onPressed: () {},
-              ),
-              SizedIconButton(
-                width: 50,
-                icon: Icons.shuffle,
-                color: Colors.white,
-                onPressed: () {},
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              SizedIconButton(
-                width: 50,
-                color: Colors.white,
-                onPressed: () {},
-                icon: Icons.favorite,
-              ),
-              SizedIconButton(
-                width: 50,
-                color: Colors.white,
-                onPressed: () => checkIfAppIsActive(context),
-                icon: Icons.info,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-*/
 
   Future<void> disconnect() async {
     try {
       setState(() {
-        _loading = true;
+        //_loading = true;
       });
       var result = await SpotifySdk.disconnect();
       setStatus(result ? 'disconnect successful' : 'disconnect failed');
       setState(() {
-        _loading = false;
+        //_loading = false;
         Navigator.push(context, PageRouteBuilder(
           pageBuilder: (
               BuildContext context,
@@ -328,12 +318,12 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
       });
     } on PlatformException catch (e) {
       setState(() {
-        _loading = false;
+        //_loading = false;
       });
       setStatus(e.code, message: e.message);
     } on MissingPluginException {
       setState(() {
-        _loading = false;
+        //_loading = false;
       });
       setStatus('not implemented');
     }
@@ -425,11 +415,11 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
     }
   }
 
-
 }
 
 Future<void> play(String playlistUri) async {
   try {
+    //print('spotify:playlist:' + playlistUri + '=================================================================================================');
     await SpotifySdk.play(spotifyUri: 'spotify:playlist:' + playlistUri);
   } on PlatformException catch (e) {
     setStatus(e.code, message: e.message);

@@ -14,7 +14,7 @@ showAlertDialog(BuildContext context) {
     child: const Text("Add", style: TextStyle(color: Colors.white)),
     onPressed:  () {
       if (playlistUriController.text.isNotEmpty) {
-        play(playlistUriController.text.substring(34, 57));
+        play(playlistUriController.text.substring(34, 56));
       }
       Navigator.of(context).pop();
     },
@@ -31,7 +31,7 @@ showAlertDialog(BuildContext context) {
       textAlign: TextAlign.center,
       cursorColor: Colors.white,
       decoration: const InputDecoration(
-        labelText: 'Enter copied link',
+        labelText: 'Enter shared link',
         labelStyle: TextStyle(color: Colors.white70),
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.white),
