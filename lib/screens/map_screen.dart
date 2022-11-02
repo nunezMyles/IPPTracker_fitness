@@ -24,68 +24,25 @@ class MapScreen extends StatefulWidget {
 // preserve values when user navigates to different page - to continuously track time, distance travelled
 bool recordStarted = false;
 
-double dist = 0;
-
 int time = 0;
+double dist = 0;
 int lastTime = 0;
-String savedDisplayTime = '00:00:00';
 double speed = 0;
 double avgSpeed = 0;
 int speedCounter = 0;
 String displayTime = '';
+String savedDisplayTime = '00:00:00';
 
 List<LatLng> route = [];
 final Set<Polyline> polyline = {};
 LatLng center = const LatLng(1.3521, 103.8198); // Map view starts w/ Singapore coords
 
+bool isLocationOn = false;
 final Location location = Location();
 StopWatchTimer stopWatchTimer = StopWatchTimer();
 
 class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixin{
   late GoogleMapController _mapController;
-  bool isLocationOn = false;
-
-  _locationInit(BuildContext context) async {
-    bool serviceEnabled;
-    geo.LocationPermission permission;
-
-    // Test if location services are enabled.
-    serviceEnabled = await geo.Geolocator.isLocationServiceEnabled();
-
-    if (!serviceEnabled) {
-      // Location services are not enabled don't continue
-      // accessing the position and request users of the
-      // App to enable the location services.
-      showSnackBar(context, 'Location services are disabled.');
-    } else {
-      setState(() { // reload widget to display 'go to current location' button
-        isLocationOn = true;
-      });
-    }
-
-    permission = await geo.Geolocator.checkPermission();
-
-    if (permission == geo.LocationPermission.denied) {
-      permission = await geo.Geolocator.requestPermission();
-      if (permission == geo.LocationPermission.denied) {
-        // Permissions are denied, next time you could try
-        // requesting permissions again (this is also where
-        // Android's shouldShowRequestPermissionRationale
-        // returned true. According to Android guidelines
-        // your App should show an explanatory UI now.
-        showSnackBar(context, 'Location permissions are denied');
-      } else {
-        setState(() { // reload widget to display 'go to current location' button
-          isLocationOn = true;
-        });
-      }
-    }
-
-    if (permission == geo.LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
-      showSnackBar(context, 'Location permissions are permanently denied, we cannot request permissions.');
-    }
-  }
 
   @override
   void initState() {
@@ -101,13 +58,53 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
   @override
   bool get wantKeepAlive => true; // preserve widget state when navigating to different page
 
-  void _onMapCreated(GoogleMapController controller) {
+  _locationInit(BuildContext context) async {
+    bool serviceEnabled;
+    geo.LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await geo.Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) { // will always check if device loc is on
+      if (isLocationOn) {
+        setState(() {
+          isLocationOn = false; // if device loc is off and app loc shows on, turn app loc off
+        });
+      }
+      showSnackBar(context, 'Location services are disabled.');
+      return;
+    }
+
+    if (isLocationOn) { // if device loc is on and app loc is on, return, do nothing
+      return;
+    }
+
+    permission = await geo.Geolocator.checkPermission();
+    if (permission == geo.LocationPermission.denied) {
+      permission = await geo.Geolocator.requestPermission();
+      if (permission == geo.LocationPermission.denied) {
+        showSnackBar(context, 'Location permissions are denied');
+        return;
+      }
+      return;
+    }
+
+    if (permission == geo.LocationPermission.deniedForever) {
+      showSnackBar(context, 'Location permissions are permanently denied, we cannot request permissions.');
+      return;
+    }
+
+    setState(() {
+      isLocationOn = true;  // if device loc is on and app loc is off, turn app loc on
+    });
+    _goToCurrentLoc();
+  }
+
+  _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
     double appendDist;
 
     location.onLocationChanged.listen((event) {
       LatLng loc = LatLng(event.latitude!, event.longitude!);
-      //print(event.latitude.toString() + ' , ' + event.longitude.toString());
       center = loc;
 
       // continuously return to current location only after User has started running
@@ -126,9 +123,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
             loc.latitude,
             loc.longitude
         );
-        //print(appendDist.toString() + '========================================================');
         dist = dist + appendDist;
-        //print(_dist.toString() + '==================================================================');
         int timeDuration = (time - lastTime);
 
         if (timeDuration != 0) {
@@ -160,10 +155,22 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
     });
   }
 
+  _goToCurrentLoc() async {
+    await geo.Geolocator.getCurrentPosition().then((value) {
+      _mapController.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: LatLng(value.latitude, value.longitude), zoom: 18),
+        ),
+      );
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
+
     super.build(context);
+
     _locationInit(context);
 
     return Scaffold(
@@ -177,16 +184,11 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
             width: 45.0,
             child: FittedBox(
               child: FloatingActionButton(
+                heroTag: "current_location_btn", // hero tag to resolve 'multiple heroes' error
                 backgroundColor: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.8),
                 child: const Icon(Icons.my_location, color: Colors.white, size: 30,),
-                onPressed: () async {
-                  await geo.Geolocator.getCurrentPosition().then((value) {
-                    _mapController.animateCamera(
-                      CameraUpdate.newCameraPosition(
-                        CameraPosition(target: LatLng(value.latitude, value.longitude), zoom: 18),
-                      ),
-                    );
-                  });
+                onPressed: () {
+                  _goToCurrentLoc();
                 },
               ),
             ),
@@ -197,6 +199,7 @@ class _MapScreenState extends State<MapScreen> with AutomaticKeepAliveClientMixi
             width: 45.0,
             child: FittedBox(
               child: FloatingActionButton(
+                heroTag: "spotify_btn", // hero tag to resolve 'multiple heroes' error
                 backgroundColor: const Color.fromARGB(255, 23, 23, 23).withOpacity(0.8),
                 child: const Icon(MyFlutterApp.spotify, color: Colors.green, size: 37,),
                 onPressed: () async {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../utilities/account_service.dart';
 import '../widgets/bottomNavBar.dart';
 import '../widgets/activityFilterDialog.dart';
+import 'map_screen.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({Key? key}) : super(key: key);
@@ -32,6 +33,7 @@ class _AccountScreenState extends State<AccountScreen> {
             ),
             onPressed: () {
               setState(() {
+                isLocationOn = false; // reset app loc display
                 filterValues = [true, true, true, true]; // reset activity filter
                 navBarselectedIndex = 0; // reset nav bar selection
                 AccountService().logOut(context);
