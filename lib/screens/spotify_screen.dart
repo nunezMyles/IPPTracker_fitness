@@ -76,11 +76,11 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
         children: [
           _connected
               ? _buildPlayerContextWidget()
-              : const Center(child: Text('Not connected')),
+              : const Center(child: CircularProgressIndicator(color: Colors.green)),
           const SizedBox(height: 15),
           _connected
               ? _buildPlayerStateWidget()
-              : const Center(child: Text('Not connected')),
+              : const SizedBox(width: 0),
         ],
       ),
     );
@@ -111,15 +111,23 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
                     : const Text('Connect to see an image...'),
               ),
               const SizedBox(height:10),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(width: 20),
-                  Column(
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(track.name, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                      Text(track.artist.name!, style: const TextStyle(color: Colors.white54, fontSize: 18))
+                      Flexible(
+                          child: Text(track.name, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold))
+                      ),
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(track.artist.name!, style: const TextStyle(color: Colors.white54, fontSize: 18)),
                     ],
                   ),
                 ],
@@ -261,9 +269,7 @@ class _SpotifyScreenState extends State<SpotifyScreen> {
             ],
           );
         } else {
-          return const Center(
-            child: Text('Not connected', style: TextStyle(color: Colors.white)),
-          );
+          return const Center(child: CircularProgressIndicator());
         }
       },
     );
