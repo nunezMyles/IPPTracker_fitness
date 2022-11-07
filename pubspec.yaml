@@ -51,9 +51,9 @@ dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icon/fitness_app_icon2_end.png"
+  image_path: "assets/icon/fitness_app_icon3.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
-  adaptive_icon_foreground: "assets/icon/fitness_app_icon2_end.png"
+  adaptive_icon_foreground: "assets/icon/fitness_app_icon3.png"
   adaptive_icon_background: "#171717"
 
 dev_dependencies:
