@@ -21,6 +21,7 @@ A mobile app that records the timings and sets of User runs/situps/pushups. It i
 <img width="300" height="650" src="/showcase/Screenshot_20221107-215402.jpg" alt="calendar screen normal" /> <img width="300" height="650" src="/showcase/Screenshot_20221107-215355.jpg" alt="calendar screen add" />
 
 
+
 ## Backend
 
 ### Server
