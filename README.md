@@ -3,7 +3,11 @@
 A mobile app that records the timings and sets of User runs/situps/pushups. It includes an IPPT score calculator, activity planner, location tracker to map routes & Spotify integration.
 
 
-## Features
+## Frontend
+
+
+
+## Backend
 
 ### Server
 - Hosted in Google Cloud App Engine
