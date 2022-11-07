@@ -5,6 +5,20 @@ A mobile app that records the timings and sets of User runs/situps/pushups. It i
 
 ## Frontend
 
+### 1. App Launcher Icon
+![App launcher icon](/showcase/Screenshot_20221107-213133_One%20UI%20Home.jpg)
+
+
+### 2. Home Screen
+<img width="300" height="650" src="/showcase/Screenshot_20221107-214206.jpg" alt="home screen normal" /> <img width="300" height="650" src="/showcase/Screenshot_20221107-214218.jpg" alt="home screen add" />
+
+
+### 3. Map Screen
+<img width="300" height="650" src="/showcase/Screenshot_20221107-214226_Google%20Play%20services.jpg" alt="map screen off" /> <img width="300" height="650" src="/showcase/Screenshot_20221107-215143.jpg" alt="map screen on" /> <br><img width="300" height="650" src="/showcase/Screenshot_20221107-215741.jpg" alt="map screen record run" /> <img width="300" height="650" src="/showcase/Screenshot_20221107-215158.jpg" alt="map screen spotify" />
+
+
+### 4. Calendar Screen
+<img width="300" height="650" src="/showcase/Screenshot_20221107-215402.jpg" alt="calendar screen normal" /> <img width="300" height="650" src="/showcase/Screenshot_20221107-215355.jpg" alt="calendar screen add" />
 
 
 ## Backend
