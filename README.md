@@ -1,13 +1,13 @@
-# IPPTracker - Fitness Tracker [WIP]
+# IPPTracker - Fitness Tracker
 
-A mobile app that records the timings and sets of User runs/situps/pushups. It includes an IPPT score calculator, activity planner/calendar, location tracker to map routes & Spotify integration.
+A mobile app that records the timings and sets of User runs/situps/pushups. It includes an IPPT score calculator, activity planner, location tracker to map routes & Spotify integration.
 
 
 ## Features
 
 ### Server
-- Server hosted w/ Google Cloud App Engine
-- Web Server development w/ nodeJS express
+- Hosted in Google Cloud App Engine
+- Developed w/ nodeJS express
 
 ### Database
 - MongoDB CRUD
@@ -18,8 +18,8 @@ A mobile app that records the timings and sets of User runs/situps/pushups. It i
 - Password hashing w/ Bcrypt
 
 ### APIs
-- Built RESTful APIs inside NodeJS Server
-- Use of Online APIs, e.g. Google Maps, IPPT Score calculator
+- Created RESTful APIs in server
+- Use of public APIs, e.g. Google Maps, IPPT Score calculator
 
 ### Others
 - Enhanced account security w/ JWT
