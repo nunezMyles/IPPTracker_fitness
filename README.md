@@ -27,21 +27,23 @@ A mobile app that records the timings and sets of User runs/situps/pushups. It i
 
 ## Backend
 
+### Authentication
+- User authentication w/ APIs
+- Password hashing w/ Bcrypt
+
 ### Server
-- Hosted in Google Cloud App Engine
-- Developed w/ nodeJS express
+- Developed w/ Node.js Express
+- Hosted in a virtual container w/ Google App Engine Cloud Service
+- Includes middleware routing
+
+### APIs
+- Built RESTful APIs
+- Integrated public APIs, e.g. Google Maps, IPPT score calculator
+- JSON-Dart object (de)serialization
 
 ### Database
 - MongoDB CRUD
 - NodeJS-MongoDB configuration w/ Mongoose
-
-### Authentication
-- User authentication w/ Sign In, Sign Up APIs
-- Password hashing w/ Bcrypt
-
-### APIs
-- Created RESTful APIs in server
-- Use of public APIs, e.g. Google Maps, IPPT Score calculator
 
 ### Others
 - Enhanced account security w/ JWT
