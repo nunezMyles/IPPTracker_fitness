@@ -9,7 +9,7 @@ A mobile app that records the timings and sets of User runs/situps/pushups. It i
 ![App launcher icon](/showcase/Screenshot_20221107-213133_One%20UI%20Home.jpg)
 
 ### 2. Login/Register Screen
-<img width="300" height="650" src="/showcase/Screenshot_20221108-090734.jpg" alt="login screen" /> <img width="300" height="650" src="/showcase/Screenshot_20221107-214206.jpg" alt="register screen" />
+<img width="300" height="650" src="/showcase/Screenshot_20221108-090734.jpg" alt="login screen" /> <img width="300" height="650" src="/showcase/Screenshot_20221108-090741.jpg" alt="register screen" />
 
 
 ### 3. Home Screen
