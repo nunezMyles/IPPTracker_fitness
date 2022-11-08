@@ -47,7 +47,7 @@ A mobile app that records the timings and sets of User runs/situps/pushups. It i
 
 ### Others
 - Enhanced account security w/ JWT
-- Session restoration: shared_preferences package
+- User session restoration: shared_preferences package
 - Time tracker: stop_watch_timer package
 - User location: geolocator, location package
 - Calender: syncfusion_flutter_calendar package
