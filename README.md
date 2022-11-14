@@ -43,7 +43,7 @@ A mobile app that records the timings and sets of User runs/situps/pushups. It i
 
 ### Database
 - MongoDB CRUD
-- NodeJS-MongoDB configuration w/ Mongoose
+- NodeJS-MongoDB connection w/ Mongoose
 
 ### Others
 - Enhanced account security w/ JWT
