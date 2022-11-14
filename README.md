@@ -5,7 +5,7 @@ A mobile app that records the timings and sets of User runs/situps/pushups. It i
 
 ## Frontend
 
-### 1. App Launcher Icon
+### 1. App Icon
 ![App launcher icon](/showcase/Screenshot_20221107-213133_One%20UI%20Home.jpg)
 
 ### 2. Login/Register Screen
