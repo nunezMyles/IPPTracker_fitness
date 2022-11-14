@@ -1,6 +1,6 @@
 # IPPTracker - Fitness Tracker
 
-A mobile app that records the timings and sets of User runs/situps/pushups. It includes an IPPT score calculator, activity planner, location tracker to map routes & Spotify integration.
+A mobile app that records the timings and sets of User runs/situps/pushups. It includes an IPPT score calculator, Activity planner, Location tracker to map routes & Spotify integration.
 
 
 ## Frontend
