@@ -46,11 +46,12 @@ A mobile app that records the timings and sets of User runs/situps/pushups. It i
 - NodeJS-MongoDB connection w/ Mongoose
 
 ### Others
+- Spotify w/ spotify_sdk package
 - Enhanced account security w/ JWT
+- Time tracker w/ stop_watch_timer package
+- User location w/ geolocator, location packages
+- Calender w/ syncfusion_flutter_calendar package
 - User session restoration: shared_preferences package
-- Time tracker: stop_watch_timer package
-- User location: geolocator, location package
-- Calender: syncfusion_flutter_calendar package
-- Spotify: spotify_sdk package
+
 
 
