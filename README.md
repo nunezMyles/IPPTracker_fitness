@@ -31,9 +31,9 @@ A mobile app that records the timings and sets of User runs/situps/pushups. It i
 - User authentication w/ APIs
 - Password hashing w/ Bcrypt
 
-### Server
+### Serverless
+- Deployed in Google App Engine Cloud Service
 - Developed w/ Node.js Express
-- Hosted in a virtual container w/ Google App Engine Cloud Service
 - Includes middleware routing
 
 ### APIs
