@@ -32,7 +32,7 @@ A mobile app that records the timings and sets of User runs/situps/pushups. It i
 - Password hashing w/ Bcrypt
 
 ### Serverless
-- Deployed in Google App Engine Cloud Service
+- Deployed in Google App Engine (Cloud Service)
 - Developed w/ Node.js Express
 - Includes middleware routing
 
