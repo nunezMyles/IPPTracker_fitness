@@ -33,7 +33,7 @@ A mobile app that records the timings and sets of User runs/situps/pushups. It i
 
 ### Server (in Serverless)
 - Developed w/ Node.js Express
-- Deployed in Google App Engine (Cloud Service)
+- Deployed in Google App Engine (GCP Cloud Service)
 - Includes middleware routing
 
 ### APIs
