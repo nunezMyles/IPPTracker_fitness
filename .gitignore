@@ -31,8 +31,8 @@
 .pub/
 /build/
 /lib/models/global_variables.dart
-/node_server/secret.js
 /node_server/node_modules
+/node_server/secret.js
 
 # Web related
 lib/generated_plugin_registrant.dart
