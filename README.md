@@ -17,7 +17,7 @@ A mobile app that records the timings and sets of User runs/situps/pushups. It i
 
 
 ### 4. Map Screen
-<img width="300" height="650" src="/showcase/Screenshot_20221107-214226_Google%20Play%20services.jpg" alt="map screen off" /> <img width="300" height="650" src="/showcase/Screenshot_20221107-215143.jpg" alt="map screen on" /> <br><img width="300" height="650" src="/showcase/Screenshot_20221107-215741.jpg" alt="map screen record run" /> <img width="300" height="650" src="/showcase/Screenshot_20221107-215158.jpg" alt="map screen spotify" />
+<img width="300" height="650" src="/showcase/Screenshot_20221107-214226_Google%20Play%20services.jpg" alt="map screen off" /> <img width="300" height="650" src="/showcase/Screenshot_20221107-215143.jpg" alt="map screen on" /> <br><img width="300" height="650" src="/showcase/Screenshot_20221107-215741.jpg" alt="map screen record run" />
 
 
 ### 5. Calendar Screen
